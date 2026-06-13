@@ -16,10 +16,8 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
     print(f"{'='*50}\n")
 
     # 1. Initialize the shared state
-    state = AgentState(
-        target_company=company_name,
-        current_task=f"Starting analysis for {company_name}"
-    )
+    state = AgentState()
+    state.current_task = f"Starting analysis for {company_name}"
 
     try:
         # 2. Execute Company Agent (Identify Target)
@@ -47,7 +45,7 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
         state.current_task = "Workflow failed"
         return state
 
-    # 6. Final Summary
+    # 6. Final Summary (Mocking the Report Generation)
     print(f"\n{'='*50}")
     print("ANALYSIS COMPLETE")
     print(f"{'='*50}")
@@ -65,4 +63,4 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
 
 if __name__ == "__main__":
     # Test run if executed directly
-    final_state = run_supply_chain_analysis("Apple Inc.")
+    final_state = run_supply_chain_analysis("TechNova Solutions")
