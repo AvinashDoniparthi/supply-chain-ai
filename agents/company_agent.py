@@ -1,36 +1,40 @@
 from models.state import AgentState, CompanyInfo
+from scraping.company_scraper import CompanyScraper
 
 
 def company_agent(state: AgentState) -> AgentState:
     """
     Agent responsible for gathering and identifying core company information.
-    In a real scenario, this would involve calling scrapers or APIs.
-    Currently populates the state with mock data for demonstration.
+    Uses CompanyScraper to search for public data.
     """
     # Retrieve the target company name from the state
     company_name = state.target_company or "Unknown Company"
-    
+
     print(f"--- COMPANY AGENT: Researching Target Company: {company_name} ---")
 
-    # Mock data for the target company, using the provided name
-    mock_company = CompanyInfo(
-        name=company_name,
-        industry="Semiconductors",
-        headquarters="San Jose, California, USA",
-        description=f"{company_name} is a leading manufacturer of high-performance AI chips and specialized hardware accelerators.",
-        website="https://technova-example.ai",
-        metadata={"stock_symbol": "TNS", "market_cap": "$12.5B", "founded_year": 2015},
+    # Use the scraper to fetch real data
+    scraper = CompanyScraper()
+    company_data = scraper.search_company(company_name)
+
+    # Map scraped data to CompanyInfo model
+    scraped_company = CompanyInfo(
+        name=company_data.get("name", company_name),
+        industry=company_data.get("industry"),
+        headquarters=company_data.get("headquarters"),
+        description=company_data.get("description"),
+        website=company_data.get("website"),
+        metadata={"source": "Wikipedia Scraper"},
     )
 
     # Update the shared state
-    state.company = mock_company
+    state.company = scraped_company
     state.current_task = f"Company identification completed for {company_name}"
 
     # Add to history for traceability
     state.history.append(
         {
             "agent": "company_agent",
-            "action": "populated_company_info",
+            "action": "scraped_company_info",
             "company_name": company_name,
             "status": "success",
         }

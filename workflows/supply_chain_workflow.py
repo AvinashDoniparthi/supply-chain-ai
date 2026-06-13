@@ -5,13 +5,14 @@ from agents.supplier_agent import supplier_agent
 from agents.verification_agent import verification_agent
 from agents.risk_agent import risk_agent
 
+
 def create_supply_chain_workflow():
     """
     Creates and compiles the LangGraph workflow for supply chain analysis.
     The workflow follows a linear path:
     Company -> Supplier -> Verification -> Risk
     """
-    
+
     # 1. Initialize the Graph with our AgentState schema
     workflow = StateGraph(AgentState)
 
@@ -31,8 +32,9 @@ def create_supply_chain_workflow():
 
     # 4. Compile the graph
     app = workflow.compile()
-    
+
     return app
+
 
 # Initialize the graph
 supply_chain_app = create_supply_chain_workflow()
