@@ -58,11 +58,12 @@ def risk_agent(state: AgentState) -> AgentState:
             ))
 
         # RULE 3: Criticality Escalation
-        if supplier.criticality == "High" and (verification.confidence or 0.0) < 0.95:
+        conf_val = verification.confidence if verification.confidence is not None else 0.0
+        if supplier.criticality == "High" and conf_val < 0.95:
             state.risk_assessments.append(RiskAnalysis(
                 category="Strategic",
                 threat_level="Medium",
-                description=f"High criticality supplier {supplier.name} has sub-optimal verification confidence ({verification.confidence:.2f} if verification.confidence else 0.0).",
+                description=f"High criticality supplier {supplier.name} has sub-optimal verification confidence ({conf_val:.2f}).",
                 potential_impact="Dependency on a supplier whose operational status is not perfectly certain.",
                 mitigation_recommendation="Perform an on-site audit to increase confidence."
             ))
