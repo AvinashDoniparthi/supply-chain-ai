@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from typing import Dict, Any, Optional
 import logging
+import json
+import os
+import re
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -21,7 +24,7 @@ class CompanyScraper:
 
     def search_company(self, company_name: str) -> Dict[str, Any]:
         """
-        Search for a company and return its details.
+        Search for a company, return its details, and save them to the database.
 
         Args:
             company_name: Name of the company to search for.
@@ -58,11 +61,41 @@ class CompanyScraper:
             page_response = self.session.get(page_url, headers=self.headers)
             page_response.raise_for_status()
 
-            return self._parse_wikipedia_page(page_response.text, company_name)
+            data = self._parse_wikipedia_page(page_response.text, company_name)
+
+            # Step 3: Save the results (Fixing the 'isnt saving' issue)
+            self.save_results(data)
+
+            return data
 
         except Exception as e:
             logger.error(f"Error scraping company info for {company_name}: {e}")
             return self._get_empty_result(company_name)
+
+    def save_results(self, data: Dict[str, Any], filename: Optional[str] = None):
+        """
+        Persists the scraped company data to a JSON file in the database directory.
+        """
+        if not filename:
+            # Create a safe filename from the company name
+            safe_name = (
+                re.sub(r"[^\w\s-]", "", data["name"]).strip().replace(" ", "_").lower()
+            )
+            filename = f"{safe_name}_info.json"
+
+        # Ensure database directory exists
+        db_dir = "database"
+        if not os.path.exists(db_dir):
+            os.makedirs(db_dir)
+
+        filepath = os.path.join(db_dir, filename)
+
+        try:
+            with open(filepath, "w") as f:
+                json.dump(data, f, indent=4)
+            logger.info(f"Successfully saved company data to {filepath}")
+        except Exception as e:
+            logger.error(f"Failed to save results to {filepath}: {e}")
 
     def _parse_wikipedia_page(self, html: str, company_name: str) -> Dict[str, Any]:
         """
@@ -80,18 +113,20 @@ class CompanyScraper:
         }
 
         # Extract description from the first few paragraphs
-        content_div = soup.find("div", {"class": "mw-parser-output"})
-        if content_div:
-            paragraphs = content_div.find_all("p", recursive=False)
-            for p in paragraphs:
-                text = p.get_text().strip()
-                if len(text) > 20:
-                    data["description"] = text
-                    # Remove citations like [1], [2]
-                    import re
+        # We look for the first paragraph with substantial text that isn't inside a table
+        paragraphs = soup.find_all("p")
+        for p in paragraphs:
+            # Skip paragraphs inside tables (like infoboxes or lists)
+            if p.find_parent("table"):
+                continue
 
-                    data["description"] = re.sub(r"\[\d+\]", "", data["description"])
-                    break
+            text = p.get_text().strip()
+            if len(text) > 60:
+                # Clean up citations and extra whitespace
+                text = re.sub(r"\[.*?\]", "", text)
+                text = re.sub(r"\s+", " ", text)
+                data["description"] = text
+                break
 
         if infobox:
             rows = infobox.find_all("tr")
@@ -108,7 +143,12 @@ class CompanyScraper:
                     elif "headquarters" in label:
                         data["headquarters"] = value
                     elif "website" in label:
-                        data["website"] = value
+                        # Try to find a real link
+                        link = td.find("a", href=True)
+                        if link and link["href"].startswith("http"):
+                            data["website"] = link["href"]
+                        else:
+                            data["website"] = value
 
         return data
 
