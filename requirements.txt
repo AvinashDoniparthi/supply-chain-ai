@@ -10,3 +10,4 @@ pydantic_core==2.46.4
 pytokens==0.4.1
 typing-inspection==0.4.2
 typing_extensions==4.15.0
+langgraph==1.2.5

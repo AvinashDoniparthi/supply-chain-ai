@@ -42,6 +42,7 @@ class AgentState(BaseModel):
     This tracks the progress and findings of the entire multi-agent workflow.
     """
     # Core target information
+    target_company: Optional[str] = Field(default=None, description="The initial company name provided for research")
     company: Optional[CompanyInfo] = None
     
     # Supply chain mapping

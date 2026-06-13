@@ -17,6 +17,7 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
 
     # 1. Initialize the shared state
     state = AgentState()
+    state.target_company = company_name
     state.current_task = f"Starting analysis for {company_name}"
 
     try:

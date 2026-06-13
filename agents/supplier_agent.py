@@ -6,6 +6,9 @@ def supplier_agent(state: AgentState) -> AgentState:
     Agent responsible for mapping the supply chain of the target company.
     In a real scenario, this would scrape shipping records or supplier directories.
     Currently populates the state with mock supplier data.
+    
+    This implementation is idempotent: it will not add duplicate suppliers
+    if executed multiple times on the same state.
     """
     print("--- SUPPLIER AGENT: Mapping Supply Chain ---")
 
@@ -45,8 +48,20 @@ def supplier_agent(state: AgentState) -> AgentState:
         ),
     ]
 
+    # Identify existing suppliers to avoid duplicates (Name + Location)
+    existing_supplier_ids = {
+        (s.name, s.location) for s in state.suppliers
+    }
+
+    new_suppliers_added = 0
+    for supplier in mock_suppliers:
+        supplier_id = (supplier.name, supplier.location)
+        if supplier_id not in existing_supplier_ids:
+            state.suppliers.append(supplier)
+            existing_supplier_ids.add(supplier_id)
+            new_suppliers_added += 1
+
     # Update the shared state
-    state.suppliers.extend(mock_suppliers)
     state.current_task = "Supply chain mapping completed"
 
     # Update confidence score for this stage
@@ -57,7 +72,8 @@ def supplier_agent(state: AgentState) -> AgentState:
         {
             "agent": "supplier_agent",
             "action": "mapped_suppliers",
-            "count": len(mock_suppliers),
+            "new_suppliers_count": new_suppliers_added,
+            "total_suppliers_count": len(state.suppliers),
             "status": "success",
         }
     )
