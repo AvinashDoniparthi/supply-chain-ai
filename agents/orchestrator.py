@@ -1,6 +1,7 @@
 from models.state import AgentState
 from agents.company_agent import company_agent
 from agents.supplier_agent import supplier_agent
+from agents.relationship_agent import relationship_agent
 from agents.risk_agent import risk_agent
 from agents.verification_agent import verification_agent
 
@@ -30,11 +31,14 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
         if not state.suppliers:
             print("Warning: No suppliers found for this company.")
 
-        # 4. Execute Verification Agent (Fact-Check)
+        # 4. Execute Relationship Agent (Classify Relationships)
+        state = relationship_agent(state)
+
+        # 5. Execute Verification Agent (Fact-Check)
         # We verify suppliers before analyzing risk to ensure integrity
         state = verification_agent(state)
 
-        # 5. Execute Risk Agent (Assess Vulnerabilities)
+        # 6. Execute Risk Agent (Assess Vulnerabilities)
         # Risk analysis now has access to 'verified' flags in state.verification_results
         state = risk_agent(state)
 
@@ -50,7 +54,8 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
     print("ANALYSIS COMPLETE")
     print(f"{'='*50}")
     print(f"Target: {state.company.name if state.company else 'N/A'}")
-    print(f"Suppliers Mapped: {len(state.suppliers)}")
+    print(f"Entities Mapped: {len(state.suppliers)}")
+    print(f"Relationships Classified: {len(state.relationship_results)}")
     print(f"Risks Identified: {len(state.risk_assessments)}")
     print(
         f"Verification Confidence: {state.confidence_scores.get('verification', 0):.2f}"

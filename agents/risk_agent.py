@@ -8,7 +8,7 @@ def risk_agent(state: AgentState) -> AgentState:
     print("--- RISK AGENT: Analyzing Supply Chain Vulnerabilities (Verified Data Only) ---")
     
     # 1. Map entity names to their verification status for easy lookup
-    verification_map = {v.entity_name: v for v in state.verification_results}
+    verification_map = {v.supplier_name: v for v in state.verification_results}
     
     # 2. Identify unverified entities to flag as a 'Data Integrity' risk
     unverified_entities = [name for name, v in verification_map.items() if not v.verified]
@@ -48,7 +48,7 @@ def risk_agent(state: AgentState) -> AgentState:
         if "Singapore" in supplier.location or "Netherlands" in supplier.location:
             # Adjust threat level based on verification confidence
             # Lower confidence in verification increases the perceived risk
-            threat = "Medium" if (verification.confidence or 0.0) > 0.9 else "High"
+            threat = "Medium" if (verification.confidence_score or 0.0) > 0.9 else "High"
             state.risk_assessments.append(RiskAnalysis(
                 category="Logistical",
                 threat_level=threat,
@@ -58,7 +58,7 @@ def risk_agent(state: AgentState) -> AgentState:
             ))
 
         # RULE 3: Criticality Escalation
-        conf_val = verification.confidence if verification.confidence is not None else 0.0
+        conf_val = verification.confidence_score if verification.confidence_score is not None else 0.0
         if supplier.criticality == "High" and conf_val < 0.95:
             state.risk_assessments.append(RiskAnalysis(
                 category="Strategic",

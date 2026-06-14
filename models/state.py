@@ -1,5 +1,7 @@
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
+from models.relationship import RelationshipResult
+from models.verification import VerificationResult
 
 class CompanyInfo(BaseModel):
     """Basic information about the target company."""
@@ -18,15 +20,7 @@ class SupplierInfo(BaseModel):
     tier: int = Field(default=1, description="Supplier tier level (1, 2, 3...)")
     criticality: str = Field(default="Medium", description="Business impact: Low, Medium, High")
     status: str = Field(default="Active")
-
-class VerificationResult(BaseModel):
-    """Results of data verification for specific claims or entities."""
-    entity_name: str
-    source: str
-    verified: bool
-    confidence: float = Field(ge=0.0, le=1.0)
-    findings: str
-    timestamp: str
+    evidence: List[Dict[str, str]] = Field(default_factory=list, description="Evidence snippets from discovery")
 
 class RiskAnalysis(BaseModel):
     """Risk assessment for a specific category or entity."""
@@ -47,6 +41,7 @@ class AgentState(BaseModel):
     
     # Supply chain mapping
     suppliers: List[SupplierInfo] = Field(default_factory=list)
+    relationship_results: List[RelationshipResult] = Field(default_factory=list)
     
     # Intelligence layers
     verification_results: List[VerificationResult] = Field(default_factory=list)

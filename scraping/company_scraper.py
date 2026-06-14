@@ -54,6 +54,17 @@ class CompanyScraper:
                 return self._get_empty_result(company_name)
 
             page_title = search_results[0]["title"]
+            
+            # Validation: Ensure the title actually matches the company name
+            # Wikipedia search is fuzzy and often returns unrelated top results for fake names
+            name_norm = re.sub(r"[^\w\s]", "", company_name.lower())
+            title_norm = re.sub(r"[^\w\s]", "", page_title.lower())
+            
+            # Allow for some variation (e.g., "Apple" matching "Apple Inc.")
+            if name_norm not in title_norm and title_norm not in name_norm:
+                logger.warning(f"Wikipedia result '{page_title}' does not match target '{company_name}'. Rejecting.")
+                return self._get_empty_result(company_name)
+
             logger.info(f"Found Wikipedia page: {page_title}")
 
             # Step 2: Fetch the page content
