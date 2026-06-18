@@ -1,0 +1,35 @@
+{
+  "company": "Amazon",
+  "runs": [
+    {
+      "timestamp": "2026-06-16T21:17:58.167196",
+      "health_score": 22.2,
+      "health_status": "Critical",
+      "supplier_count": 1,
+      "risk_count": 1,
+      "suppliers": [
+        "Gap"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:26:59.555154",
+      "health_score": 22.2,
+      "health_status": "Critical",
+      "supplier_count": 1,
+      "risk_count": 1,
+      "suppliers": [
+        "Gap"
+      ]
+    },
+    {
+      "timestamp": "2026-06-17T16:12:11.101150",
+      "health_score": 24.9,
+      "health_status": "Critical",
+      "supplier_count": 1,
+      "risk_count": 1,
+      "suppliers": [
+        "NAND flash"
+      ]
+    }
+  ]
+}

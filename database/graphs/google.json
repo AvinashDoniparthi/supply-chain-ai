@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "Google",
+      "label": "Google",
+      "node_type": "company"
+    },
+    {
+      "id": "Aptiv Aptiv PLC",
+      "label": "Aptiv Aptiv PLC",
+      "node_type": "supplier"
+    },
+    {
+      "id": "ITSO Ltd",
+      "label": "ITSO Ltd",
+      "node_type": "supplier"
+    },
+    {
+      "id": "TSMC Semiconductor Manufacturing Company Limited",
+      "label": "TSMC Semiconductor Manufacturing Company Limited",
+      "node_type": "supplier"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Google",
+      "target": "Aptiv Aptiv PLC",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Google",
+      "target": "ITSO Ltd",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Google",
+      "target": "TSMC Semiconductor Manufacturing Company Limited",
+      "relationship": "supplier"
+    }
+  ]
+}

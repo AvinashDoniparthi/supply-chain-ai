@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from models.state import AgentState
 from models.verification import VerificationResult
 from scraping.company_scraper import CompanyScraper
+from utils.identity_resolution import resolver
 
 logger = logging.getLogger(__name__)
 
@@ -163,6 +164,7 @@ def verification_agent(state: AgentState) -> AgentState:
     Uses a provider-based architecture for real-world validation.
     """
     print("\n--- VERIFICATION AGENT: Fact-Checking Relationships (Provider-Based) ---")
+    print(f"Suppliers sent to verification: {len(state.suppliers)}")
     
     # Initialize providers
     providers = [
@@ -172,23 +174,33 @@ def verification_agent(state: AgentState) -> AgentState:
     aggregator = VerificationAggregator(providers)
     
     # Map relationship results by candidate company name for easy lookup
+    # After deduplication, candidate_company should match supplier.name (canonical)
     rel_map = {r.candidate_company: r for r in state.relationship_results}
     
     verified_results = []
     TO_VERIFY = ["supplier", "partner", "subsidiary"]
     
     for supplier in state.suppliers:
-        rel = rel_map.get(supplier.name)
+        # Use canonical name as the primary identifier
+        canonical_name = supplier.canonical_name or supplier.name
+        
+        rel = rel_map.get(canonical_name)
         
         if not rel or rel.relationship_type not in TO_VERIFY:
-            logger.info(f"Skipping verification for {supplier.name}")
+            logger.info(f"Skipping verification for {canonical_name}")
             continue
             
-        # Aggregated verification
-        result = aggregator.aggregate(supplier.name, rel.relationship_type, supplier.evidence)
+        # Aggregated verification using canonical name
+        print(f"Verifying: {canonical_name}")
+        result = aggregator.aggregate(canonical_name, rel.relationship_type, supplier.evidence)
+        
         verified_results.append(result)
         
-        print(f"Supplier: {result.supplier_name}")
+        # Update supplier location if verified
+        if result.verified and result.headquarters and result.headquarters != "Unknown":
+            supplier.location = result.headquarters
+            
+        print(f"Supplier: {canonical_name}")
         print(f"Verified: {result.verified}")
         print(f"Confidence: {result.confidence_score:.2f}")
         print(f"HQ: {result.headquarters}")

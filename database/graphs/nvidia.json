@@ -1,0 +1,31 @@
+{
+  "nodes": [
+    {
+      "id": "Nvidia",
+      "label": "Nvidia",
+      "node_type": "company"
+    },
+    {
+      "id": "TSMC Semiconductor Manufacturing Company Limited",
+      "label": "TSMC Semiconductor Manufacturing Company Limited",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Foxconn",
+      "label": "Foxconn",
+      "node_type": "supplier"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Nvidia",
+      "target": "TSMC Semiconductor Manufacturing Company Limited",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Nvidia",
+      "target": "Foxconn",
+      "relationship": "supplier"
+    }
+  ]
+}

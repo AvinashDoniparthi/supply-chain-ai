@@ -1,0 +1,15 @@
+{
+  "company": "Tesla",
+  "runs": [
+    {
+      "timestamp": "2026-06-17T16:13:15.663594",
+      "health_score": 41.5,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 4,
+      "suppliers": [
+        "LFP batteries CATL currently"
+      ]
+    }
+  ]
+}

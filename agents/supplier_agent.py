@@ -1,5 +1,6 @@
 from models.state import AgentState, SupplierInfo
 from scraping.supplier_discovery import SupplierDiscoveryScraper
+from utils.identity_resolution import resolver
 import logging
 
 logger = logging.getLogger(__name__)
@@ -32,18 +33,23 @@ def supplier_agent(state: AgentState) -> AgentState:
         total_confidence = 0
         
         for data in discovered_suppliers:
+            # Resolve identity to canonical name
+            canonical_name = resolver.resolve(data["name"])
+            
             # Create SupplierInfo object
             supplier = SupplierInfo(
                 name=data["name"],
+                canonical_name=canonical_name,
                 location=data["location"],
                 products=data["products"],
                 tier=data["tier"],
                 criticality=data["criticality"],
                 status="Active",
+                discovery_confidence=data["confidence"],
                 evidence=data.get("source_evidence", [])
             )
             
-            # Simple deduplication
+            # Simple deduplication by raw name for initial mapping
             if not any(s.name == supplier.name for s in state.suppliers):
                 state.suppliers.append(supplier)
                 new_suppliers_added += 1

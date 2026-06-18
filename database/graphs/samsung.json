@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {
+      "id": "Samsung",
+      "label": "Samsung",
+      "node_type": "company"
+    },
+    {
+      "id": "Electronics business and",
+      "label": "Electronics business and",
+      "node_type": "supplier"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Samsung",
+      "target": "Electronics business and",
+      "relationship": "supplier"
+    }
+  ]
+}

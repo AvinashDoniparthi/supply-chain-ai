@@ -1,0 +1,29 @@
+{
+  "company": "Apple Inc.",
+  "runs": [
+    {
+      "timestamp": "2026-06-16T20:59:06.796285",
+      "health_score": 54.8,
+      "health_status": "Weak",
+      "supplier_count": 3,
+      "risk_count": 3,
+      "suppliers": [
+        "Foxconn",
+        "TSMC",
+        "Supplier XYZ"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:06:27.248320",
+      "health_score": 54.8,
+      "health_status": "Weak",
+      "supplier_count": 3,
+      "risk_count": 3,
+      "suppliers": [
+        "Foxconn",
+        "TSMC",
+        "Supplier XYZ"
+      ]
+    }
+  ]
+}

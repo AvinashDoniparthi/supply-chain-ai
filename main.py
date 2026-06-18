@@ -35,6 +35,7 @@ def run_analysis(company_name: str):
         print("ANALYSIS COMPLETE")
         print(f"{'='*50}")
         print(f"Target: {final_state.company.name if final_state.company else 'N/A'}")
+        print(f"Entities Discovered: {len(final_state.discovered_entities)}")
         print(f"Suppliers Mapped: {len(final_state.suppliers)}")
         print(f"Risks Identified: {len(final_state.risk_assessments)}")
         print(
@@ -53,7 +54,7 @@ def main():
     """
     Entry point for the Supply Chain Intelligence System.
     """
-    company_name = "Tesla"
+    company_name = "Apple"
     try:
         final_state = run_analysis(company_name)
 

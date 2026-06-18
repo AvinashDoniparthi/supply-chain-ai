@@ -56,12 +56,26 @@ class CompanyScraper:
             page_title = search_results[0]["title"]
             
             # Validation: Ensure the title actually matches the company name
-            # Wikipedia search is fuzzy and often returns unrelated top results for fake names
             name_norm = re.sub(r"[^\w\s]", "", company_name.lower())
             title_norm = re.sub(r"[^\w\s]", "", page_title.lower())
             
-            # Allow for some variation (e.g., "Apple" matching "Apple Inc.")
-            if name_norm not in title_norm and title_norm not in name_norm:
+            # 1. Exact or substring match
+            is_match = name_norm in title_norm or title_norm in name_norm
+            
+            # 2. Significant word overlap (loosened)
+            if not is_match:
+                # Words like "Semiconductor" or "Precision"
+                significant_words = [w for w in name_norm.split() if len(w) > 6]
+                if any(word in title_norm for word in significant_words):
+                    is_match = True
+            
+            # 3. Abbreviation match (e.g., TSMC vs Taiwan Semiconductor...)
+            if not is_match:
+                from utils.identity_resolution import detect_abbreviation
+                if detect_abbreviation(page_title, company_name) or detect_abbreviation(company_name, page_title):
+                    is_match = True
+            
+            if not is_match:
                 logger.warning(f"Wikipedia result '{page_title}' does not match target '{company_name}'. Rejecting.")
                 return self._get_empty_result(company_name)
 

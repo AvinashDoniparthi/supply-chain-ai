@@ -1,0 +1,25 @@
+{
+  "company": "Intel",
+  "runs": [
+    {
+      "timestamp": "2026-06-16T21:20:48.443497",
+      "health_score": 48.1,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 31,
+      "suppliers": [
+        "TSMC Semiconductor Manufacturing Company Limited"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:29:50.569159",
+      "health_score": 48.1,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 31,
+      "suppliers": [
+        "TSMC Semiconductor Manufacturing Company Limited"
+      ]
+    }
+  ]
+}

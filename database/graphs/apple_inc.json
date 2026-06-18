@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "Apple Inc.",
+      "label": "Apple Inc.",
+      "node_type": "company"
+    },
+    {
+      "id": "Foxconn",
+      "label": "Foxconn",
+      "node_type": "supplier"
+    },
+    {
+      "id": "TSMC",
+      "label": "TSMC",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Supplier XYZ",
+      "label": "Supplier XYZ",
+      "node_type": "supplier"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Apple Inc.",
+      "target": "Foxconn",
+      "relationship": "partner"
+    },
+    {
+      "source": "Apple Inc.",
+      "target": "TSMC",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Apple Inc.",
+      "target": "Supplier XYZ",
+      "relationship": "unknown"
+    }
+  ]
+}

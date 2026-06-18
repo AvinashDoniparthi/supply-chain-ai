@@ -1,0 +1,29 @@
+{
+  "company": "Google",
+  "runs": [
+    {
+      "timestamp": "2026-06-16T21:19:00.326392",
+      "health_score": 56.5,
+      "health_status": "Weak",
+      "supplier_count": 3,
+      "risk_count": 32,
+      "suppliers": [
+        "Aptiv Aptiv PLC",
+        "ITSO Ltd",
+        "TSMC Semiconductor Manufacturing Company Limited"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:28:00.202497",
+      "health_score": 56.5,
+      "health_status": "Weak",
+      "supplier_count": 3,
+      "risk_count": 32,
+      "suppliers": [
+        "Aptiv Aptiv PLC",
+        "ITSO Ltd",
+        "TSMC Semiconductor Manufacturing Company Limited"
+      ]
+    }
+  ]
+}

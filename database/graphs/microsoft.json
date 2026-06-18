@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    {
+      "id": "Microsoft",
+      "label": "Microsoft",
+      "node_type": "company"
+    }
+  ],
+  "edges": []
+}

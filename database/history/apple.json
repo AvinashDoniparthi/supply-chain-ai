@@ -1,0 +1,68 @@
+{
+  "company": "Apple",
+  "runs": [
+    {
+      "timestamp": "2026-06-16T21:14:25.084619",
+      "health_score": 48.1,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 71,
+      "suppliers": [
+        "Taiwan Semiconductor Manufacturing Company"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:15:50.660208",
+      "health_score": 48.1,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 71,
+      "suppliers": [
+        "Taiwan Semiconductor Manufacturing Company"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:24:23.586336",
+      "health_score": 48.1,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 71,
+      "suppliers": [
+        "Taiwan Semiconductor Manufacturing Company"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:34:41.178734",
+      "health_score": 48.1,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 7,
+      "suppliers": [
+        "Taiwan Semiconductor Manufacturing Company"
+      ]
+    },
+    {
+      "timestamp": "2026-06-17T16:11:23.918382",
+      "health_score": 35.5,
+      "health_status": "Critical",
+      "supplier_count": 2,
+      "risk_count": 5,
+      "suppliers": [
+        "Huawei and ZTE",
+        "NAND flash"
+      ]
+    },
+    {
+      "timestamp": "2026-06-17T16:16:32.190602",
+      "health_score": 37.7,
+      "health_status": "Critical",
+      "supplier_count": 3,
+      "risk_count": 12,
+      "suppliers": [
+        "Taiwan Semiconductor Manufacturing Company",
+        "NOK Corporation",
+        "NAND flash"
+      ]
+    }
+  ]
+}

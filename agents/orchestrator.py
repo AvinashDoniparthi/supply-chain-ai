@@ -2,6 +2,7 @@ from models.state import AgentState
 from agents.company_agent import company_agent
 from agents.supplier_agent import supplier_agent
 from agents.relationship_agent import relationship_agent
+from agents.deduplication_agent import deduplication_agent
 from agents.risk_agent import risk_agent
 from agents.verification_agent import verification_agent
 
@@ -34,11 +35,14 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
         # 4. Execute Relationship Agent (Classify Relationships)
         state = relationship_agent(state)
 
-        # 5. Execute Verification Agent (Fact-Check)
+        # 5. Execute Deduplication Agent (Merge Entities)
+        state = deduplication_agent(state)
+
+        # 6. Execute Verification Agent (Fact-Check)
         # We verify suppliers before analyzing risk to ensure integrity
         state = verification_agent(state)
 
-        # 6. Execute Risk Agent (Assess Vulnerabilities)
+        # 7. Execute Risk Agent (Assess Vulnerabilities)
         # Risk analysis now has access to 'verified' flags in state.verification_results
         state = risk_agent(state)
 
@@ -49,12 +53,13 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
         state.current_task = "Workflow failed"
         return state
 
-    # 6. Final Summary (Mocking the Report Generation)
+    # 8. Final Summary (Mocking the Report Generation)
     print(f"\n{'='*50}")
     print("ANALYSIS COMPLETE")
     print(f"{'='*50}")
     print(f"Target: {state.company.name if state.company else 'N/A'}")
-    print(f"Entities Mapped: {len(state.suppliers)}")
+    print(f"Entities Discovered: {len(state.discovered_entities)}")
+    print(f"Suppliers Mapped: {len(state.suppliers)}")
     print(f"Relationships Classified: {len(state.relationship_results)}")
     print(f"Risks Identified: {len(state.risk_assessments)}")
     print(

@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    {
+      "id": "Amazon",
+      "label": "Amazon",
+      "node_type": "company"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,39 @@
+{
+  "company": "Samsung",
+  "runs": [
+    {
+      "timestamp": "2026-06-16T21:20:08.231154",
+      "health_score": 39.0,
+      "health_status": "Critical",
+      "supplier_count": 3,
+      "risk_count": 198,
+      "suppliers": [
+        "Electronics business and",
+        "Multi",
+        "Ericsson"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:29:09.648536",
+      "health_score": 39.0,
+      "health_status": "Critical",
+      "supplier_count": 3,
+      "risk_count": 193,
+      "suppliers": [
+        "Electronics business and",
+        "Multi",
+        "Ericsson"
+      ]
+    },
+    {
+      "timestamp": "2026-06-16T21:34:49.312448",
+      "health_score": 25.8,
+      "health_status": "Critical",
+      "supplier_count": 1,
+      "risk_count": 1,
+      "suppliers": [
+        "Electronics business and"
+      ]
+    }
+  ]
+}
