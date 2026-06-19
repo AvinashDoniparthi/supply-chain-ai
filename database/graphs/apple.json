@@ -4,38 +4,7 @@
       "id": "Apple",
       "label": "Apple",
       "node_type": "company"
-    },
-    {
-      "id": "Taiwan Semiconductor Manufacturing Company",
-      "label": "Taiwan Semiconductor Manufacturing Company",
-      "node_type": "supplier"
-    },
-    {
-      "id": "NOK Corporation",
-      "label": "NOK Corporation",
-      "node_type": "supplier"
-    },
-    {
-      "id": "NAND flash",
-      "label": "NAND flash",
-      "node_type": "supplier"
     }
   ],
-  "edges": [
-    {
-      "source": "Apple",
-      "target": "Taiwan Semiconductor Manufacturing Company",
-      "relationship": "supplier"
-    },
-    {
-      "source": "Apple",
-      "target": "NOK Corporation",
-      "relationship": "supplier"
-    },
-    {
-      "source": "Apple",
-      "target": "NAND flash",
-      "relationship": "supplier"
-    }
-  ]
+  "edges": []
 }

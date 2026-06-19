@@ -21,52 +21,103 @@ def supplier_agent(state: AgentState) -> AgentState:
         # Initialize the real discovery scraper
         discovery = SupplierDiscoveryScraper()
         
-        # Search for real suppliers
-        discovered_suppliers = discovery.find_suppliers(company_name)
+        # Track seen companies for cycle protection
+        target_canonical = resolver.resolve(company_name)
+        seen_companies = {target_canonical}
         
-        if not discovered_suppliers:
+        tier1_suppliers = []
+        tier2_suppliers = []
+
+        # 1. Discover Tier 1 suppliers
+        discovered_data_tier1 = discovery.find_suppliers(company_name)
+        
+        if not discovered_data_tier1:
             logger.warning(f"No suppliers discovered for {company_name}")
             state.current_task = "Supply chain mapping failed: No suppliers found"
             return state
 
-        new_suppliers_added = 0
-        total_confidence = 0
-        
-        for data in discovered_suppliers:
-            # Resolve identity to canonical name
+        for data in discovered_data_tier1:
             canonical_name = resolver.resolve(data["name"])
+            if canonical_name in seen_companies:
+                continue
             
-            # Create SupplierInfo object
+            # Create Tier 1 SupplierInfo
             supplier = SupplierInfo(
                 name=data["name"],
                 canonical_name=canonical_name,
                 location=data["location"],
                 products=data["products"],
-                tier=data["tier"],
+                tier=1,
                 criticality=data["criticality"],
                 status="Active",
                 discovery_confidence=data["confidence"],
+                propagated_confidence=data["confidence"],
+                parent_company=company_name,
+                relationship_path=[company_name, canonical_name],
                 evidence=data.get("source_evidence", [])
             )
             
-            # Simple deduplication by raw name for initial mapping
-            if not any(s.name == supplier.name for s in state.suppliers):
+            state.suppliers.append(supplier)
+            tier1_suppliers.append(supplier)
+            seen_companies.add(canonical_name)
+
+        # 2. Discover Tier 2 suppliers
+        for tier1_supplier in tier1_suppliers:
+            discovered_data_tier2 = discovery.find_suppliers(tier1_supplier.canonical_name or tier1_supplier.name)
+            
+            for data in discovered_data_tier2:
+                canonical_name = resolver.resolve(data["name"])
+                if canonical_name in seen_companies:
+                    continue
+                
+                # Create Tier 2 SupplierInfo
+                supplier = SupplierInfo(
+                    name=data["name"],
+                    canonical_name=canonical_name,
+                    location=data["location"],
+                    products=data["products"],
+                    tier=2,
+                    criticality=data["criticality"],
+                    status="Active",
+                    discovery_confidence=data["confidence"],
+                    propagated_confidence=round(tier1_supplier.propagated_confidence * data["confidence"], 2),
+                    parent_company=tier1_supplier.canonical_name or tier1_supplier.name,
+                    relationship_path=tier1_supplier.relationship_path + [canonical_name],
+                    evidence=data.get("source_evidence", [])
+                )
+                
                 state.suppliers.append(supplier)
-                new_suppliers_added += 1
-                total_confidence += data["confidence"]
+                tier2_suppliers.append(supplier)
+                seen_companies.add(canonical_name)
+
+        # Logging
+        print("\n--- TIER DISCOVERY ---")
+        print("\nTier 1 Suppliers:")
+        for s in tier1_suppliers:
+            print(f"- {s.canonical_name or s.name}")
+        
+        print("\nTier 2 Suppliers:")
+        for t1 in tier1_suppliers:
+            t2_for_t1 = [t2 for t2 in tier2_suppliers if t2.parent_company == (t1.canonical_name or t1.name)]
+            if t2_for_t1:
+                print(f"\n{t1.canonical_name or t1.name}:")
+                for t2 in t2_for_t1:
+                    print(f"  - {t2.canonical_name or t2.name}")
+
+        print(f"\nTotal Tier 1: {len(tier1_suppliers)}")
+        print(f"Total Tier 2: {len(tier2_suppliers)}")
 
         # Update the shared state metrics
-        avg_confidence = total_confidence / new_suppliers_added if new_suppliers_added > 0 else 0.5
-        state.confidence_scores["mapping"] = round(avg_confidence, 2)
-        state.current_task = f"Supply chain mapping completed. Found {new_suppliers_added} partners."
+        new_suppliers_added = len(tier1_suppliers) + len(tier2_suppliers)
+        state.current_task = f"Supply chain mapping completed. Found {len(tier1_suppliers)} Tier 1 and {len(tier2_suppliers)} Tier 2 partners."
 
         # Add to history
         state.history.append({
             "agent": "supplier_agent",
-            "action": "real_supplier_discovery",
+            "action": "recursive_supplier_discovery",
             "company": company_name,
-            "new_suppliers_count": new_suppliers_added,
-            "avg_confidence": avg_confidence,
+            "tier1_count": len(tier1_suppliers),
+            "tier2_count": len(tier2_suppliers),
             "status": "success"
         })
 
