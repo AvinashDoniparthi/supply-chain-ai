@@ -1,6 +1,22 @@
+# Virtual environments
 venv/
-__pycache__/
 .env
-.pytest_cache/
+
+# Python
+__pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# VS Code
+.vscode/
+
+# macOS
 .DS_Store
+
+# Runtime data
+database/cache/
+database/history/
+
+# ChromaDB
+chroma_db/
