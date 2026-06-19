@@ -22,6 +22,9 @@ class SupplierInfo(BaseModel):
     criticality: str = Field(default="Medium", description="Business impact: Low, Medium, High")
     status: str = Field(default="Active")
     discovery_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    propagated_confidence: float = Field(default=0.0, ge=0.0, le=1.0, description="Propagated confidence score based on tier hierarchy")
+    parent_company: Optional[str] = Field(default=None, description="The company this supplier directly sells to in the context of this branch")
+    relationship_path: List[str] = Field(default_factory=list, description="Full ancestry path from the target company down to this supplier")
     evidence: List[Dict[str, str]] = Field(default_factory=list, description="Evidence snippets from discovery")
 
 class RiskAnalysis(BaseModel):

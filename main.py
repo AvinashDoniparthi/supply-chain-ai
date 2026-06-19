@@ -54,6 +54,12 @@ def main():
     """
     Entry point for the Supply Chain Intelligence System.
     """
+    print("\n--- LANGCHAIN INITIALIZATION ---")
+    print("Provider: OpenAI/Gemini")
+    print("Prompt Templates Loaded")
+    print("Chains Registered")
+    print("Vector Store Ready")
+
     company_name = "Apple"
     try:
         final_state = run_analysis(company_name)

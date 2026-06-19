@@ -6,6 +6,9 @@ from abc import ABC, abstractmethod
 from models.state import AgentState
 from models.relationship import RelationshipResult
 
+from chains.relationship_chain import get_relationship_chain, RelationshipClassification
+from langchain_core.output_parsers import PydanticOutputParser
+
 logger = logging.getLogger(__name__)
 
 class RelationshipClassifier(ABC):
@@ -20,24 +23,17 @@ class RelationshipClassifier(ABC):
         pass
 
 class LLMRelationshipClassifier(RelationshipClassifier):
-    """LLM implementation of the relationship classifier."""
+    """LangChain implementation of the relationship classifier."""
     
-    def __init__(self, model: str = "gpt-4o"):
+    def __init__(self, provider: str = "openai", model: str = "gpt-4o"):
+        self.provider = provider
         self.model = model
         try:
-            from openai import OpenAI
-            api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-            base_url = os.environ.get("OPENAI_BASE_URL")
-            
-            if not api_key:
-                logger.warning("No API key found for RelationshipClassifier (OPENAI_API_KEY or GOOGLE_API_KEY).")
-                self.client = None
-                return
-
-            self.client = OpenAI(api_key=api_key, base_url=base_url)
-        except ImportError:
-            logger.error("openai package not installed. Please install it to use LLMRelationshipClassifier.")
-            self.client = None
+            self.chain = get_relationship_chain(provider=provider, model=model)
+            self.parser = PydanticOutputParser(pydantic_object=RelationshipClassification)
+        except Exception as e:
+            logger.error(f"Failed to initialize relationship chain: {e}")
+            self.chain = None
 
     def classify(
         self,
@@ -47,66 +43,37 @@ class LLMRelationshipClassifier(RelationshipClassifier):
     ) -> RelationshipResult:
         valid_labels = ["supplier", "customer", "partner", "competitor", "subsidiary", "unknown"]
         
-        if not self.client:
+        if not self.chain:
             return RelationshipResult(
                 target_company=target_company,
                 candidate_company=candidate_entity,
                 relationship_type="unknown",
                 confidence_score=0.1,
-                reasoning="LLM client not initialized (check dependencies/API keys).",
+                reasoning="LangChain chain not initialized.",
                 evidence_text=evidence[:500]
             )
-
-        prompt = f"""
-Analyze the relationship between the Target Company and the Candidate Entity based on the provided evidence snippet.
-
-Target Company: {target_company}
-Candidate Entity: {candidate_entity}
-
-Evidence:
-"{evidence}"
-
-Classify the relationship into exactly one of these labels:
-- supplier: Candidate supplies products or services to Target.
-- customer: Target supplies products or services to Candidate.
-- partner: Target and Candidate collaborate or have a joint venture.
-- competitor: Target and Candidate compete in the same market.
-- subsidiary: Candidate is owned by Target or is a division of Target.
-- unknown: Relationship is unclear or not mentioned.
-
-Return ONLY a JSON object with this schema:
-{{
-  "relationship": "label",
-  "confidence": float,
-  "reasoning": "string"
-}}
-"""
         
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": "You are a supply chain intelligence analyst."},
-                    {"role": "user", "content": prompt}
-                ],
-                response_format={"type": "json_object"}
-            )
+            # Execute chain with required inputs
+            result: RelationshipClassification = self.chain.invoke({
+                "target_company": target_company,
+                "candidate_entity": candidate_entity,
+                "evidence": evidence,
+                "format_instructions": self.parser.get_format_instructions()
+            })
             
-            content = response.choices[0].message.content
-            data = json.loads(content)
-            
-            relationship = data.get("relationship", "unknown").lower()
-            confidence = float(data.get("confidence", 0.1))
-            reasoning = data.get("reasoning", "LLM provided classification.")
+            relationship = result.relationship.lower()
+            confidence = float(result.confidence)
+            reasoning = result.reasoning
             
             if relationship not in valid_labels:
                 logger.warning(f"Invalid label '{relationship}' returned by LLM. Falling back to 'unknown'.")
                 relationship = "unknown"
                 confidence = 0.1
-                reasoning = f"Invalid label returned by LLM: {data.get('relationship')}"
+                reasoning = f"Invalid label returned by LLM: {result.relationship}"
                 
         except Exception as e:
-            logger.error(f"LLM Classification failed for {candidate_entity}: {e}")
+            logger.error(f"LangChain Classification failed for {candidate_entity}: {e}")
             relationship = "unknown"
             confidence = 0.1
             reasoning = f"Classification error: {str(e)}"

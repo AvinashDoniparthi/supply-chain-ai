@@ -134,19 +134,31 @@ class ExecutiveReportAgent:
         return recommendations[:5]
 
     def _generate_executive_summary(self, company_name, health, key_suppliers, major_risks) -> str:
-        summary_parts = []
-        summary_parts.append(f"{company_name}'s supply chain health is {health.status} ({health.overall_score}/100).")
+        from chains.executive_summary_chain import get_executive_summary_chain
         
-        if key_suppliers:
-            summary_parts.append(f"The company relies heavily on {key_suppliers[0]} for critical production and operations.")
+        try:
+            chain = get_executive_summary_chain(provider="openai")
+            summary = chain.invoke({
+                "health_score": f"{health.overall_score}/100 ({health.status})",
+                "suppliers": ", ".join(key_suppliers) if key_suppliers else "None identified",
+                "risks": ", ".join(major_risks) if major_risks else "No major risks identified"
+            })
+            return summary
+        except Exception as e:
+            logger.warning(f"LangChain executive summary generation failed: {e}. Using deterministic fallback.")
+            summary_parts = []
+            summary_parts.append(f"{company_name}'s supply chain health is {health.status} ({health.overall_score}/100).")
             
-        if major_risks:
-            summary_parts.append(f"{major_risks[0]} represents a primary risk factor needing immediate attention.")
+            if key_suppliers:
+                summary_parts.append(f"The company relies heavily on {key_suppliers[0]} for critical production and operations.")
+                
+            if major_risks:
+                summary_parts.append(f"{major_risks[0]} represents a primary risk factor needing immediate attention.")
+                
+            summary_parts.append("Supplier verification confidence remains strong overall." if health.overall_score > 70 else "Significant gaps in supplier verification and data quality were identified.")
+            summary_parts.append("Supply chain diversification should be considered to reduce concentration risk.")
             
-        summary_parts.append("Supplier verification confidence remains strong overall." if health.overall_score > 70 else "Significant gaps in supplier verification and data quality were identified.")
-        summary_parts.append("Supply chain diversification should be considered to reduce concentration risk.")
-        
-        return " ".join(summary_parts)
+            return " ".join(summary_parts)
 
 def executive_report_agent(state: AgentState) -> AgentState:
     agent = ExecutiveReportAgent()

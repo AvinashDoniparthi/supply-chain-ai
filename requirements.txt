@@ -14,4 +14,9 @@ langgraph==1.2.5
 requests==2.34.2
 beautifulsoup4==4.15.0
 openai
+langchain
+langchain-openai
+langchain-google-genai
+chromadb
+langchain-community
 
