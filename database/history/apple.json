@@ -63,6 +63,148 @@
         "NOK Corporation",
         "NAND flash"
       ]
+    },
+    {
+      "timestamp": "2026-06-19T15:25:25.232927",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T15:39:00.823411",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T15:39:16.105789",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T15:45:23.616034",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T15:46:46.281888",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 2,
+      "suppliers": [
+        "TSMC"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T15:49:13.794638",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T15:52:05.823018",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T15:52:37.961731",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T15:53:30.060568",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T16:16:25.181970",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T16:16:39.546709",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T16:16:50.499217",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T16:18:04.217692",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
     }
   ]
 }

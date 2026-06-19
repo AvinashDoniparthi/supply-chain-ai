@@ -165,6 +165,7 @@ def verification_agent(state: AgentState) -> AgentState:
     """
     print("\n--- VERIFICATION AGENT: Fact-Checking Relationships (Provider-Based) ---")
     print(f"Suppliers sent to verification: {len(state.suppliers)}")
+    print(f"[PIPELINE COUNT] Before verification_agent: {len(state.suppliers)} suppliers")
     
     # Initialize providers
     providers = [
@@ -213,8 +214,7 @@ def verification_agent(state: AgentState) -> AgentState:
         state.confidence_scores["verification"] = round(avg_conf, 2)
     
     state.current_task = f"Verification completed for {len(verified_results)} entities using multi-provider architecture."
-    
-    state.history.append({
+    print(f"[PIPELINE COUNT] After verification_agent: {len(state.suppliers)} suppliers\")\n    \n    state.history.append({
         "agent": "verification_agent",
         "action": "provider_based_verification",
         "verified_count": len([r for r in verified_results if r.verified]),

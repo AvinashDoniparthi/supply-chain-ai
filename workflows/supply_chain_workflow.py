@@ -1,3 +1,5 @@
+import logging
+
 from langgraph.graph import StateGraph, START, END
 from models.state import AgentState
 from agents.company_agent import company_agent
@@ -12,6 +14,31 @@ from agents.health_agent import health_agent
 from agents.executive_report_agent import executive_report_agent
 from agents.history_agent import history_agent
 from agents.graph_export_agent import graph_export_agent
+
+logger = logging.getLogger(__name__)
+
+
+def tier_router(state: AgentState) -> str:
+    """Route the workflow based on current supplier discovery progress."""
+    queue_size = len(state.mapping_queue)
+    decision = "continue_discovery" if queue_size > 0 else "discovery_complete"
+
+    log_msg = (
+        "[TIER ROUTER]\n"
+        f"Queue Size: {queue_size}\n"
+        f"Current Depth: {state.current_depth}\n"
+        f"Decision: {decision}"
+    )
+    print(log_msg)
+    logger.info(log_msg)
+
+    return decision
+
+
+def tier_router_node(state: AgentState) -> AgentState:
+    """No-op node that enables conditional routing after supplier discovery."""
+    state.current_task = "Tier router evaluation"
+    return state
 
 
 def create_supply_chain_workflow():
@@ -38,11 +65,20 @@ def create_supply_chain_workflow():
     workflow.add_node("executive_report_agent", executive_report_agent)
     workflow.add_node("history_agent", history_agent)
     workflow.add_node("graph_export_agent", graph_export_agent)
+    workflow.add_node("tier_router", tier_router_node)
 
     # 3. Define the edges (the flow of execution)
     workflow.add_edge(START, "company_agent")
     workflow.add_edge("company_agent", "supplier_agent")
-    workflow.add_edge("supplier_agent", "relationship_agent")
+    workflow.add_edge("supplier_agent", "tier_router")
+    workflow.add_conditional_edges(
+        "tier_router",
+        tier_router,
+        path_map={
+            "continue_discovery": "supplier_agent",
+            "discovery_complete": "relationship_agent",
+        },
+    )
     workflow.add_edge("relationship_agent", "deduplication_agent")
     workflow.add_edge("deduplication_agent", "verification_agent")
     workflow.add_edge("verification_agent", "risk_agent")

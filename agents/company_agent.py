@@ -1,5 +1,6 @@
 from models.state import AgentState, CompanyInfo
 from scraping.company_scraper import CompanyScraper
+from utils.identity_resolution import resolver
 
 
 def company_agent(state: AgentState) -> AgentState:
@@ -28,6 +29,14 @@ def company_agent(state: AgentState) -> AgentState:
 
     # Update the shared state
     state.company = scraped_company
+
+    # Initialize traversal state for LangGraph tier discovery
+    canonical_target = resolver.resolve(scraped_company.name)
+    if canonical_target not in state.seen_companies:
+        state.seen_companies.append(canonical_target)
+    if scraped_company.name not in state.mapping_queue:
+        state.mapping_queue.append(scraped_company.name)
+    state.current_depth = 0
 
     # HARDCODED FALLBACK FOR MAJOR TARGETS (to ensure inference works)
     if not state.company.industry or state.company.industry == "Unknown":

@@ -3,8 +3,10 @@ from pydantic import BaseModel, Field
 from models.relationship import RelationshipResult
 from models.verification import VerificationResult
 
+
 class CompanyInfo(BaseModel):
     """Basic information about the target company."""
+
     name: str
     industry: Optional[str] = None
     headquarters: Optional[str] = None
@@ -12,36 +14,59 @@ class CompanyInfo(BaseModel):
     website: Optional[str] = None
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
+
 class SupplierInfo(BaseModel):
     """Details about a supplier within the supply chain."""
+
     name: str
     canonical_name: Optional[str] = None
     location: str
     products: List[str] = Field(default_factory=list)
     tier: int = Field(default=1, description="Supplier tier level (1, 2, 3...)")
-    criticality: str = Field(default="Medium", description="Business impact: Low, Medium, High")
+    criticality: str = Field(
+        default="Medium", description="Business impact: Low, Medium, High"
+    )
     status: str = Field(default="Active")
     discovery_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
-    propagated_confidence: float = Field(default=0.0, ge=0.0, le=1.0, description="Propagated confidence score based on tier hierarchy")
-    parent_company: Optional[str] = Field(default=None, description="The company this supplier directly sells to in the context of this branch")
-    relationship_path: List[str] = Field(default_factory=list, description="Full ancestry path from the target company down to this supplier")
-    evidence: List[Dict[str, str]] = Field(default_factory=list, description="Evidence snippets from discovery")
+    propagated_confidence: float = Field(
+        default=0.0,
+        ge=0.0,
+        le=1.0,
+        description="Propagated confidence score based on tier hierarchy",
+    )
+    parent_company: Optional[str] = Field(
+        default=None,
+        description="The company this supplier directly sells to in the context of this branch",
+    )
+    relationship_path: List[str] = Field(
+        default_factory=list,
+        description="Full ancestry path from the target company down to this supplier",
+    )
+    evidence: List[Dict[str, str]] = Field(
+        default_factory=list, description="Evidence snippets from discovery"
+    )
+
 
 class RiskAnalysis(BaseModel):
     """Risk assessment for a specific supplier or entity."""
+
     supplier_name: str
-    risk_type: str = Field(description="e.g., Geopolitical, Operational, Financial, Environmental, Strategic")
+    risk_type: str = Field(
+        description="e.g., Geopolitical, Operational, Financial, Environmental, Strategic"
+    )
     severity: str = Field(description="Critical, High, Medium, Low")
     confidence: float = Field(default=1.0, ge=0.0, le=1.0)
     reasoning: str
     mitigation: Optional[str] = None
-    
+
     # Keep old fields for backward compatibility if needed, but the agent will use the new ones.
     # Actually, better to just update them to the new names since this is a design phase.
     # The requirement specifies the output fields.
 
+
 class SupplierConfidence(BaseModel):
     """Granular confidence scoring for a supplier relationship."""
+
     supplier_name: str
     discovery_confidence: float
     relationship_confidence: float
@@ -50,15 +75,19 @@ class SupplierConfidence(BaseModel):
     final_confidence: float
     reasoning: str
 
+
 class SupplierCriticality(BaseModel):
     """Assessment of supplier importance to the target company."""
+
     supplier_name: str
     criticality_score: float
     criticality_level: str
     reasoning: str
 
+
 class SupplyChainHealth(BaseModel):
     """Overall health assessment of the supply chain."""
+
     overall_score: float
     status: str
     supplier_count: int
@@ -66,8 +95,10 @@ class SupplyChainHealth(BaseModel):
     high_risk_suppliers: int
     summary: str
 
+
 class ExecutiveReport(BaseModel):
     """Business-ready summary of the supply chain analysis."""
+
     company_name: str
     overall_health_score: float
     health_status: str
@@ -76,8 +107,10 @@ class ExecutiveReport(BaseModel):
     major_risks: List[str]
     recommendations: List[str]
 
+
 class HistoricalRun(BaseModel):
     """Snapshot of a single supply chain analysis run."""
+
     timestamp: str
     health_score: float
     health_status: str
@@ -85,34 +118,58 @@ class HistoricalRun(BaseModel):
     risk_count: int
     suppliers: List[str]
 
+
 class GraphNode(BaseModel):
     id: str
     label: str
     node_type: str
+
 
 class GraphEdge(BaseModel):
     source: str
     target: str
     relationship: str
 
+
 class SupplyChainGraph(BaseModel):
     nodes: List[GraphNode]
     edges: List[GraphEdge]
+
 
 class AgentState(BaseModel):
     """
     The global state object shared between all agents in the supply chain intelligence system.
     This tracks the progress and findings of the entire multi-agent workflow.
     """
+
     # Core target information
-    target_company: Optional[str] = Field(default=None, description="The initial company name provided for research")
+    target_company: Optional[str] = Field(
+        default=None, description="The initial company name provided for research"
+    )
+    current_depth: int = Field(
+        default=0, description="Current depth of the active discovery node"
+    )
+    max_depth: int = Field(
+        default=3, description="Maximum depth for recursive supplier discovery"
+    )
+    mapping_queue: List[str] = Field(
+        default_factory=list,
+        description="Queue of company names pending supply chain discovery",
+    )
+    seen_companies: List[str] = Field(
+        default_factory=list,
+        description="Canonical company names already discovered or enqueued",
+    )
     company: Optional[CompanyInfo] = None
-    
+
     # Supply chain mapping
     suppliers: List[SupplierInfo] = Field(default_factory=list)
-    discovered_entities: List[SupplierInfo] = Field(default_factory=list, description="All entities found during discovery, before filtering")
+    discovered_entities: List[SupplierInfo] = Field(
+        default_factory=list,
+        description="All entities found during discovery, before filtering",
+    )
     relationship_results: List[RelationshipResult] = Field(default_factory=list)
-    
+
     # Intelligence layers
     verification_results: List[VerificationResult] = Field(default_factory=list)
     risk_assessments: List[RiskAnalysis] = Field(default_factory=list)
@@ -122,14 +179,16 @@ class AgentState(BaseModel):
     executive_report: Optional[ExecutiveReport] = None
     historical_runs: List[HistoricalRun] = Field(default_factory=list)
     supply_chain_graph: Optional[SupplyChainGraph] = None
-    
+
     # System metrics and outputs
     confidence_scores: Dict[str, float] = Field(
-        default_factory=dict, 
-        description="Confidence scores for different analysis stages (e.g., 'mapping', 'risk')"
+        default_factory=dict,
+        description="Confidence scores for different analysis stages (e.g., 'mapping', 'risk')",
     )
-    final_reports: List[str] = Field(default_factory=list, description="Paths or content of generated reports")
-    
+    final_reports: List[str] = Field(
+        default_factory=list, description="Paths or content of generated reports"
+    )
+
     # Workflow control
     current_task: Optional[str] = None
     history: List[Dict[str, Any]] = Field(default_factory=list)

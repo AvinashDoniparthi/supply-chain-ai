@@ -4,18 +4,7 @@
       "id": "Tesla",
       "label": "Tesla",
       "node_type": "company"
-    },
-    {
-      "id": "LFP batteries CATL currently",
-      "label": "LFP batteries CATL currently",
-      "node_type": "supplier"
     }
   ],
-  "edges": [
-    {
-      "source": "Tesla",
-      "target": "LFP batteries CATL currently",
-      "relationship": "supplier"
-    }
-  ]
+  "edges": []
 }
