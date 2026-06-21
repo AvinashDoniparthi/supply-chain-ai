@@ -38,12 +38,9 @@ class TestHealthAgent(unittest.TestCase):
         updated_state = health_agent(self.state)
         health = updated_state.supply_chain_health
         
-        # Calculation:
-        # Confidence: 0.95 * 0.3 = 0.285
-        # Criticality: 0.9 * 0.3 = 0.27
-        # Risk: 1.0 (No Risk) * 0.4 = 0.4
-        # Total: (0.285 + 0.27 + 0.4) * 100 = 95.5
-        
+        # Plain AgentState fixtures use open-world coverage, so benchmark
+        # expected supplier sets do not cap health.
+
         self.assertEqual(health.overall_score, 95.5)
         self.assertEqual(health.status, "Excellent")
         self.assertEqual(health.critical_suppliers, 1)
@@ -109,16 +106,14 @@ class TestHealthAgent(unittest.TestCase):
             SupplierCriticality(supplier_name="BadOne", criticality_score=0.2, criticality_level="Low", reasoning="...")
         ]
         self.state.risk_assessments = [
-            RiskAnalysis(supplier_name="BadOne", risk_type="Strategic", severity="High", confidence=1.0, reasoning="Potential fraud.")
+            RiskAnalysis(supplier_name="BadOne", risk_type="News", severity="High", confidence=1.0, reasoning="Capacity shortage.")
         ]
         
         updated_state = health_agent(self.state)
         health = updated_state.supply_chain_health
         
-        # GoodOne: (0.9*0.3 + 0.8*0.3 + 1.0*0.4) = 0.27 + 0.24 + 0.4 = 0.91
-        # BadOne: (0.4*0.3 + 0.2*0.3 + 0.3*0.4) = 0.12 + 0.06 + 0.12 = 0.3
-        # Average: (0.91 + 0.3) / 2 = 0.605 * 100 = 60.5
-        
+        # Open-world coverage preserves the raw mixed health score.
+
         self.assertEqual(health.overall_score, 60.5)
         self.assertEqual(health.status, "Moderate")
 

@@ -1,4 +1,5 @@
 import unittest
+import os
 from unittest.mock import MagicMock, patch
 from langchain_core.messages import AIMessage
 from providers.llm_provider import get_llm
@@ -12,6 +13,17 @@ from tools.supply_chain_tools import get_supplier_info, get_risk_info, get_histo
 from models.state import AgentState
 
 class TestLangChainIntegration(unittest.TestCase):
+    def setUp(self):
+        self.env_patcher = patch.dict(
+            os.environ,
+            {
+                "GOOGLE_API_KEY": "google-test-key",
+                "OPENAI_API_KEY": "openai-test-key",
+            },
+            clear=True,
+        )
+        self.env_patcher.start()
+        self.addCleanup(self.env_patcher.stop)
     
     def test_provider_factory(self):
         """Verify provider factory works for both openai and gemini."""

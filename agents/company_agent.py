@@ -1,6 +1,8 @@
 from models.state import AgentState, CompanyInfo
 from scraping.company_scraper import CompanyScraper
+from utils.output import agent_event, progress
 from utils.identity_resolution import resolver
+from utils.runtime_controls import finish_stage, start_stage, stop_if_timed_out
 
 
 def company_agent(state: AgentState) -> AgentState:
@@ -11,11 +13,22 @@ def company_agent(state: AgentState) -> AgentState:
     # Retrieve the target company name from the state
     company_name = state.target_company or "Unknown Company"
 
-    print(f"--- COMPANY AGENT: Researching Target Company: {company_name} ---")
+    start_stage(state, "company_research")
+    progress(1, 6, "Researching Company")
+    agent_event(f"Company agent started: {company_name}")
 
     # Use the scraper to fetch real data
-    scraper = CompanyScraper()
-    company_data = scraper.search_company(company_name)
+    if stop_if_timed_out(state, "company_research"):
+        company_data = {
+            "name": company_name,
+            "industry": "Not found",
+            "headquarters": "Not found",
+            "description": f"Could not find public information for {company_name}.",
+            "website": None,
+        }
+    else:
+        scraper = CompanyScraper(runtime_state=state, stage_key="company_research")
+        company_data = scraper.search_company(company_name)
 
     # Map scraped data to CompanyInfo model
     scraped_company = CompanyInfo(
@@ -59,5 +72,8 @@ def company_agent(state: AgentState) -> AgentState:
             "status": "success",
         }
     )
+
+    agent_event(f"Company agent completed: {scraped_company.name}")
+    finish_stage(state, "company_research")
 
     return state

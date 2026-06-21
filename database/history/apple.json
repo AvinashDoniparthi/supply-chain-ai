@@ -205,6 +205,471 @@
         "TSMC",
         "ASML"
       ]
+    },
+    {
+      "timestamp": "2026-06-19T21:20:59.657819",
+      "health_score": 41.2,
+      "health_status": "Weak",
+      "supplier_count": 25,
+      "risk_count": 25,
+      "suppliers": [
+        "Taiwan Semiconductor Manufacturing Co",
+        "NOK Corporation",
+        "Manufacturing International Corporation",
+        "Vanguard International Semiconductor Corporation",
+        "GlobalFoundries GlobalFoundries Inc",
+        "Onsemi ON Semiconductor Corporation",
+        "Foxconn Industry Co",
+        "SIA Engineering Company International Corporation",
+        "Crown Equipment Corporation",
+        "International with Magna Electronics Corporation",
+        "RTX Corporation",
+        "IDEX Corporation IDEX Corporation",
+        "Danaher Corporation",
+        "Raytheon is a business unit of RTX Corporation",
+        "Integrated Circuit Engineering Corporation",
+        "Mitre Corporation",
+        "MITRE Corporation",
+        "Capital Group",
+        "Caterpillar Inc",
+        "Paccar Paccar Inc",
+        "Micron became a major supplier to Apple Inc",
+        "Fabless manufacturing including Apple Inc",
+        "Semiconductor Components Group",
+        "Intel Intel Corporation",
+        "Semiconductor Research Corporation"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T21:25:58.542040",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-19T21:27:58.496123",
+      "health_score": 41.2,
+      "health_status": "Weak",
+      "supplier_count": 24,
+      "risk_count": 24,
+      "suppliers": [
+        "Taiwan Semiconductor Manufacturing Co",
+        "NOK Corporation",
+        "Manufacturing International Corporation",
+        "Vanguard International Semiconductor Corporation",
+        "GlobalFoundries GlobalFoundries Inc",
+        "Onsemi ON Semiconductor Corporation",
+        "Foxconn Industry Co",
+        "SIA Engineering Company International Corporation",
+        "Crown Equipment Corporation",
+        "Magna Electronics Corporation",
+        "RTX Corporation",
+        "IDEX Corporation IDEX Corporation",
+        "Danaher Corporation",
+        "Raytheon",
+        "Integrated Circuit Engineering Corporation",
+        "Mitre Corporation",
+        "MITRE Corporation",
+        "Capital Group",
+        "Caterpillar Inc",
+        "Paccar Paccar Inc",
+        "Micron",
+        "Semiconductor Components Group",
+        "Intel Intel Corporation",
+        "Semiconductor Research Corporation"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T21:57:07.912794",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T21:58:17.931562",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T21:59:10.517190",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T22:00:22.944866",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T22:22:27.262271",
+      "health_score": 48.7,
+      "health_status": "Weak",
+      "supplier_count": 1,
+      "risk_count": 7,
+      "suppliers": [
+        "Taiwan Semiconductor Manufacturing Co"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T22:32:37.895002",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T22:34:13.189612",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T22:35:02.524276",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-20T23:04:52.358762",
+      "health_score": 86.5,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "NOK Corporation"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T12:09:56.298331",
+      "health_score": 45.0,
+      "health_status": "Insufficient Data",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T12:19:47.719315",
+      "health_score": 45.0,
+      "health_status": "Insufficient Data",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T13:19:32.393249",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T13:20:28.772548",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T13:21:30.908083",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T13:25:33.364161",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T13:50:00.836098",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T13:50:31.363694",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T13:51:12.299604",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T13:54:02.181287",
+      "health_score": 48.6,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T18:24:13.433211",
+      "health_score": 57.0,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T18:25:20.735598",
+      "health_score": 57.0,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T18:26:13.582398",
+      "health_score": 57.0,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T18:28:42.662001",
+      "health_score": 57.0,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T18:57:38.114778",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T19:06:04.345138",
+      "health_score": 65.5,
+      "health_status": "Moderate",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "Taiwan Semiconductor",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Murata Manufacturing",
+        "ASML",
+        "Lam Research",
+        "Entegris",
+        "Contract",
+        "E Ink Corporation",
+        "Netronix Inc",
+        "Hon Hai Technology Group",
+        "Geely Holding Group"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:31:20.714798",
+      "health_score": 45.0,
+      "health_status": "Insufficient Data",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:33:19.687047",
+      "health_score": 45.0,
+      "health_status": "Insufficient Data",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:34:31.516719",
+      "health_score": 45.0,
+      "health_status": "Insufficient Data",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:34:51.000942",
+      "health_score": 45.0,
+      "health_status": "Insufficient Data",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:36:11.423461",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:37:02.796846",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:39:07.843157",
+      "health_score": 69.0,
+      "health_status": "Moderate",
+      "supplier_count": 7,
+      "risk_count": 7,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Murata Manufacturing",
+        "ASML",
+        "Lam Research",
+        "Entegris"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:48:54.238882",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T21:49:09.561923",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
     }
   ]
 }

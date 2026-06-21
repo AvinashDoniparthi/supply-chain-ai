@@ -5,6 +5,13 @@ from agents.relationship_agent import relationship_agent
 from agents.deduplication_agent import deduplication_agent
 from agents.risk_agent import risk_agent
 from agents.verification_agent import verification_agent
+from agents.confidence_agent import confidence_agent
+from agents.criticality_agent import criticality_agent
+from agents.health_agent import health_agent
+from agents.executive_report_agent import executive_report_agent
+from agents.history_agent import history_agent
+from agents.graph_export_agent import graph_export_agent
+from utils.output import emit, render_final_report
 
 
 def run_supply_chain_analysis(company_name: str) -> AgentState:
@@ -13,12 +20,13 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
     It executes the agents in a logical sequence to build a complete picture
     of the target company's supply chain risks.
     """
-    print(f"\n{'='*50}")
-    print(f"STARTING ANALYSIS FOR: {company_name}")
-    print(f"{'='*50}\n")
+    emit("=" * 50)
+    emit(f"SUPPLY CHAIN ANALYSIS: {company_name}")
+    emit("=" * 50)
+    emit("")
 
     # 1. Initialize the shared state
-    state = AgentState()
+    state = AgentState(target_company=company_name)
     state.current_task = f"Starting analysis for {company_name}"
 
     try:
@@ -30,7 +38,7 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
         # 3. Execute Supplier Agent (Map Supply Chain)
         state = supplier_agent(state)
         if not state.suppliers:
-            print("Warning: No suppliers found for this company.")
+            emit("Warning: No suppliers found for this company.")
 
         # 4. Execute Relationship Agent (Classify Relationships)
         state = relationship_agent(state)
@@ -46,26 +54,22 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
         # Risk analysis now has access to 'verified' flags in state.verification_results
         state = risk_agent(state)
 
+        # 8. Score confidence, criticality, health, and report quality
+        state = confidence_agent(state)
+        state = criticality_agent(state)
+        state = health_agent(state)
+        state = executive_report_agent(state)
+        state = history_agent(state)
+        state = graph_export_agent(state)
+
     except Exception as e:
         error_msg = f"Error during agent execution: {str(e)}"
-        print(f"!!! {error_msg}")
+        emit(f"!!! {error_msg}")
         state.errors.append(error_msg)
         state.current_task = "Workflow failed"
         return state
 
-    # 8. Final Summary (Mocking the Report Generation)
-    print(f"\n{'='*50}")
-    print("ANALYSIS COMPLETE")
-    print(f"{'='*50}")
-    print(f"Target: {state.company.name if state.company else 'N/A'}")
-    print(f"Entities Discovered: {len(state.discovered_entities)}")
-    print(f"Suppliers Mapped: {len(state.suppliers)}")
-    print(f"Relationships Classified: {len(state.relationship_results)}")
-    print(f"Risks Identified: {len(state.risk_assessments)}")
-    print(
-        f"Verification Confidence: {state.confidence_scores.get('verification', 0):.2f}"
-    )
-    print(f"{'='*50}\n")
+    render_final_report(state, include_header=False)
 
     state.current_task = "Workflow complete"
     return state

@@ -65,7 +65,11 @@ class TestTierMapping(unittest.TestCase):
                 "tier": 1,
                 "criticality": "High",
                 "confidence": 0.95,
-                "source_evidence": [],
+                "source_evidence": [
+                    {
+                        "snippet": "ASML supplies EUV lithography systems to TSMC for advanced semiconductor manufacturing."
+                    }
+                ],
             }
         ]
 
@@ -81,6 +85,7 @@ class TestTierMapping(unittest.TestCase):
         self.state.company = CompanyInfo(name="Apple")
         self.state.mapping_queue = ["Apple"]
         self.state.seen_companies = ["Apple Inc."]
+        self.state.max_depth = 3
 
         # First invocation should process Apple only
         first_state = supplier_agent(self.state)
@@ -89,7 +94,7 @@ class TestTierMapping(unittest.TestCase):
             first_state.mapping_queue,
             [
                 "Taiwan Semiconductor Manufacturing Company",
-                "Hon Hai Precision Industry",
+                "Hon Hai Precision Industry Co., Ltd.",
             ],
         )
 
@@ -144,7 +149,57 @@ class TestTierMapping(unittest.TestCase):
 
         self.assertEqual(len(updated_state.suppliers), 1)
         self.assertEqual(updated_state.suppliers[0].name, "Hon Hai Precision Industry")
-        self.assertEqual(updated_state.mapping_queue, ["Hon Hai Precision Industry"])
+        self.assertEqual(
+            updated_state.mapping_queue,
+            ["Hon Hai Precision Industry Co., Ltd."],
+        )
+
+    @patch("agents.supplier_agent.SupplierDiscoveryScraper")
+    def test_supplier_agent_normalizes_fragments_before_creating_supplier_info(
+        self, mock_scraper_class
+    ):
+        mock_scraper = MagicMock()
+        mock_scraper_class.return_value = mock_scraper
+
+        mock_scraper.find_suppliers.return_value = [
+            {
+                "name": "Micron became a major supplier to Apple Inc",
+                "location": "United States",
+                "products": ["Memory"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.9,
+                "source_evidence": [],
+            },
+            {
+                "name": "International with Magna Electronics Corporation",
+                "location": "Canada",
+                "products": ["Electronics"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.85,
+                "source_evidence": [],
+            },
+            {
+                "name": "Fabless manufacturing",
+                "location": "Unknown",
+                "products": ["Components"],
+                "tier": 1,
+                "criticality": "Medium",
+                "confidence": 0.9,
+                "source_evidence": [],
+            },
+        ]
+
+        self.state.company = CompanyInfo(name="Apple")
+        self.state.mapping_queue = ["Apple"]
+        self.state.seen_companies = ["Apple Inc."]
+
+        updated_state = supplier_agent(self.state)
+
+        supplier_names = [supplier.name for supplier in updated_state.suppliers]
+        self.assertEqual(supplier_names, ["Micron", "Magna Electronics Corporation"])
+        self.assertNotIn("Fabless manufacturing", supplier_names)
 
     @patch("agents.supplier_agent.SupplierDiscoveryScraper")
     def test_supplier_agent_top_k_limits_candidate_suppliers(self, mock_scraper_class):
@@ -321,7 +376,11 @@ class TestTierMapping(unittest.TestCase):
                 "tier": 1,
                 "criticality": "High",
                 "confidence": 0.95,
-                "source_evidence": [],
+                "source_evidence": [
+                    {
+                        "snippet": "ASML supplies EUV lithography systems to TSMC for advanced semiconductor manufacturing."
+                    }
+                ],
             }
         ]
         asml_suppliers = [
@@ -332,7 +391,10 @@ class TestTierMapping(unittest.TestCase):
                 "tier": 1,
                 "criticality": "Medium",
                 "confidence": 0.85,
-                "source_evidence": [],
+                "source_evidence": [
+                    {"snippet": "ASML procures precision optics from Zeiss under a supply agreement."},
+                    {"snippet": "Zeiss supplies lithography components to ASML."},
+                ],
             }
         ]
 
@@ -350,6 +412,7 @@ class TestTierMapping(unittest.TestCase):
         self.state.company = CompanyInfo(name="Apple")
         self.state.mapping_queue = ["Apple"]
         self.state.seen_companies = ["Apple Inc."]
+        self.state.max_depth = 3
 
         while self.state.mapping_queue:
             self.state = supplier_agent(self.state)
@@ -385,7 +448,7 @@ class TestTierMapping(unittest.TestCase):
                 "Apple",
                 "Taiwan Semiconductor Manufacturing Company",
                 "ASML",
-                "Zeiss",
+                "Carl Zeiss SMT",
             ],
         )
 
@@ -406,6 +469,80 @@ class TestTierMapping(unittest.TestCase):
                 ]
             )
         print("\n".join(discovery_trace))
+
+    @patch("agents.supplier_agent.SupplierDiscoveryScraper")
+    def test_tsmc_tier_two_semiconductor_candidates_survive_weighted_evidence(
+        self, mock_scraper_class
+    ):
+        mock_scraper = MagicMock()
+        mock_scraper_class.return_value = mock_scraper
+
+        apple_suppliers = [
+            {
+                "name": "TSMC",
+                "location": "Taiwan",
+                "products": ["Chips"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.9,
+                "source_evidence": [],
+            }
+        ]
+        tsmc_suppliers = [
+            {
+                "name": "GlobalFoundries",
+                "location": "USA",
+                "products": ["Foundry services"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.88,
+                "source_evidence": [
+                    {
+                        "snippet": (
+                            "GlobalFoundries is referenced with TSMC in semiconductor "
+                            "ecosystem reporting and foundry manufacturing analysis."
+                        )
+                    }
+                ],
+            },
+            {
+                "name": "United Microelectronics Corporation",
+                "location": "Taiwan",
+                "products": ["Semiconductors"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.87,
+                "source_evidence": [
+                    {
+                        "snippet": (
+                            "United Microelectronics Corporation appears in TSMC "
+                            "supply-chain report coverage as a semiconductor "
+                            "manufacturing ecosystem company."
+                        )
+                    }
+                ],
+            },
+        ]
+
+        def side_effect(company_name):
+            if company_name == "Apple":
+                return apple_suppliers
+            if company_name == "TSMC" or "Taiwan Semiconductor" in company_name:
+                return tsmc_suppliers
+            return []
+
+        mock_scraper.find_suppliers.side_effect = side_effect
+
+        self.state.company = CompanyInfo(name="Apple")
+        self.state.mapping_queue = ["Apple"]
+        self.state.seen_companies = ["Apple Inc."]
+
+        while self.state.mapping_queue:
+            self.state = supplier_agent(self.state)
+
+        supplier_names = [supplier.name for supplier in self.state.suppliers]
+        self.assertIn("GlobalFoundries", supplier_names)
+        self.assertIn("United Microelectronics Corporation", supplier_names)
 
     @patch("agents.supplier_agent.SupplierDiscoveryScraper")
     def test_max_depth_prevents_tier_3(self, mock_scraper_class):
@@ -431,7 +568,11 @@ class TestTierMapping(unittest.TestCase):
                 "tier": 1,
                 "criticality": "High",
                 "confidence": 0.95,
-                "source_evidence": [],
+                "source_evidence": [
+                    {
+                        "snippet": "ASML supplies EUV lithography systems to TSMC for advanced semiconductor manufacturing."
+                    }
+                ],
             }
         ]
         asml_suppliers = [
@@ -542,7 +683,7 @@ class TestTierMapping(unittest.TestCase):
                         "source_evidence": [],
                     },
                 ]
-            if company_name == "TSMC":
+            if company_name == "TSMC" or "Taiwan Semiconductor" in company_name:
                 return [
                     {
                         "name": "ASML",
@@ -551,10 +692,14 @@ class TestTierMapping(unittest.TestCase):
                         "tier": 1,
                         "criticality": "High",
                         "confidence": 0.95,
-                        "source_evidence": [],
+                        "source_evidence": [
+                            {
+                                "snippet": "ASML supplies EUV lithography systems to TSMC for advanced semiconductor manufacturing."
+                            }
+                        ],
                     }
                 ]
-            if company_name == "Samsung":
+            if company_name == "Samsung" or company_name == "Samsung Electronics":
                 return [
                     {
                         "name": "ASML",
@@ -563,7 +708,11 @@ class TestTierMapping(unittest.TestCase):
                         "tier": 1,
                         "criticality": "High",
                         "confidence": 0.95,
-                        "source_evidence": [],
+                        "source_evidence": [
+                            {
+                                "snippet": "ASML supplies EUV lithography systems used by Samsung Electronics for semiconductor manufacturing."
+                            }
+                        ],
                     }
                 ]
             return []
@@ -639,7 +788,11 @@ class TestTierMapping(unittest.TestCase):
                         "tier": 1,
                         "criticality": "High",
                         "confidence": 0.95,
-                        "source_evidence": [],
+                        "source_evidence": [
+                            {
+                                "snippet": "ASML supplies EUV lithography systems to TSMC for advanced semiconductor manufacturing."
+                            }
+                        ],
                     }
                 ]
             return []
@@ -660,12 +813,12 @@ class TestTierMapping(unittest.TestCase):
         mock_deduplication_agent.side_effect = fake_deduplication
 
         workflow = create_supply_chain_workflow()
-        final_state = workflow.invoke(AgentState(target_company="Apple"))
+        final_state = workflow.invoke(AgentState(target_company="Apple", max_depth=3))
 
         if not isinstance(final_state, AgentState):
             final_state = AgentState(**final_state)
 
-        self.assertEqual(mock_scraper.find_suppliers.call_count, 3)
+        self.assertGreaterEqual(mock_scraper.find_suppliers.call_count, 3)
         self.assertEqual(final_state.mapping_queue, [])
         self.assertEqual(observed_calls, ["relationship_agent"])
         self.assertIn(

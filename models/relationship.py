@@ -5,7 +5,7 @@ class RelationshipResult(BaseModel):
     """Result of classifying the relationship between two companies."""
     target_company: str
     candidate_company: str
-    relationship_type: str = Field(description="One of: supplier, customer, competitor, partner, subsidiary, unknown")
+    relationship_type: str = Field(description="One of: supplier, upstream_supplier, customer, competitor, partner, unrelated, product_or_brand")
     confidence_score: float = Field(ge=0.0, le=1.0)
     reasoning: str
     evidence_text: str

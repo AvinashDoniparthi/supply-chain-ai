@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from models.state import AgentState, HistoricalRun
+from utils.output import agent_event, debug_log
 
 logger = logging.getLogger(__name__)
 
@@ -18,10 +19,10 @@ class HistoryAgent:
             os.makedirs(self.history_dir)
 
     def process_history(self, state: AgentState) -> AgentState:
-        print("\n--- HISTORY AGENT ---")
+        agent_event("History agent started")
 
         if not state.executive_report or not state.supply_chain_health:
-            print("Executive report or health data missing. History processing skipped.")
+            debug_log(logger, "Executive report or health data missing. History processing skipped.")
             return state
 
         company_name = state.target_company or "Unknown"
@@ -53,15 +54,15 @@ class HistoryAgent:
         state.historical_runs = [HistoricalRun(**r) for r in history_data["runs"]]
 
         # 5. Logging
-        print(f"\nPrevious Runs: {len(history_data['runs']) - 1}")
-        print(f"\nCurrent Health: {current_run.health_score}")
-        print(f"Previous Health: {previous_run['health_score'] if previous_run else 'N/A'}")
+        debug_log(logger, "Previous Runs: %s", len(history_data["runs"]) - 1)
+        debug_log(logger, "Current Health: %s", current_run.health_score)
+        debug_log(logger, "Previous Health: %s", previous_run["health_score"] if previous_run else "N/A")
 
-        print(f"\nHealth Delta: {trends['health_delta']}")
-        print(f"Supplier Delta: {trends['supplier_delta']}")
-        print(f"Risk Delta: {trends['risk_delta']}")
+        debug_log(logger, "Health Delta: %s", trends["health_delta"])
+        debug_log(logger, "Supplier Delta: %s", trends["supplier_delta"])
+        debug_log(logger, "Risk Delta: %s", trends["risk_delta"])
 
-        print(f"\nHistory Saved: {history_file}")
+        debug_log(logger, "History Saved: %s", history_file)
 
         state.current_task = "History processing completed"
         state.history.append({
@@ -70,6 +71,8 @@ class HistoryAgent:
             "trends": trends,
             "status": "success"
         })
+
+        agent_event("History agent completed")
 
         return state
 

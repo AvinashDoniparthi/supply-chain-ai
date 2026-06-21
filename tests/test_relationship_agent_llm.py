@@ -1,78 +1,152 @@
 import unittest
 from unittest.mock import MagicMock, patch
-import json
-from agents.relationship_agent import LLMRelationshipClassifier
+
+from providers.llm_provider import LLMConfig
+from agents.relationship_agent import (
+    HeuristicRelationshipClassifier,
+    LLMRelationshipClassifier,
+    relationship_agent,
+)
+from chains.relationship_chain import RelationshipClassification
 from models.relationship import RelationshipResult
+from models.state import AgentState, SupplierInfo
+
 
 class TestLLMRelationshipClassifier(unittest.TestCase):
     def setUp(self):
-        # Mock the OpenAI client
-        self.mock_client = MagicMock()
-        with patch('openai.OpenAI', return_value=self.mock_client):
-            self.classifier = LLMRelationshipClassifier()
-            # Manually set the client if the patch didn't work as expected in __init__
-            self.classifier.client = self.mock_client
-
-    def _mock_response(self, relationship, confidence, reasoning):
-        mock_choice = MagicMock()
-        mock_choice.message.content = json.dumps({
-            "relationship": relationship,
-            "confidence": confidence,
-            "reasoning": reasoning
-        })
-        mock_response = MagicMock()
-        mock_response.choices = [mock_choice]
-        self.mock_client.chat.completions.create.return_value = mock_response
+        self.mock_chain = MagicMock()
+        self.resolve_patcher = patch(
+            "agents.relationship_agent.resolve_provider",
+            return_value=LLMConfig(
+                provider="google",
+                model="gemini-2.5-flash",
+                key_source="GOOGLE_API_KEY",
+                api_key="google-test-key",
+            ),
+        )
+        self.chain_patcher = patch(
+            "agents.relationship_agent.get_relationship_chain",
+            return_value=self.mock_chain,
+        )
+        self.resolve_patcher.start()
+        self.chain_patcher.start()
+        self.addCleanup(self.resolve_patcher.stop)
+        self.addCleanup(self.chain_patcher.stop)
+        self.classifier = LLMRelationshipClassifier()
 
     def test_supplier_detection(self):
-        self._mock_response("supplier", 0.95, "Candidate provides components to Target.")
+        self.mock_chain.invoke.return_value = RelationshipClassification(
+            relationship="supplier",
+            confidence=0.95,
+            reasoning="Candidate provides components to Target.",
+        )
+
         result = self.classifier.classify("Apple", "TSMC", "TSMC manufactures chips for Apple.")
-        
+
         self.assertEqual(result.relationship_type, "supplier")
         self.assertEqual(result.confidence_score, 0.95)
-        self.assertIn("TSMC", result.candidate_company)
+        self.assertEqual(result.candidate_company, "TSMC")
 
-    def test_customer_detection(self):
-        self._mock_response("customer", 0.9, "Target sells GPUs to Candidate.")
-        result = self.classifier.classify("Nvidia", "Dell", "Dell sells servers powered by Nvidia GPUs.")
-        
-        self.assertEqual(result.relationship_type, "customer")
-        self.assertEqual(result.confidence_score, 0.9)
+    def test_invalid_label_raises(self):
+        self.mock_chain.invoke.return_value = RelationshipClassification(
+            relationship="friend",
+            confidence=0.5,
+            reasoning="Invalid label.",
+        )
 
-    def test_competitor_detection(self):
-        self._mock_response("competitor", 0.85, "Both compete in the cloud market.")
-        result = self.classifier.classify("AWS", "Azure", "Azure is gaining market share against AWS.")
-        
-        self.assertEqual(result.relationship_type, "competitor")
+        with self.assertRaisesRegex(RuntimeError, "Invalid relationship label"):
+            self.classifier.classify("Company A", "Company B", "Evidence text")
 
-    def test_partner_detection(self):
-        self._mock_response("partner", 0.8, "Joint development of AI models.")
-        result = self.classifier.classify("Microsoft", "OpenAI", "Microsoft and OpenAI have a strategic partnership.")
-        
-        self.assertEqual(result.relationship_type, "partner")
+    def test_chain_failure_raises(self):
+        self.mock_chain.invoke.side_effect = Exception("parse error")
 
-    def test_malformed_response_handling(self):
-        # LLM returns something that is not one of the labels
-        self._mock_response("friend", 0.5, "They are friends.")
-        result = self.classifier.classify("Company A", "Company B", "Evidence text")
-        
-        self.assertEqual(result.relationship_type, "unknown")
-        self.assertEqual(result.confidence_score, 0.1)
-        self.assertIn("Invalid label", result.reasoning)
+        with self.assertRaisesRegex(RuntimeError, "Relationship classification failed"):
+            self.classifier.classify("Company A", "Company B", "Evidence text")
 
-    def test_json_parse_error_fallback(self):
-        # Mocking a response that isn't valid JSON
-        mock_choice = MagicMock()
-        mock_choice.message.content = "Not a JSON"
-        mock_response = MagicMock()
-        mock_response.choices = [mock_choice]
-        self.mock_client.chat.completions.create.return_value = mock_response
-        
-        result = self.classifier.classify("Company A", "Company B", "Evidence text")
-        
-        self.assertEqual(result.relationship_type, "unknown")
-        self.assertEqual(result.confidence_score, 0.1)
-        self.assertIn("Classification error", result.reasoning)
+
+class TestRelationshipAgent(unittest.TestCase):
+    @patch("agents.relationship_agent.print_llm_config_once")
+    @patch("agents.relationship_agent.get_classifier")
+    def test_relationship_agent_passes_context_to_classifier(
+        self, mock_get_classifier, mock_print_config
+    ):
+        mock_classifier = object.__new__(LLMRelationshipClassifier)
+        mock_classifier.config = LLMConfig(
+            provider="google",
+            model="gemini-2.5-flash",
+            key_source="GOOGLE_API_KEY",
+            api_key="google-test-key",
+        )
+        mock_classifier.classify = MagicMock(return_value=RelationshipResult(
+            target_company="Apple",
+            candidate_company="TSMC",
+            relationship_type="supplier",
+            confidence_score=0.91,
+            reasoning="TSMC manufactures chips for Apple.",
+            evidence_text="TSMC manufactures chips for Apple.",
+        ))
+        mock_get_classifier.return_value = mock_classifier
+
+        state = AgentState(target_company="Apple")
+        state.company = type("Company", (), {"name": "Apple"})()
+        state.suppliers = [
+            SupplierInfo(
+                name="TSMC",
+                canonical_name="Taiwan Semiconductor Manufacturing Company",
+                location="Taiwan",
+                parent_company="Apple",
+                evidence=[{"snippet": "TSMC manufactures chips for Apple."}],
+            )
+        ]
+
+        updated_state = relationship_agent(state)
+
+        self.assertEqual(len(updated_state.relationship_results), 1)
+        mock_classifier.classify.assert_called_once()
+        args, kwargs = mock_classifier.classify.call_args
+        self.assertIn("Supplier name: TSMC", kwargs["evidence"])
+        self.assertIn("Canonical company: Taiwan Semiconductor Manufacturing Company", kwargs["evidence"])
+        self.assertEqual(
+            updated_state.relationship_results[0].evidence_text,
+            "TSMC manufactures chips for Apple.",
+        )
+
+    def test_tier_two_supplier_is_labeled_upstream(self):
+        state = AgentState(target_company="AMD", skip_risk=True, max_depth=2)
+        state.company = type("Company", (), {"name": "AMD"})()
+        state.suppliers = [
+            SupplierInfo(
+                name="ASML",
+                canonical_name="ASML",
+                location="Netherlands",
+                tier=2,
+                parent_company="Taiwan Semiconductor Manufacturing Company",
+                evidence=[
+                    {
+                        "snippet": "ASML supplies EUV lithography systems to TSMC for advanced semiconductor manufacturing."
+                    }
+                ],
+            )
+        ]
+
+        updated_state = relationship_agent(state)
+
+        self.assertEqual(
+            updated_state.relationship_results[0].relationship_type,
+            "upstream_supplier",
+        )
+
+    def test_heuristic_classifies_thinkpad_as_product_or_brand(self):
+        classifier = HeuristicRelationshipClassifier()
+
+        result = classifier.classify(
+            "AMD",
+            "ThinkPad",
+            "ThinkPad laptops use AMD processors.",
+        )
+
+        self.assertEqual(result.relationship_type, "product_or_brand")
+
 
 if __name__ == "__main__":
     unittest.main()

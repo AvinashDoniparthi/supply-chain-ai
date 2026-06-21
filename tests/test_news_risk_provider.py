@@ -124,10 +124,43 @@ class TestNewsRiskProvider(unittest.TestCase):
         mock_response.content = self.create_mock_rss([])
         mock_get.return_value = mock_response
 
-        with patch('builtins.print') as mock_print:
+        with self.assertLogs('agents.risk_agent', level='DEBUG') as logs:
             risks = self.provider.assess_risk(self.state)
             self.assertEqual(len(risks), 0)
-            mock_print.assert_any_call("No recent risk-related news found")
+            self.assertIn(
+                "No recent risk-related news found",
+                "\n".join(logs.output),
+            )
+
+    def test_article_containing_war_but_not_about_supplier_is_ignored(self):
+        item = {
+            "title": "War tensions disrupt global shipping lanes",
+            "snippet": "The article discusses broad macroeconomic impacts without naming TestCorp.",
+            "pub_date": email.utils.format_datetime(datetime.now()),
+        }
+
+        risk, keywords = self.provider._analyze_headline_with_keywords(
+            self.state.suppliers[0], item
+        )
+
+        self.assertIsNone(risk)
+        self.assertEqual(keywords, [])
+
+    def test_supplier_direct_war_article_creates_supplier_specific_risk(self):
+        item = {
+            "title": "TestCorp factory shutdown risk rises amid war escalation",
+            "snippet": "TestCorp said its main production facility could be affected.",
+            "pub_date": email.utils.format_datetime(datetime.now()),
+        }
+
+        risk, keywords = self.provider._analyze_headline_with_keywords(
+            self.state.suppliers[0], item
+        )
+
+        self.assertIsNotNone(risk)
+        self.assertEqual(risk.supplier_name, self.supplier_name)
+        self.assertEqual(risk.severity, "Critical")
+        self.assertIn("war", keywords)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,30 +1,90 @@
 {
   "nodes": [
     {
-      "id": "Nvidia",
-      "label": "Nvidia",
+      "id": "NVIDIA",
+      "label": "NVIDIA",
       "node_type": "company"
     },
     {
-      "id": "TSMC Semiconductor Manufacturing Company Limited",
-      "label": "TSMC Semiconductor Manufacturing Company Limited",
+      "id": "Taiwan Semiconductor",
+      "label": "Taiwan Semiconductor",
       "node_type": "supplier"
     },
     {
-      "id": "Foxconn",
-      "label": "Foxconn",
+      "id": "SK Hynix",
+      "label": "SK Hynix",
+      "node_type": "supplier"
+    },
+    {
+      "id": "ASML",
+      "label": "ASML",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Lam Research",
+      "label": "Lam Research",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Entegris",
+      "label": "Entegris",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Corning",
+      "label": "Corning",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Murata Manufacturing",
+      "label": "Murata Manufacturing",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Sony Semiconductor",
+      "label": "Sony Semiconductor",
       "node_type": "supplier"
     }
   ],
   "edges": [
     {
-      "source": "Nvidia",
-      "target": "TSMC Semiconductor Manufacturing Company Limited",
+      "source": "NVIDIA",
+      "target": "Taiwan Semiconductor",
       "relationship": "supplier"
     },
     {
-      "source": "Nvidia",
-      "target": "Foxconn",
+      "source": "NVIDIA",
+      "target": "SK Hynix",
+      "relationship": "supplier"
+    },
+    {
+      "source": "NVIDIA",
+      "target": "ASML",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "NVIDIA",
+      "target": "Lam Research",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "NVIDIA",
+      "target": "Entegris",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "NVIDIA",
+      "target": "Corning",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "NVIDIA",
+      "target": "Murata Manufacturing",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "NVIDIA",
+      "target": "Sony Semiconductor",
       "relationship": "supplier"
     }
   ]

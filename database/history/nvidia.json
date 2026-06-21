@@ -61,6 +61,40 @@
         "TSMC Semiconductor Manufacturing Company Limited",
         "Foxconn"
       ]
+    },
+    {
+      "timestamp": "2026-06-21T19:07:04.481096",
+      "health_score": 76.1,
+      "health_status": "Good",
+      "supplier_count": 8,
+      "risk_count": 4,
+      "suppliers": [
+        "Taiwan Semiconductor",
+        "SK Hynix",
+        "ASML",
+        "Lam Research",
+        "Entegris",
+        "Corning",
+        "Murata Manufacturing",
+        "Sony Semiconductor"
+      ]
+    },
+    {
+      "timestamp": "2026-06-21T19:07:44.360147",
+      "health_score": 76.1,
+      "health_status": "Good",
+      "supplier_count": 8,
+      "risk_count": 4,
+      "suppliers": [
+        "Taiwan Semiconductor",
+        "SK Hynix",
+        "ASML",
+        "Lam Research",
+        "Entegris",
+        "Corning",
+        "Murata Manufacturing",
+        "Sony Semiconductor"
+      ]
     }
   ]
 }

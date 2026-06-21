@@ -1,21 +1,26 @@
 import os
+import logging
 from langchain_openai import OpenAIEmbeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
+from providers.llm_provider import resolve_provider
 
-def get_embeddings(provider="openai"):
-    if provider == "openai":
-        return OpenAIEmbeddings(openai_api_key=os.environ.get("OPENAI_API_KEY") or "mock-key")
-    elif provider in ["gemini", "google"]:
-        return GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=os.environ.get("GOOGLE_API_KEY") or "mock-key")
+logger = logging.getLogger(__name__)
+
+def get_embeddings(provider=None):
+    config = resolve_provider(provider=provider)
+    if config.provider == "openai":
+        return OpenAIEmbeddings(openai_api_key=config.api_key)
+    elif config.provider == "google":
+        return GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=config.api_key)
     else:
         raise ValueError(f"Unknown embeddings provider: {provider}")
 
 # For persistent storage
 CHROMA_DB_DIR = "database/chroma_db"
 
-def index_analysis(state, provider="openai"):
+def index_analysis(state, provider=None):
     """
     Indexes supplier profiles, risk assessments, and executive reports into Chroma.
     """
@@ -49,11 +54,11 @@ def index_analysis(state, provider="openai"):
         
     if documents:
         vector_store.add_documents(documents)
-        print(f"Indexed {len(documents)} documents into Chroma vector store.")
+        logger.debug("Indexed %s documents into Chroma vector store.", len(documents))
     
     return vector_store
 
-def search_analysis(query, provider="openai"):
+def search_analysis(query, provider=None):
     """
     Searches the analysis results in Chroma.
     """

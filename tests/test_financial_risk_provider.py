@@ -90,7 +90,7 @@ class TestFinancialRiskProvider(unittest.TestCase):
         risks = self.provider.assess_risk(self.state)
         self.assertEqual(len(risks), 1)
         self.assertEqual(risks[0].severity, "High")
-        self.assertIn("high financial risk", risks[0].reasoning.lower())
+        self.assertIn("high supplier-specific financial risk", risks[0].reasoning.lower())
 
     @patch('requests.get')
     def test_date_filtering_180_days(self, mock_get):
@@ -102,7 +102,7 @@ class TestFinancialRiskProvider(unittest.TestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.content = self.create_mock_rss([
-            {"title": "Recent earnings miss", "snippet": "declining revenue", "pub_date": within_date},
+            {"title": "FinCorp reports recent earnings miss", "snippet": "FinCorp cited declining revenue", "pub_date": within_date},
             {"title": "Old bankruptcy news", "snippet": "bankruptcy", "pub_date": outside_date}
         ])
         mock_get.return_value = mock_response
@@ -142,10 +142,52 @@ class TestFinancialRiskProvider(unittest.TestCase):
         mock_response.content = self.create_mock_rss([])
         mock_get.return_value = mock_response
 
-        with patch('builtins.print') as mock_print:
-            risks = self.provider.assess_risk(self.state)
-            self.assertEqual(len(risks), 0)
-            mock_print.assert_any_call("No recent financial risk signals found.")
+        risks = self.provider.assess_risk(self.state)
+        self.assertEqual(len(risks), 0)
+
+    def test_random_saks_bankruptcy_does_not_create_supplier_risk(self):
+        item = {
+            "title": "Saks files for bankruptcy protection",
+            "snippet": "Analysts mentioned FinCorp once in a market roundup.",
+            "pub_date": email.utils.format_datetime(datetime.now()),
+        }
+
+        risk, keywords = self.provider._analyze_financial_headline(
+            self.state.suppliers[0], item
+        )
+
+        self.assertIsNone(risk)
+        self.assertEqual(keywords, [])
+
+    def test_random_airline_bankruptcy_does_not_create_supplier_risk(self):
+        item = {
+            "title": "Spirit Airlines bankruptcy plan approved",
+            "snippet": "The airline industry story is unrelated to FinCorp operations.",
+            "pub_date": email.utils.format_datetime(datetime.now()),
+        }
+
+        risk, keywords = self.provider._analyze_financial_headline(
+            self.state.suppliers[0], item
+        )
+
+        self.assertIsNone(risk)
+        self.assertEqual(keywords, [])
+
+    def test_supplier_bankruptcy_article_creates_critical_risk(self):
+        item = {
+            "title": "FinCorp files for bankruptcy protection",
+            "snippet": "FinCorp filed for bankruptcy after a debt default.",
+            "pub_date": email.utils.format_datetime(datetime.now()),
+        }
+
+        risk, keywords = self.provider._analyze_financial_headline(
+            self.state.suppliers[0], item
+        )
+
+        self.assertIsNotNone(risk)
+        self.assertEqual(risk.supplier_name, self.supplier_name)
+        self.assertEqual(risk.severity, "Critical")
+        self.assertIn("bankruptcy", keywords)
 
 if __name__ == '__main__':
     unittest.main()

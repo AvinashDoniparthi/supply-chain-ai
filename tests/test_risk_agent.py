@@ -5,11 +5,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from models.state import AgentState, SupplierInfo, RiskAnalysis, CompanyInfo
 from models.verification import VerificationResult
 from agents.risk_agent import risk_agent
+from utils.output import data_quality_warning_lines
 
 def test_risk_agent():
     # 1. Setup mock state
     state = AgentState(
         target_company="Apple Inc.",
+        skip_news=True,
         suppliers=[
             SupplierInfo(name="Foxconn", location="Hsinchu, Taiwan", criticality="High"),
             SupplierInfo(name="Unverified Corp", location="Unknown", criticality="Low"),
@@ -46,14 +48,16 @@ def test_risk_agent():
 
     # Check for expected risks
     found_foxconn_geo = any(r.supplier_name == "Foxconn" and r.risk_type == "Geopolitical" for r in updated_state.risk_assessments)
-    found_unverified_corp = any(r.supplier_name == "Unverified Corp" and r.risk_type == "Operational" for r in updated_state.risk_assessments)
     found_russian_metals_geo = any(r.supplier_name == "Russian Metals" and r.risk_type == "Geopolitical" for r in updated_state.risk_assessments)
-    found_russian_metals_ver = any(r.supplier_name == "Russian Metals" and r.risk_type == "Strategic" for r in updated_state.risk_assessments)
+    found_verification_risk = any("verification" in r.reasoning.lower() for r in updated_state.risk_assessments)
 
     assert found_foxconn_geo, "Foxconn geopolitical risk not found"
-    assert found_unverified_corp, "Unverified Corp operational risk not found"
     assert found_russian_metals_geo, "Russian Metals geopolitical risk not found"
-    assert found_russian_metals_ver, "Russian Metals verification (strategic) risk not found"
+    assert not found_verification_risk, "Verification failure should not be represented as a business risk"
+
+    warnings = "\n".join(data_quality_warning_lines(updated_state))
+    assert "Supplier missing verification: Unverified Corp" in warnings
+    assert "Supplier failed verification: Russian Metals" in warnings
 
     print("\n--- TEST PASSED SUCCESSFULLY ---")
 

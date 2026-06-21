@@ -5,6 +5,11 @@ import logging
 import json
 import os
 import re
+from utils.runtime_controls import (
+    can_consume_web_query,
+    remaining_stage_timeout,
+    stop_if_timed_out,
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -16,11 +21,13 @@ class CompanyScraper:
     A scraper to gather company information from public sources (primarily Wikipedia).
     """
 
-    def __init__(self):
+    def __init__(self, runtime_state: Optional[Any] = None, stage_key: str = "company_research"):
         self.session = requests.Session()
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
+        self.runtime_state = runtime_state
+        self.stage_key = stage_key
 
     def search_company(self, company_name: str) -> Dict[str, Any]:
         """
@@ -35,6 +42,16 @@ class CompanyScraper:
         logger.info(f"Searching for company: {company_name}")
 
         try:
+            cached = self._load_cached_result(company_name)
+            if cached:
+                logger.info("Using cached company data for %s", company_name)
+                return cached
+
+            if self.runtime_state and stop_if_timed_out(
+                self.runtime_state, self.stage_key
+            ):
+                return self._get_empty_result(company_name)
+
             # Step 1: Search Wikipedia for the company
             search_url = "https://en.wikipedia.org/w/api.php"
             params = {
@@ -45,7 +62,19 @@ class CompanyScraper:
                 "limit": 1,
             }
 
-            response = self.session.get(search_url, params=params, headers=self.headers)
+            if not can_consume_web_query(
+                self.runtime_state,
+                self.stage_key,
+                f"Wikipedia company search for '{company_name}'",
+            ):
+                return self._get_empty_result(company_name)
+
+            response = self.session.get(
+                search_url,
+                params=params,
+                headers=self.headers,
+                timeout=remaining_stage_timeout(self.runtime_state, self.stage_key, 5.0),
+            )
             response.raise_for_status()
             search_results = response.json().get("query", {}).get("search", [])
 
@@ -83,7 +112,18 @@ class CompanyScraper:
 
             # Step 2: Fetch the page content
             page_url = f"https://en.wikipedia.org/wiki/{page_title.replace(' ', '_')}"
-            page_response = self.session.get(page_url, headers=self.headers)
+            if not can_consume_web_query(
+                self.runtime_state,
+                self.stage_key,
+                f"Wikipedia company page for '{page_title}'",
+            ):
+                return self._get_empty_result(company_name)
+
+            page_response = self.session.get(
+                page_url,
+                headers=self.headers,
+                timeout=remaining_stage_timeout(self.runtime_state, self.stage_key, 5.0),
+            )
             page_response.raise_for_status()
 
             data = self._parse_wikipedia_page(page_response.text, company_name)
@@ -96,6 +136,18 @@ class CompanyScraper:
         except Exception as e:
             logger.error(f"Error scraping company info for {company_name}: {e}")
             return self._get_empty_result(company_name)
+
+    def _load_cached_result(self, company_name: str) -> Optional[Dict[str, Any]]:
+        safe_name = re.sub(r"[^\w\s-]", "", company_name).strip().replace(" ", "_").lower()
+        cache_path = os.path.join("database", f"{safe_name}_info.json")
+        if not os.path.exists(cache_path):
+            return None
+        try:
+            with open(cache_path, "r") as f:
+                return json.load(f)
+        except Exception as e:
+            logger.error(f"Failed to load cached company data from {cache_path}: {e}")
+            return None
 
     def save_results(self, data: Dict[str, Any], filename: Optional[str] = None):
         """

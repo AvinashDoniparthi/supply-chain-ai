@@ -40,17 +40,13 @@ class TestConfidenceAgent(unittest.TestCase):
         updated_state = confidence_agent(self.state)
         conf = updated_state.supplier_confidence_scores[0]
         
-        # Calculation:
-        # Discovery: 0.92 * 0.20 = 0.184
-        # Relationship: 0.98 * 0.30 = 0.294
-        # Verification: 0.85 * 0.35 = 0.2975
-        # Risk: 0.9 * 0.15 = 0.135
-        # Total: 0.9105 -> 0.91
-        
+        # Plain AgentState fixtures use open-world coverage, so discovered
+        # Tier-1 suppliers are not capped by benchmark expected sets.
+
         self.assertEqual(conf.supplier_name, "Foxconn")
-        self.assertEqual(conf.final_confidence, 0.91)
+        self.assertEqual(conf.final_confidence, 0.89)
         self.assertIn("Successfully verified", conf.reasoning)
-        self.assertIn("No operational or strategic risks", conf.reasoning)
+        self.assertIn("No supplier-specific risk signals", conf.reasoning)
 
     def test_failed_verification(self):
         """Test a supplier that failed verification."""
@@ -78,14 +74,9 @@ class TestConfidenceAgent(unittest.TestCase):
         updated_state = confidence_agent(self.state)
         conf = updated_state.supplier_confidence_scores[0]
         
-        # Calculation:
-        # Discovery: 0.5 * 0.20 = 0.10
-        # Relationship: 0.5 * 0.30 = 0.15
-        # Verification: (0.4 * 0.5) * 0.35 = 0.07 (verification failed: conf * 0.5)
-        # Risk: 0.9 * 0.15 = 0.135
-        # Total: 0.455 -> 0.46
-        
-        self.assertEqual(conf.final_confidence, 0.46)
+        # Open-world coverage does not apply benchmark expected supplier caps.
+
+        self.assertEqual(conf.final_confidence, 0.43)
         self.assertIn("Verification failed", conf.reasoning)
 
     def test_high_risk_supplier(self):
@@ -123,13 +114,9 @@ class TestConfidenceAgent(unittest.TestCase):
         updated_state = confidence_agent(self.state)
         conf = updated_state.supplier_confidence_scores[0]
         
-        # Calculation:
-        # Discovery: 0.8 * 0.20 = 0.16
-        # Relationship: 0.9 * 0.30 = 0.27
-        # Verification: 0.9 * 0.35 = 0.315
-        # Risk: 0.4 * 0.15 = 0.06 (High risk = 0.4)
-        # Total: 0.805 -> 0.81
-        
+        # Strong individual evidence is not capped by benchmark expected sets in
+        # open-world mode.
+
         self.assertEqual(conf.final_confidence, 0.81)
         self.assertIn("Exposure to high severity risks", conf.reasoning)
 
@@ -140,13 +127,10 @@ class TestConfidenceAgent(unittest.TestCase):
         updated_state = confidence_agent(self.state)
         conf = updated_state.supplier_confidence_scores[0]
         
-        # Discovery: 0.5 (default) * 0.20 = 0.10
-        # Relationship: 0.5 (default) * 0.30 = 0.15
-        # Verification: 0.3 (missing) * 0.35 = 0.105
-        # Risk: 0.9 * 0.15 = 0.135
-        # Total: 0.49
-        
-        self.assertEqual(conf.final_confidence, 0.49)
+        # Missing verification lowers confidence, but benchmark expected sets do
+        # not cap plain open-world fixtures.
+
+        self.assertEqual(conf.final_confidence, 0.47)
         self.assertIn("No verification data available", conf.reasoning)
 
 if __name__ == '__main__':

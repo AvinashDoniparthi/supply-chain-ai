@@ -4,7 +4,28 @@
       "id": "Apple",
       "label": "Apple",
       "node_type": "company"
+    },
+    {
+      "id": "TSMC",
+      "label": "TSMC",
+      "node_type": "supplier"
+    },
+    {
+      "id": "ASML",
+      "label": "ASML",
+      "node_type": "supplier"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "Apple",
+      "target": "TSMC",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Apple",
+      "target": "ASML",
+      "relationship": "supplier"
+    }
+  ]
 }

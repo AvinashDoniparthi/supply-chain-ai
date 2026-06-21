@@ -1,14 +1,40 @@
 import unittest
 import sys
 import os
+from unittest.mock import MagicMock, patch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.state import AgentState, SupplierInfo, RiskAnalysis, SupplierConfidence, SupplierCriticality, SupplyChainHealth, ExecutiveReport
 from agents.executive_report_agent import executive_report_agent
+from providers.llm_provider import LLMConfig
+from langchain_core.messages import AIMessage
+from langchain_core.runnables import RunnableLambda
 
 class TestExecutiveReportAgent(unittest.TestCase):
     def setUp(self):
+        self.resolve_patcher = patch(
+            "chains.executive_summary_chain.resolve_provider",
+            return_value=LLMConfig(
+                provider="google",
+                model="gemini-2.5-flash",
+                key_source="GOOGLE_API_KEY",
+                api_key="google-test-key",
+            ),
+        )
+        self.get_llm_patcher = patch(
+            "chains.executive_summary_chain.get_llm",
+            return_value=RunnableLambda(
+                lambda _: AIMessage(
+                    content="Apple's supply chain is healthy with strong ties to Foxconn."
+                )
+            ),
+        )
+        self.resolve_patcher.start()
+        self.get_llm_patcher.start()
+        self.addCleanup(self.resolve_patcher.stop)
+        self.addCleanup(self.get_llm_patcher.stop)
+
         self.state = AgentState(target_company="Apple Inc.")
         self.state.supply_chain_health = SupplyChainHealth(
             overall_score=84.2,
@@ -35,7 +61,17 @@ class TestExecutiveReportAgent(unittest.TestCase):
         self.assertIsNotNone(report)
         self.assertEqual(report.company_name, "Apple Inc.")
         self.assertEqual(report.overall_health_score, 84.2)
-        self.assertIn("Apple Inc.'s supply chain health is Good", report.executive_summary)
+        self.assertIn("DISCOVERY QUALITY", report.executive_summary)
+        self.assertIn("SUPPLY CHAIN HEALTH", report.executive_summary)
+        self.assertIn("TIER 1 SUPPLIERS", report.executive_summary)
+        self.assertIn("TOP RISKS", report.executive_summary)
+        self.assertIn("DATA QUALITY WARNINGS", report.executive_summary)
+        self.assertIn("CRITICAL SUPPLIERS", report.executive_summary)
+        self.assertIn("EXECUTIVE SUMMARY", report.executive_summary)
+        self.assertIn(
+            "Coverage: High - 1 discovered Tier-1 suppliers identified.",
+            report.executive_summary,
+        )
 
     def test_key_suppliers_selection(self):
         """Test that top suppliers are selected correctly by criticality then confidence."""
@@ -66,7 +102,7 @@ class TestExecutiveReportAgent(unittest.TestCase):
     def test_major_risks_prioritization(self):
         """Test that risks are prioritized by severity."""
         self.state.risk_assessments = [
-            RiskAnalysis(supplier_name="S1", risk_type="Operational", severity="Low", confidence=1.0, reasoning="Minor issue."),
+            RiskAnalysis(supplier_name="S1", risk_type="News", severity="Low", confidence=1.0, reasoning="Minor strike warning."),
             RiskAnalysis(supplier_name="S2", risk_type="Geopolitical", severity="Critical", confidence=1.0, reasoning="War zone."),
             RiskAnalysis(supplier_name="S3", risk_type="Strategic", severity="High", confidence=1.0, reasoning="Sanctions.")
         ]
@@ -76,7 +112,7 @@ class TestExecutiveReportAgent(unittest.TestCase):
         
         self.assertIn("Geopolitical", report.major_risks[0])
         self.assertIn("Strategic", report.major_risks[1])
-        self.assertIn("Operational", report.major_risks[2])
+        self.assertIn("News", report.major_risks[2])
 
     def test_dynamic_recommendations(self):
         """Test recommendations change based on risk profile."""
@@ -102,7 +138,27 @@ class TestExecutiveReportAgent(unittest.TestCase):
         
         report2 = executive_report_agent(self.state).executive_report
         self.assertTrue(any("verification" in r.lower() for r in report2.recommendations))
-        self.assertTrue(any("resilience review" in r.lower() for r in report2.recommendations))
+        self.assertFalse(any("resilience review" in r.lower() for r in report2.recommendations))
+
+    def test_summary_avoids_disruption_exposure_when_no_supplier_risks(self):
+        self.state.target_company = "Dell"
+        self.state.suppliers = [
+            SupplierInfo(name="Broadcom", canonical_name="Broadcom Inc.", location="United States", products=["Chips"]),
+            SupplierInfo(name="Compal Electronics", location="Taiwan", products=["Contract manufacturing"]),
+            SupplierInfo(name="Marvell Technology", canonical_name="Marvell Technology, Inc.", location="United States", products=["Storage controllers"]),
+            SupplierInfo(name="Quanta Computer", location="Taiwan", products=["ODM manufacturing"]),
+        ]
+        self.state.risk_assessments = []
+
+        report = executive_report_agent(self.state).executive_report
+
+        self.assertIn("No supplier-specific risks detected", report.executive_summary)
+        self.assertIn(
+            "The main concern is limited verification depth or supplier concentration.",
+            report.executive_summary,
+        )
+        self.assertNotIn("supplier-specific disruption exposure", report.executive_summary)
+        self.assertNotIn("geographic disruption exposure", report.executive_summary)
 
 if __name__ == '__main__':
     unittest.main()

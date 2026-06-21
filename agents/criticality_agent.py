@@ -3,6 +3,8 @@ from typing import List, Dict, Any, Optional
 from models.state import AgentState, SupplierCriticality, SupplierInfo, RiskAnalysis
 from models.relationship import RelationshipResult
 from models.verification import VerificationResult
+from utils.identity_resolution import resolver
+from utils.output import agent_event, debug_log
 
 logger = logging.getLogger(__name__)
 
@@ -12,13 +14,19 @@ class CriticalityAgent:
     """
 
     def calculate_criticality(self, state: AgentState) -> AgentState:
-        print("\n--- CRITICALITY AGENT ---")
+        agent_event("Criticality agent started")
         
         criticality_results = []
         
         # Maps for quick lookup
-        relationship_map = {r.candidate_company: r for r in state.relationship_results}
-        verification_map = {v.supplier_name: v for v in state.verification_results}
+        relationship_map = {}
+        for relationship in state.relationship_results:
+            relationship_map[relationship.candidate_company] = relationship
+            relationship_map[resolver.resolve(relationship.candidate_company)] = relationship
+        verification_map = {}
+        for verification in state.verification_results:
+            verification_map[verification.supplier_name] = verification
+            verification_map[resolver.resolve(verification.supplier_name)] = verification
         
         # Track product categories for uniqueness
         product_categories = {}
@@ -31,12 +39,15 @@ class CriticalityAgent:
 
         for supplier in state.suppliers:
             # A. Relationship importance
-            rel_result = relationship_map.get(supplier.name) or relationship_map.get(getattr(supplier, 'canonical_name', ''))
+            supplier_key = resolver.resolve(getattr(supplier, 'canonical_name', '') or supplier.name)
+            rel_result = relationship_map.get(supplier.name) or relationship_map.get(supplier_key)
             rel_type = rel_result.relationship_type.lower() if rel_result else "unknown"
             
             rel_score = 0.0
             if rel_type == "supplier":
                 rel_score = 0.4
+            elif rel_type == "upstream_supplier":
+                rel_score = 0.3
             elif rel_type == "partner":
                 rel_score = 0.3
             elif rel_type == "subsidiary":
@@ -75,7 +86,7 @@ class CriticalityAgent:
                     break
 
             # D. Verification confidence (multiplier)
-            ver_result = verification_map.get(supplier.name) or verification_map.get(getattr(supplier, 'canonical_name', ''))
+            ver_result = verification_map.get(supplier.name) or verification_map.get(supplier_key)
             # Use verification confidence_score if available, else default to 0.5 (unverified)
             ver_multiplier = ver_result.confidence_score if ver_result else 0.5
             
@@ -113,10 +124,14 @@ class CriticalityAgent:
             criticality_results.append(res_obj)
 
             # Logging
-            print(f"\nSupplier: {supplier.name}")
-            print(f"Criticality Score: {final_score}")
-            print(f"Level: {level}")
-            print(f"Reason: {reasoning}")
+            debug_log(
+                logger,
+                "Supplier: %s | Criticality Score: %s | Level: %s | Reason: %s",
+                supplier.name,
+                final_score,
+                level,
+                reasoning,
+            )
 
         state.supplier_criticality_scores = criticality_results
         state.current_task = "Criticality assessment completed"
@@ -127,6 +142,8 @@ class CriticalityAgent:
             "total_suppliers": len(criticality_results),
             "status": "success"
         })
+
+        agent_event(f"Criticality agent completed: {len(criticality_results)} scored")
 
         return state
 

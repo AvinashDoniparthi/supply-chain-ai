@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "Dell",
+      "label": "Dell",
+      "node_type": "company"
+    },
+    {
+      "id": "Marvell Technology",
+      "label": "Marvell Technology",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Broadcom",
+      "label": "Broadcom",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Compal Electronics",
+      "label": "Compal Electronics",
+      "node_type": "supplier"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Dell",
+      "target": "Marvell Technology",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Dell",
+      "target": "Broadcom",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Dell",
+      "target": "Compal Electronics",
+      "relationship": "supplier"
+    }
+  ]
+}

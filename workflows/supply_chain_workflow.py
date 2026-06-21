@@ -14,12 +14,34 @@ from agents.health_agent import health_agent
 from agents.executive_report_agent import executive_report_agent
 from agents.history_agent import history_agent
 from agents.graph_export_agent import graph_export_agent
+from utils.output import debug_log
+from utils.runtime_controls import emit_limit_once, stop_if_timed_out
 
 logger = logging.getLogger(__name__)
 
 
 def tier_router(state: AgentState) -> str:
     """Route the workflow based on current supplier discovery progress."""
+    if stop_if_timed_out(state, "supplier_discovery"):
+        state.mapping_queue = []
+
+    if len(state.mapping_queue) > state.max_mapping_queue_size:
+        del state.mapping_queue[state.max_mapping_queue_size :]
+        emit_limit_once(
+            state,
+            "mapping_queue_size",
+            f"Mapping queue capped at {state.max_mapping_queue_size} companies.",
+        )
+
+    processed = state.runtime_counters.get("supplier_companies_processed", 0)
+    if processed >= state.max_total_suppliers_processed and state.mapping_queue:
+        state.mapping_queue = []
+        emit_limit_once(
+            state,
+            "total_suppliers_processed",
+            f"Total supplier processing cap reached ({state.max_total_suppliers_processed}).",
+        )
+
     queue_size = len(state.mapping_queue)
     decision = "continue_discovery" if queue_size > 0 else "discovery_complete"
 
@@ -29,8 +51,7 @@ def tier_router(state: AgentState) -> str:
         f"Current Depth: {state.current_depth}\n"
         f"Decision: {decision}"
     )
-    print(log_msg)
-    logger.info(log_msg)
+    debug_log(logger, log_msg)
 
     return decision
 

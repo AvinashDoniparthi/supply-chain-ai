@@ -3,6 +3,8 @@ import os
 import logging
 from typing import List, Dict, Any, Optional
 from models.state import AgentState, GraphNode, GraphEdge, SupplyChainGraph
+from utils.output import agent_event, debug_log
+from utils.runtime_controls import finish_stage
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +19,7 @@ class GraphExportAgent:
             os.makedirs(self.export_dir)
 
     def export_graph(self, state: AgentState) -> AgentState:
-        print("\n--- GRAPH EXPORT AGENT ---")
+        agent_event("Graph export agent started")
 
         company_name = state.target_company or "Unknown"
         
@@ -65,9 +67,9 @@ class GraphExportAgent:
             with open(export_file, "w") as f:
                 # Use model_dump for Pydantic v2
                 json.dump(graph.model_dump(), f, indent=2)
-            print(f"\nNodes Created: {len(nodes)}")
-            print(f"Edges Created: {len(edges)}")
-            print(f"\nGraph Saved: {export_file}")
+            debug_log(logger, "Nodes Created: %s", len(nodes))
+            debug_log(logger, "Edges Created: %s", len(edges))
+            debug_log(logger, "Graph Saved: %s", export_file)
         except Exception as e:
             logger.error(f"Failed to export graph to {export_file}: {e}")
 
@@ -78,6 +80,9 @@ class GraphExportAgent:
             "file": export_file,
             "status": "success"
         })
+
+        agent_event("Graph export agent completed")
+        finish_stage(state, "report_generation")
 
         return state
 

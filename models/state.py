@@ -150,7 +150,44 @@ class AgentState(BaseModel):
         default=0, description="Current depth of the active discovery node"
     )
     max_depth: int = Field(
-        default=3, description="Maximum depth for recursive supplier discovery"
+        default=2, description="Maximum depth for recursive supplier discovery"
+    )
+    max_candidates_per_company: int = Field(
+        default=5,
+        description="Maximum supplier candidates retained for each discovered company",
+    )
+    timeout_seconds: int = Field(
+        default=180, description="Per-stage timeout in seconds"
+    )
+    max_articles_per_supplier: int = Field(
+        default=10, description="Maximum news articles analyzed per supplier"
+    )
+    max_retries: int = Field(
+        default=2, description="Maximum retries for bounded provider calls"
+    )
+    max_mapping_queue_size: int = Field(
+        default=50, description="Maximum queued companies for tier expansion"
+    )
+    max_total_suppliers_processed: int = Field(
+        default=50, description="Maximum queued companies processed during discovery"
+    )
+    max_llm_calls: int = Field(
+        default=30, description="Maximum LLM calls for a single run"
+    )
+    max_web_queries: int = Field(
+        default=40, description="Maximum web queries for a single run"
+    )
+    skip_risk: bool = Field(
+        default=False, description="Skip all risk providers for faster runs"
+    )
+    skip_news: bool = Field(
+        default=False, description="Skip live news and financial risk providers"
+    )
+    supplier_cache_enabled: bool = Field(
+        default=True, description="Use cached supplier discovery results when available"
+    )
+    refresh_supplier_cache: bool = Field(
+        default=False, description="Ignore existing supplier discovery cache and refresh it"
     )
     mapping_queue: List[str] = Field(
         default_factory=list,
@@ -181,7 +218,7 @@ class AgentState(BaseModel):
     supply_chain_graph: Optional[SupplyChainGraph] = None
 
     # System metrics and outputs
-    confidence_scores: Dict[str, float] = Field(
+    confidence_scores: Dict[str, Any] = Field(
         default_factory=dict,
         description="Confidence scores for different analysis stages (e.g., 'mapping', 'risk')",
     )
@@ -193,3 +230,16 @@ class AgentState(BaseModel):
     current_task: Optional[str] = None
     history: List[Dict[str, Any]] = Field(default_factory=list)
     errors: List[str] = Field(default_factory=list)
+    active_stage: Optional[str] = None
+    stage_started_at: Dict[str, float] = Field(default_factory=dict)
+    stage_durations: Dict[str, float] = Field(default_factory=dict)
+    timed_out_stages: List[str] = Field(default_factory=list)
+    limit_events: List[str] = Field(default_factory=list)
+    skip_events: List[str] = Field(default_factory=list)
+    runtime_counters: Dict[str, int] = Field(
+        default_factory=lambda: {
+            "supplier_companies_processed": 0,
+            "llm_calls": 0,
+            "web_queries": 0,
+        }
+    )

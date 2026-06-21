@@ -14,8 +14,8 @@ The system orchestrates a multi-agent workflow using **LangGraph**. The workflow
 
 ### LLM Abstraction Layer (`providers/llm_provider.py`)
 A centralized factory for chat models. It abstracts the underlying provider (OpenAI or Gemini), allowing the system to switch models easily.
-- `get_llm(provider="openai")` -> Returns `ChatOpenAI`
-- `get_llm(provider="gemini")` -> Returns `ChatGoogleGenerativeAI`
+- `resolve_provider()` -> Selects Google first, then OpenAI, and fails fast if neither key exists
+- `get_llm()` -> Returns `ChatGoogleGenerativeAI` or `ChatOpenAI` based on resolved credentials
 
 ### Prompt Templates (`prompts/`)
 All LLM prompts are externalized into reusable templates.
@@ -74,10 +74,10 @@ from providers.llm_provider import get_llm
 from chains.relationship_chain import get_relationship_chain
 
 # Initialize LLM
-llm = get_llm(provider="openai")
+llm = get_llm()
 
 # Execute relationship classification
-chain = get_relationship_chain(provider="openai")
+chain = get_relationship_chain()
 result = chain.invoke({
     "target_company": "Apple",
     "candidate_entity": "TSMC",

@@ -1,0 +1,121 @@
+{
+  "nodes": [
+    {
+      "id": "AMD",
+      "label": "AMD",
+      "node_type": "company"
+    },
+    {
+      "id": "TSMC",
+      "label": "TSMC",
+      "node_type": "supplier"
+    },
+    {
+      "id": "GlobalFoundries",
+      "label": "GlobalFoundries",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Samsung",
+      "label": "Samsung",
+      "node_type": "supplier"
+    },
+    {
+      "id": "ASE Technology",
+      "label": "ASE Technology",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Amkor Technology",
+      "label": "Amkor Technology",
+      "node_type": "supplier"
+    },
+    {
+      "id": "ASML",
+      "label": "ASML",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Lam Research",
+      "label": "Lam Research",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Entegris",
+      "label": "Entegris",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Corning",
+      "label": "Corning",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Murata Manufacturing",
+      "label": "Murata Manufacturing",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Sony Semiconductor",
+      "label": "Sony Semiconductor",
+      "node_type": "supplier"
+    }
+  ],
+  "edges": [
+    {
+      "source": "AMD",
+      "target": "TSMC",
+      "relationship": "supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "GlobalFoundries",
+      "relationship": "supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "Samsung",
+      "relationship": "supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "ASE Technology",
+      "relationship": "supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "Amkor Technology",
+      "relationship": "supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "ASML",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "Lam Research",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "Entegris",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "Corning",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "Murata Manufacturing",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "Sony Semiconductor",
+      "relationship": "supplier"
+    }
+  ]
+}

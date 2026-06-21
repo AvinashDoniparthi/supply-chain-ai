@@ -1,0 +1,10 @@
+{
+  "nodes": [
+    {
+      "id": "Qualcomm",
+      "label": "Qualcomm",
+      "node_type": "company"
+    }
+  ],
+  "edges": []
+}

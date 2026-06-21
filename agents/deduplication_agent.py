@@ -3,15 +3,12 @@ from typing import Dict, List, Any
 from models.state import AgentState, SupplierInfo
 from models.relationship import RelationshipResult
 from utils.identity_resolution import resolver
+from utils.output import agent_event, debug_log
 
 logger = logging.getLogger(__name__)
 
-# Threshold for relationship confidence - below this, we retain all suppliers
-# Above this, we filter by relationship type
-RELATIONSHIP_FILTER_CONFIDENCE = 0.80
-
-# Relationship types that should be removed if confidence is high
-REJECT_RELATIONSHIP_TYPES = {"competitor", "customer", "distributor", "unrelated"}
+# Relationship types allowed into the final supplier set.
+RETAIN_RELATIONSHIP_TYPES = {"supplier", "upstream_supplier"}
 
 
 def deduplication_agent(state: AgentState) -> AgentState:
@@ -19,7 +16,7 @@ def deduplication_agent(state: AgentState) -> AgentState:
     Agent responsible for deduplicating suppliers based on their canonical names.
     Merges evidence, products, and picks the highest confidence relationship.
     """
-    print("\n--- DEDUPLICATION AGENT: Merging Entities by Identity ---")
+    agent_event("Deduplication agent started")
 
     if not state.suppliers:
         return state
@@ -27,9 +24,9 @@ def deduplication_agent(state: AgentState) -> AgentState:
     # 1. Group suppliers by canonical name
     canonical_groups: Dict[str, List[SupplierInfo]] = {}
     for supplier in state.suppliers:
-        # Ensure canonical name is set (it should be from supplier_agent)
-        if not supplier.canonical_name:
-            supplier.canonical_name = resolver.resolve(supplier.name)
+        # Re-resolve existing canonical values so older aliases collapse into
+        # the current centralized canonical identity.
+        supplier.canonical_name = resolver.resolve(supplier.canonical_name or supplier.name)
 
         c_name = supplier.canonical_name
         if c_name not in canonical_groups:
@@ -40,12 +37,15 @@ def deduplication_agent(state: AgentState) -> AgentState:
 
     for c_name, group in canonical_groups.items():
         if len(group) == 1:
-            deduplicated_suppliers.append(group[0])
+            supplier = group[0]
+            supplier.canonical_name = c_name
+            supplier.name = resolver.display_name(c_name)
+            deduplicated_suppliers.append(supplier)
             continue
 
-        print(f"Merging {len(group)} entities into: {c_name}")
+        debug_log(logger, "Merging %s entities into: %s", len(group), c_name)
         for s in group:
-            print(f"  - {s.name}")
+            debug_log(logger, "  - %s", s.name)
 
         # Merge logic
         primary = group[0]  # Use the first one as the base
@@ -53,9 +53,14 @@ def deduplication_agent(state: AgentState) -> AgentState:
         merged_products = set()
         merged_evidence = []
         max_confidence = 0.0
+        max_propagated_confidence = 0.0
+        parent_companies = []
+        relationship_paths = []
 
         # Track unique evidence links
         seen_links = set()
+        seen_parent_companies = set()
+        seen_relationship_paths = set()
 
         for s in group:
             merged_products.update(s.products)
@@ -68,18 +73,34 @@ def deduplication_agent(state: AgentState) -> AgentState:
             if s.discovery_confidence > max_confidence:
                 max_confidence = s.discovery_confidence
 
+            if s.propagated_confidence > max_propagated_confidence:
+                max_propagated_confidence = s.propagated_confidence
+
+            if s.parent_company and s.parent_company not in seen_parent_companies:
+                parent_companies.append(s.parent_company)
+                seen_parent_companies.add(s.parent_company)
+
+            if s.relationship_path:
+                path_key = " -> ".join(s.relationship_path)
+                if path_key not in seen_relationship_paths:
+                    relationship_paths.append(path_key)
+                    seen_relationship_paths.add(path_key)
+
         # Create a new merged supplier info
         merged_supplier = SupplierInfo(
-            name=c_name,  # Use canonical name as the name for the deduplicated entry
+            name=resolver.display_name(c_name),
             canonical_name=c_name,
             location=primary.location,  # Could be improved by picking a non-"Unknown" location
             products=list(merged_products),
-            tier=min(s.tier for s in group),  # Pick highest tier (lowest number)
+            tier=max(s.tier for s in group),
             criticality=(
                 "High" if any(s.criticality == "High" for s in group) else "Medium"
             ),
             status="Active",
             discovery_confidence=max_confidence,
+            propagated_confidence=max_propagated_confidence,
+            parent_company="; ".join(parent_companies) if parent_companies else None,
+            relationship_path=relationship_paths,
             evidence=merged_evidence,
         )
 
@@ -117,70 +138,63 @@ def deduplication_agent(state: AgentState) -> AgentState:
     # Build mapping of supplier to relationship data
     rel_map = {r.candidate_company: r for r in deduplicated_relationships}
 
-    # Filter suppliers based on improved logic:
-    # - Retain all suppliers with relationship_type == "unknown"
-    # - Retain all suppliers with relationship confidence < RELATIONSHIP_FILTER_CONFIDENCE
-    # - Only remove suppliers with explicitly bad types AND high confidence
+    # Filter suppliers based on supply-chain relationship labels only.
     filtered_suppliers = []
     removed_count = 0
+    has_relationship_data = bool(deduplicated_relationships)
 
     for supplier in deduplicated_suppliers:
         supplier_name = supplier.canonical_name or supplier.name
         rel_result = rel_map.get(supplier_name)
 
-        # If no relationship data, retain the supplier (be conservative)
+        # If relationship classification completely failed, keep discovered
+        # suppliers rather than deleting the entire run. Otherwise no-match
+        # entities are not retained as suppliers.
         if not rel_result:
-            filtered_suppliers.append(supplier)
-            print(
-                f"[RELATIONSHIP FILTER] Supplier: {supplier_name} | Classification: N/A | Confidence: N/A | Removed: False"
+            if not has_relationship_data:
+                filtered_suppliers.append(supplier)
+            debug_log(
+                logger,
+                "[RELATIONSHIP FILTER] Supplier: %s | Classification: N/A | Confidence: N/A | Removed: %s",
+                supplier_name,
+                bool(has_relationship_data),
             )
+            if has_relationship_data:
+                removed_count += 1
             continue
 
-        rel_type = rel_result.relationship_type
+        rel_type = rel_result.relationship_type.lower()
         rel_conf = rel_result.confidence_score
 
-        # Retain if unknown relationship (degraded mode)
-        if rel_type == "unknown":
-            filtered_suppliers.append(supplier)
-            print(
-                f"[RELATIONSHIP FILTER] Supplier: {supplier_name} | Classification: {rel_type} | Confidence: {rel_conf:.2f} | Removed: False (unknown retained)"
-            )
-            continue
-
-        # Retain if confidence is below threshold (be conservative with low-confidence data)
-        if rel_conf < RELATIONSHIP_FILTER_CONFIDENCE:
-            filtered_suppliers.append(supplier)
-            print(
-                f"[RELATIONSHIP FILTER] Supplier: {supplier_name} | Classification: {rel_type} | Confidence: {rel_conf:.2f} | Removed: False (low confidence retained)"
-            )
-            continue
-
-        # Only remove if explicitly bad type AND high confidence
-        if (
-            rel_type in REJECT_RELATIONSHIP_TYPES
-            and rel_conf >= RELATIONSHIP_FILTER_CONFIDENCE
-        ):
+        if rel_type not in RETAIN_RELATIONSHIP_TYPES:
             removed_count += 1
-            print(
-                f"[RELATIONSHIP FILTER] Supplier: {supplier_name} | Classification: {rel_type} | Confidence: {rel_conf:.2f} | Removed: True"
+            debug_log(
+                logger,
+                "[RELATIONSHIP FILTER] Supplier: %s | Classification: %s | Confidence: %.2f | Removed: True",
+                supplier_name,
+                rel_type,
+                rel_conf,
             )
             continue
 
-        # Default: retain (be conservative)
         filtered_suppliers.append(supplier)
-        print(
-            f"[RELATIONSHIP FILTER] Supplier: {supplier_name} | Classification: {rel_type} | Confidence: {rel_conf:.2f} | Removed: False"
+        debug_log(
+            logger,
+            "[RELATIONSHIP FILTER] Supplier: %s | Classification: %s | Confidence: %.2f | Removed: False",
+            supplier_name,
+            rel_type,
+            rel_conf,
         )
 
     # Update state
     state.suppliers = filtered_suppliers
     state.relationship_results = deduplicated_relationships
 
-    print(f"\n--- DEDUPLICATION SUMMARY ---")
-    print(f"Total Unique Entities Discovered: {len(state.discovered_entities)}")
-    print(f"Entities Retained After Filtering: {len(filtered_suppliers)}")
-    print(f"Entities Removed (High-confidence rejects): {removed_count}")
-    print(f"Filter Confidence Threshold: {RELATIONSHIP_FILTER_CONFIDENCE}")
+    debug_log(logger, "[DEDUPLICATION SUMMARY]")
+    debug_log(logger, "Total Unique Entities Discovered: %s", len(state.discovered_entities))
+    debug_log(logger, "Entities Retained After Filtering: %s", len(filtered_suppliers))
+    debug_log(logger, "Entities Removed (non-supplier labels): %s", removed_count)
+    debug_log(logger, "Retained Relationship Types: %s", sorted(RETAIN_RELATIONSHIP_TYPES))
     for s in state.discovered_entities:
         rel_result = rel_map.get(s.canonical_name or s.name)
         if rel_result:
@@ -188,15 +202,18 @@ def deduplication_agent(state: AgentState) -> AgentState:
             rel_conf = rel_result.confidence_score
             is_retained = s in filtered_suppliers
             status = "RETAIN" if is_retained else "REMOVE"
-            print(f"  - {s.name}: {rel_type} ({rel_conf:.2f}) -> {status}")
+            debug_log(logger, "  - %s: %s (%.2f) -> %s", s.name, rel_type, rel_conf, status)
         else:
             status = "RETAIN" if s in filtered_suppliers else "REMOVE"
-            print(f"  - {s.name}: N/A -> {status}")
+            debug_log(logger, "  - %s: N/A -> %s", s.name, status)
 
     state.current_task = f"Deduplicated into {len(state.discovered_entities)} entities. Retained {len(state.suppliers)} for verification."
-    print(
-        f"[PIPELINE COUNT] After deduplication_agent: {len(state.suppliers)} suppliers"
+    debug_log(
+        logger,
+        "[PIPELINE COUNT] After deduplication_agent: %s suppliers",
+        len(state.suppliers),
     )
+    agent_event(f"Deduplication agent completed: {len(state.suppliers)} retained")
     state.history.append(
         {
             "agent": "deduplication_agent",
