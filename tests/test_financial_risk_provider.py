@@ -189,5 +189,19 @@ class TestFinancialRiskProvider(unittest.TestCase):
         self.assertEqual(risk.severity, "Critical")
         self.assertIn("bankruptcy", keywords)
 
+    def test_etf_price_drop_does_not_create_supplier_financial_risk(self):
+        item = {
+            "title": "Semiconductor ETF drops as FinCorp stock price falls",
+            "snippet": "FinCorp shares traded lower with chip stocks during a broad market sell-off.",
+            "pub_date": email.utils.format_datetime(datetime.now()),
+        }
+
+        risk, keywords = self.provider._analyze_financial_headline(
+            self.state.suppliers[0], item
+        )
+
+        self.assertIsNone(risk)
+        self.assertEqual(keywords, [])
+
 if __name__ == '__main__':
     unittest.main()

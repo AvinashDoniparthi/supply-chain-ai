@@ -162,5 +162,45 @@ class TestNewsRiskProvider(unittest.TestCase):
         self.assertEqual(risk.severity, "Critical")
         self.assertIn("war", keywords)
 
+    def test_tsmc_strike_deal_is_not_labor_risk(self):
+        supplier = SupplierInfo(name="TSMC", location="Taiwan")
+        titles = [
+            "Amkor, TSMC strike deal on advanced packaging",
+            "Amkor and TSMC struck deal on advanced packaging",
+            "TSMC and Amkor strike agreement on advanced packaging",
+            "Advanced packaging deal struck by Amkor and TSMC",
+        ]
+
+        for title in titles:
+            with self.subTest(title=title):
+                item = {
+                    "title": title,
+                    "snippet": "TSMC said the partnership expands manufacturing capacity.",
+                    "pub_date": email.utils.format_datetime(datetime.now()),
+                }
+
+                risk, keywords = self.provider._analyze_headline_with_keywords(
+                    supplier, item
+                )
+
+                self.assertIsNone(risk)
+                self.assertEqual(keywords, [])
+
+    def test_real_union_strike_creates_labor_risk(self):
+        item = {
+            "title": "TestCorp union strike disrupts factory production",
+            "snippet": "Union strike action by workers halted a TestCorp facility.",
+            "pub_date": email.utils.format_datetime(datetime.now()),
+        }
+
+        risk, keywords = self.provider._analyze_headline_with_keywords(
+            self.state.suppliers[0], item
+        )
+
+        self.assertIsNotNone(risk)
+        self.assertEqual(risk.supplier_name, self.supplier_name)
+        self.assertEqual(risk.severity, "High")
+        self.assertIn("union strike", keywords)
+
 if __name__ == '__main__':
     unittest.main()

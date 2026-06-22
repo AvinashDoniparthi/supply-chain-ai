@@ -4,6 +4,7 @@ from scraping.supplier_discovery import (
     candidate_competes_with_target,
     supplier_evidence_is_strong,
     supplier_evidence_explicitly_links_candidate_to_source,
+    is_location_or_ecosystem_entity,
     normalize_supplier_candidate_name,
     validate_supplier_candidate_name,
     unrelated_energy_candidate_without_supply_evidence,
@@ -235,6 +236,12 @@ def supplier_agent(state: AgentState) -> AgentState:
                     f"[NORMALIZE] Candidate: {raw_candidate_name} -> {candidate_name}"
                 )
                 data = {**data, "name": candidate_name}
+
+            if is_location_or_ecosystem_entity(candidate_name):
+                logger.info(
+                    f"[FILTER] Rejected: {candidate_name} Reason: Location, region, or ecosystem label"
+                )
+                continue
 
             canonical_name = resolver.resolve(candidate_name)
 

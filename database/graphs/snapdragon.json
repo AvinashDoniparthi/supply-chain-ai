@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "id": "Snapdragon",
+      "label": "Snapdragon",
+      "node_type": "company"
+    },
+    {
+      "id": "Xiaomi",
+      "label": "Xiaomi",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Xiaomi Mi",
+      "label": "Xiaomi Mi",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Smart TV",
+      "label": "Smart TV",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Sony TV",
+      "label": "Sony TV",
+      "node_type": "supplier"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Snapdragon",
+      "target": "Xiaomi",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Snapdragon",
+      "target": "Xiaomi Mi",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Snapdragon",
+      "target": "Smart TV",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Snapdragon",
+      "target": "Sony TV",
+      "relationship": "upstream_supplier"
+    }
+  ]
+}

@@ -4,13 +4,16 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from agents.deduplication_agent import deduplication_agent
+from agents.risk_agent import risk_agent
 from agents.supplier_agent import supplier_agent
 from agents.verification_agent import verification_agent
 from models.relationship import RelationshipResult
-from models.state import AgentState, CompanyInfo, SupplierInfo
+from models.state import AgentState, CompanyInfo, RiskAnalysis, SupplierInfo
 from scraping.supplier_discovery import (
     SupplierDiscoveryScraper,
     discovery_queries,
+    is_location_or_ecosystem_entity,
+    is_product_or_brand_name,
     validate_supplier_candidate_name,
 )
 from utils.identity_resolution import resolver
@@ -235,11 +238,22 @@ class TestCrossCompanyStability(unittest.TestCase):
 
     def test_qualcomm_query_patterns_and_foundry_discovery(self):
         queries = discovery_queries("Qualcomm")
+        self.assertEqual(
+            queries[:6],
+            [
+                "Qualcomm foundry supplier",
+                "Qualcomm chip manufacturing partner",
+                "Qualcomm semiconductor supply chain",
+                "Qualcomm TSMC Samsung foundry",
+                "Qualcomm ASE Amkor packaging supplier",
+                "Qualcomm outsourced semiconductor assembly and test",
+            ],
+        )
         self.assertIn("Qualcomm foundry supplier", queries)
         self.assertIn("Qualcomm chip manufacturing partner", queries)
         self.assertIn("Qualcomm semiconductor supply chain", queries)
         self.assertIn("Qualcomm TSMC Samsung foundry", queries)
-        self.assertIn("Qualcomm packaging supplier ASE Amkor", queries)
+        self.assertIn("Qualcomm ASE Amkor packaging supplier", queries)
         self.assertIn("Qualcomm outsourced semiconductor assembly and test", queries)
 
         suppliers, _queries = self.run_discovery(
@@ -265,7 +279,7 @@ class TestCrossCompanyStability(unittest.TestCase):
 
         self.assertIn("Qualcomm foundry supplier", queries)
         self.assertIn("Qualcomm TSMC Samsung foundry", queries)
-        self.assertIn("Qualcomm packaging supplier ASE Amkor", queries)
+        self.assertIn("Qualcomm ASE Amkor packaging supplier", queries)
 
     def test_qualcomm_discovery_ignores_stale_empty_cache(self):
         with tempfile.TemporaryDirectory() as cache_dir:
@@ -295,6 +309,128 @@ class TestCrossCompanyStability(unittest.TestCase):
         self.assertIn("TSMC", names)
         self.assertIn("Qualcomm foundry supplier", scraper.session.seen_queries)
         self.assertEqual(scraper.get_stats()["Cache Used"], 0)
+
+    def test_qualcomm_current_empty_cache_forces_live_even_with_legacy_cache(self):
+        with tempfile.TemporaryDirectory() as cache_dir:
+            scraper = SupplierDiscoveryScraper()
+            scraper.cache_dir = cache_dir
+            with open(scraper._get_cache_path("Qualcomm"), "w") as cache_file:
+                json.dump([], cache_file)
+            legacy_cache_path = scraper._get_cache_path("Qualcomm").replace(
+                f"_v{scraper.cache_version}.json",
+                f"_v{scraper.cache_version - 1}.json",
+            )
+            with open(legacy_cache_path, "w") as cache_file:
+                json.dump(
+                    [
+                        {
+                            "name": "Amkor Technology",
+                            "source_evidence": [
+                                {
+                                    "title": "Amkor Technology",
+                                    "link": "https://en.wikipedia.org/wiki/Amkor_Technology",
+                                    "snippet": (
+                                        "Amkor Technology was recognized as Supplier "
+                                        "of the Year by Qualcomm Technologies."
+                                    ),
+                                }
+                            ],
+                        }
+                    ],
+                    cache_file,
+                )
+
+            scraper.session = FakeWikipediaSession(
+                {
+                    "Qualcomm foundry supplier": [
+                        {
+                            "title": "TSMC",
+                            "snippet": (
+                                "TSMC serves as the main supplier for Nvidia, Apple, "
+                                "Broadcom, and Qualcomm."
+                            ),
+                        }
+                    ]
+                }
+            )
+
+            with patch("scraping.supplier_discovery.time.sleep", return_value=None):
+                suppliers = scraper.find_suppliers("Qualcomm")
+
+        names = {supplier["name"] for supplier in suppliers}
+        self.assertIn("TSMC", names)
+        self.assertNotIn("Amkor Technology", names)
+        self.assertIn("Qualcomm foundry supplier", scraper.session.seen_queries)
+        self.assertEqual(scraper.get_stats()["Cache Used"], 0)
+
+    def test_qualcomm_uses_non_empty_legacy_cache_when_current_cache_missing(self):
+        with tempfile.TemporaryDirectory() as cache_dir:
+            scraper = SupplierDiscoveryScraper()
+            scraper.cache_dir = cache_dir
+            legacy_cache_path = scraper._get_cache_path("Qualcomm").replace(
+                f"_v{scraper.cache_version}.json",
+                f"_v{scraper.cache_version - 1}.json",
+            )
+            with open(legacy_cache_path, "w") as cache_file:
+                json.dump(
+                    [
+                        {
+                            "name": "Amkor Technology",
+                            "location": "Unknown (Verified by Research)",
+                            "products": ["Semiconductor Packaging/Test"],
+                            "tier": 1,
+                            "criticality": "High",
+                            "confidence": 0.91,
+                            "justification": "Direct supplier evidence for Qualcomm",
+                            "source_evidence": [
+                                {
+                                    "title": "Amkor Technology",
+                                    "link": "https://en.wikipedia.org/wiki/Amkor_Technology",
+                                    "snippet": (
+                                        "Amkor Technology was recognized as Supplier "
+                                        "of the Year by Qualcomm Technologies."
+                                    ),
+                                }
+                            ],
+                        }
+                    ],
+                    cache_file,
+                )
+            scraper.session = FakeWikipediaSession()
+
+            suppliers = scraper.find_suppliers("Qualcomm")
+
+        self.assertEqual([supplier["name"] for supplier in suppliers], ["Amkor Technology"])
+        self.assertEqual(scraper.session.seen_queries, [])
+        self.assertEqual(scraper.get_stats()["Cache Used"], 1)
+
+    def test_qualcomm_cache_only_returns_stale_empty_cache_without_live_queries(self):
+        state = AgentState(target_company="Qualcomm", supplier_cache_only=True)
+        with tempfile.TemporaryDirectory() as cache_dir:
+            scraper = SupplierDiscoveryScraper(runtime_state=state)
+            scraper.cache_dir = cache_dir
+            with open(scraper._get_cache_path("Qualcomm"), "w") as cache_file:
+                json.dump([], cache_file)
+
+            scraper.session = FakeWikipediaSession(
+                {
+                    "Qualcomm foundry supplier": [
+                        {
+                            "title": "TSMC",
+                            "snippet": (
+                                "TSMC serves as the main supplier for Nvidia, Apple, "
+                                "Broadcom, and Qualcomm."
+                            ),
+                        }
+                    ]
+                }
+            )
+
+            with patch("scraping.supplier_discovery.time.sleep", return_value=None):
+                suppliers = scraper.find_suppliers("Qualcomm")
+
+        self.assertEqual(suppliers, [])
+        self.assertEqual(scraper.session.seen_queries, [])
 
     def test_qualcomm_refresh_cache_bypasses_curated_fast_path(self):
         state = AgentState(target_company="Qualcomm", refresh_supplier_cache=True)
@@ -381,7 +517,7 @@ class TestCrossCompanyStability(unittest.TestCase):
         suppliers, _queries = self.run_discovery(
             "Qualcomm",
             search_results={
-                "Qualcomm packaging supplier ASE Amkor": [
+                "Qualcomm ASE Amkor packaging supplier": [
                     {
                         "title": "ASE Technology",
                         "snippet": (
@@ -403,6 +539,9 @@ class TestCrossCompanyStability(unittest.TestCase):
             "technology hub",
             "Industrial Park",
             "Economic Zone",
+            "innovation district",
+            "region",
+            "cluster",
             "Hsinchu Science Park",
         ]:
             valid, reason = validate_supplier_candidate_name(candidate, "Dell")
@@ -411,6 +550,12 @@ class TestCrossCompanyStability(unittest.TestCase):
                 "location" in reason or "ecosystem" in reason,
                 f"{candidate}: {reason}",
             )
+            self.assertTrue(is_location_or_ecosystem_entity(candidate), candidate)
+
+        for company in ["Broadcom", "Compal Electronics", "Marvell Technology"]:
+            valid, reason = validate_supplier_candidate_name(company, "Dell")
+            self.assertTrue(valid, f"{company}: {reason}")
+            self.assertFalse(is_location_or_ecosystem_entity(company), company)
 
     def test_dell_query_patterns_and_supplier_verification(self):
         queries = discovery_queries("Dell")
@@ -442,6 +587,277 @@ class TestCrossCompanyStability(unittest.TestCase):
         self.assertTrue(results["Broadcom Inc."].verified)
         self.assertTrue(results["Compal Electronics"].verified)
         self.assertTrue(results["Marvell Technology, Inc."].verified)
+
+    @patch("agents.supplier_agent.SupplierDiscoveryScraper")
+    def test_dell_supplier_output_rejects_silicon_wadi_but_keeps_real_companies(
+        self, mock_scraper_class
+    ):
+        mock_scraper = MagicMock()
+        mock_scraper_class.return_value = mock_scraper
+
+        dell_suppliers = [
+            {
+                "name": "Broadcom",
+                "location": "United States",
+                "products": ["Networking chips"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.87,
+                "source_evidence": [],
+            },
+            {
+                "name": "Compal",
+                "location": "Taiwan",
+                "products": ["Contract manufacturing"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.87,
+                "source_evidence": [],
+            },
+            {
+                "name": "Marvell Technology Group",
+                "location": "United States",
+                "products": ["Storage controllers"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.94,
+                "source_evidence": [],
+            },
+        ]
+        marvell_suppliers = [
+            {
+                "name": "Silicon Wadi",
+                "location": "Israel",
+                "products": ["General Components"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.79,
+                "source_evidence": [
+                    {
+                        "title": "Silicon Wadi",
+                        "link": "https://en.wikipedia.org/wiki/Silicon_Wadi",
+                        "snippet": (
+                            "Marvell to acquire LAN-chip supplier Galileo for "
+                            "$2.7 billion in stock."
+                        ),
+                    }
+                ],
+            }
+        ]
+
+        def find_suppliers(company_name):
+            if company_name == "Dell":
+                return dell_suppliers
+            if company_name == "Marvell Technology, Inc.":
+                return marvell_suppliers
+            return []
+
+        mock_scraper.find_suppliers.side_effect = find_suppliers
+
+        state = AgentState(target_company="Dell")
+        state.company = CompanyInfo(name="Dell")
+        state.mapping_queue = ["Dell"]
+        state.seen_companies = ["Dell Technologies"]
+        state.max_depth = 2
+
+        state = supplier_agent(state)
+        state = supplier_agent(state)
+
+        supplier_names = {supplier.name for supplier in state.suppliers}
+        canonical_names = {supplier.canonical_name for supplier in state.suppliers}
+        self.assertNotIn("Silicon Wadi", supplier_names)
+        self.assertIn("Broadcom Inc.", canonical_names)
+        self.assertIn("Compal Electronics", canonical_names)
+        self.assertIn("Marvell Technology, Inc.", canonical_names)
+
+    @patch("agents.supplier_agent.SupplierDiscoveryScraper")
+    def test_dell_tier2_rejects_customers_products_and_unsupported_upstream(
+        self, mock_scraper_class
+    ):
+        mock_scraper = MagicMock()
+        mock_scraper_class.return_value = mock_scraper
+
+        dell_suppliers = [
+            {
+                "name": "Broadcom",
+                "location": "United States",
+                "products": ["Networking chips"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.95,
+                "source_evidence": [
+                    {"snippet": "Broadcom provides networking chips to Dell."}
+                ],
+            },
+            {
+                "name": "Compal",
+                "location": "Taiwan",
+                "products": ["Contract manufacturing"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.94,
+                "source_evidence": [
+                    {"snippet": "Compal Electronics manufactures laptops for Dell."}
+                ],
+            },
+            {
+                "name": "Marvell Technology Group",
+                "location": "United States",
+                "products": ["Storage controllers"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.93,
+                "source_evidence": [
+                    {
+                        "snippet": (
+                            "Marvell Technology Group supplies storage controllers "
+                            "to Dell."
+                        )
+                    }
+                ],
+            },
+        ]
+        compal_candidates = [
+            {
+                "name": "Apple Inc.",
+                "location": "United States",
+                "products": ["Consumer electronics"],
+                "tier": 1,
+                "criticality": "Medium",
+                "confidence": 0.9,
+                "source_evidence": [
+                    {
+                        "snippet": (
+                            "Compal Electronics manufactures laptops for Apple Inc., "
+                            "a major customer and brand owner."
+                        )
+                    }
+                ],
+            },
+            {
+                "name": "Dell Inspiron",
+                "location": "Unknown",
+                "products": ["Laptop line"],
+                "tier": 1,
+                "criticality": "Medium",
+                "confidence": 0.9,
+                "source_evidence": [
+                    {
+                        "snippet": (
+                            "The Dell Inspiron product line is manufactured by "
+                            "Compal Electronics for Dell."
+                        )
+                    }
+                ],
+            },
+        ]
+        broadcom_candidates = [
+            {
+                "name": "Semiconductor Manufacturing International Corporation",
+                "location": "China",
+                "products": ["Foundry services"],
+                "tier": 1,
+                "criticality": "High",
+                "confidence": 0.9,
+                "source_evidence": [
+                    {
+                        "snippet": (
+                            "Broadcom and Semiconductor Manufacturing International "
+                            "Corporation appear in semiconductor foundry partner "
+                            "discussions."
+                        )
+                    }
+                ],
+            }
+        ]
+
+        def find_suppliers(company_name):
+            if company_name == "Dell":
+                return dell_suppliers
+            if company_name == "Broadcom Inc.":
+                return broadcom_candidates
+            if company_name == "Compal Electronics":
+                return compal_candidates
+            return []
+
+        mock_scraper.find_suppliers.side_effect = find_suppliers
+
+        state = AgentState(target_company="Dell")
+        state.company = CompanyInfo(name="Dell")
+        state.mapping_queue = ["Dell"]
+        state.seen_companies = ["Dell Technologies"]
+        state.max_depth = 2
+
+        for _ in range(4):
+            state = supplier_agent(state)
+
+        supplier_names = {supplier.name for supplier in state.suppliers}
+        canonical_names = {supplier.canonical_name for supplier in state.suppliers}
+
+        self.assertNotIn("Apple Inc.", canonical_names)
+        self.assertNotIn("Dell Inspiron", supplier_names)
+        self.assertNotIn(
+            "Semiconductor Manufacturing International Corporation", supplier_names
+        )
+        self.assertIn("Broadcom Inc.", canonical_names)
+        self.assertIn("Compal Electronics", canonical_names)
+        self.assertIn("Marvell Technology, Inc.", canonical_names)
+
+    def test_dell_product_or_brand_names_are_rejected(self):
+        for candidate in [
+            "Dell Inspiron",
+            "Dell XPS",
+            "ThinkPad",
+            "MacBook",
+            "iPhone",
+            "iPad",
+        ]:
+            self.assertTrue(is_product_or_brand_name(candidate), candidate)
+            valid, reason = validate_supplier_candidate_name(candidate, "Dell")
+            self.assertFalse(valid, candidate)
+            self.assertIn("product or brand", reason)
+
+    @patch("agents.risk_agent.FinancialRiskProvider.assess_risk", return_value=[])
+    @patch("agents.risk_agent.NewsRiskProvider.assess_risk", return_value=[])
+    @patch("agents.risk_agent.GeopoliticalRiskProvider.assess_risk")
+    def test_dell_risks_ignore_rejected_apple_entity(
+        self, mock_geo_risk, _mock_news_risk, _mock_financial_risk
+    ):
+        mock_geo_risk.return_value = [
+            RiskAnalysis(
+                supplier_name="Apple Inc.",
+                risk_type="Geopolitical",
+                severity="High",
+                confidence=0.9,
+                reasoning="Apple-related risk should not propagate to Dell.",
+            ),
+            RiskAnalysis(
+                supplier_name="Broadcom",
+                risk_type="Geopolitical",
+                severity="Medium",
+                confidence=0.8,
+                reasoning="Retained Broadcom supplier risk.",
+            ),
+        ]
+        state = AgentState(target_company="Dell")
+        state.company = CompanyInfo(name="Dell")
+        state.suppliers = [
+            SupplierInfo(
+                name="Broadcom",
+                canonical_name="Broadcom Inc.",
+                location="United States",
+                products=["Networking chips"],
+            )
+        ]
+
+        state = risk_agent(state)
+
+        risk_text = "\n".join(
+            f"{risk.supplier_name} {risk.reasoning}"
+            for risk in state.risk_assessments
+        )
+        self.assertNotIn("Apple", risk_text)
+        self.assertIn("Broadcom", risk_text)
 
     @patch("agents.supplier_agent.SupplierDiscoveryScraper")
     def test_nvidia_samsung_requires_direct_supplier_evidence(self, mock_scraper_class):

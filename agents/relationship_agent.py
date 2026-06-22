@@ -7,6 +7,7 @@ from models.relationship import RelationshipResult
 from chains.relationship_chain import get_relationship_chain, RelationshipClassification
 from langchain_core.output_parsers import PydanticOutputParser
 from providers.llm_provider import print_llm_config_once, resolve_provider
+from retrieval.rag_enrichment import enrich_supplier_evidence_with_rag
 from scraping.supplier_discovery import (
     analyze_supplier_evidence,
     candidate_competes_with_target,
@@ -269,6 +270,7 @@ def relationship_agent(state: AgentState) -> AgentState:
         "[PIPELINE COUNT] Before relationship_agent: %s suppliers",
         len(state.suppliers),
     )
+    state = enrich_supplier_evidence_with_rag(state, "relationship_classification")
 
     if not target_company:
         state.errors.append(

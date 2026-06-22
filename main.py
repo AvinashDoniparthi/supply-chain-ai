@@ -25,6 +25,8 @@ def run_analysis(
     skip_news: bool = False,
     supplier_cache_enabled: bool = True,
     refresh_supplier_cache: bool = False,
+    supplier_cache_only: bool = False,
+    execution_mode: str = "llm",
 ):
     """
     Executes the supply chain analysis using the LangGraph workflow.
@@ -46,6 +48,9 @@ def run_analysis(
         skip_news=skip_news,
         supplier_cache_enabled=supplier_cache_enabled,
         refresh_supplier_cache=refresh_supplier_cache,
+        supplier_cache_only=supplier_cache_only,
+        execution_mode=execution_mode,
+        run_metadata={"mode": execution_mode},
     )
 
     try:
@@ -74,10 +79,7 @@ def run_analysis(
         raise
 
 
-def main():
-    """
-    Entry point for the Supply Chain Intelligence System.
-    """
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Supply Chain Intelligence System")
     parser.add_argument("company", nargs="?", default=None)
     parser.add_argument("--company", dest="company_flag", help="Company to analyze.")
@@ -109,6 +111,12 @@ def main():
         action="store_true",
         help="Skip live news and financial risk providers.",
     )
+    parser.add_argument(
+        "--mode",
+        choices=["llm", "rag"],
+        default="llm",
+        help="Execution mode: llm uses the current pipeline; rag augments evidence with vector retrieval.",
+    )
     cache_group = parser.add_mutually_exclusive_group()
     cache_group.add_argument(
         "--refresh-cache",
@@ -120,7 +128,20 @@ def main():
         action="store_true",
         help="Disable supplier discovery cache reads and writes.",
     )
+    cache_group.add_argument(
+        "--use-cache-only",
+        action="store_true",
+        help="Only use supplier discovery cache; do not run live discovery.",
+    )
     add_output_args(parser)
+    return parser
+
+
+def main():
+    """
+    Entry point for the Supply Chain Intelligence System.
+    """
+    parser = build_parser()
     args = parser.parse_args()
     configure_output(mode_from_args(args))
     company_name = args.company_flag or args.company or "AMD"
@@ -140,6 +161,8 @@ def main():
             skip_news=args.skip_news,
             supplier_cache_enabled=not args.no_cache,
             refresh_supplier_cache=args.refresh_cache,
+            supplier_cache_only=args.use_cache_only,
+            execution_mode=args.mode,
         )
 
         if final_state.errors:

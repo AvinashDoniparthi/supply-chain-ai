@@ -10,6 +10,7 @@ from utils.output import (
     agent_event,
     data_quality_warning_lines,
     debug_log,
+    execution_mode_label,
     is_external_risk,
     progress,
     render_supplier_tier_lines,
@@ -75,11 +76,13 @@ class ExecutiveReportAgent:
             debug_log(logger, "- %s", rec)
 
         state.executive_report = report
+        state.run_metadata["mode"] = state.execution_mode
         state.current_task = "Executive report generated"
         
         state.history.append({
             "agent": "executive_report_agent",
             "action": "generated_executive_report",
+            "mode": state.execution_mode,
             "status": "success"
         })
 
@@ -303,15 +306,23 @@ class ExecutiveReportAgent:
         false_positive_text = ", ".join(coverage["false_positive_suppliers"][:5]) if use_expected else ""
         verification_quality = calculate_verification_quality(state)
 
-        lines = [
-            "DISCOVERY QUALITY",
-            (
-                f"Coverage: {coverage['label']} - {coverage['matched_expected_count']}/"
-                f"{coverage['expected_count']} expected Tier-1 suppliers identified."
-                if use_expected
-                else f"Coverage: {coverage['label']} - {coverage['tier1_supplier_count']} discovered Tier-1 suppliers identified."
-            ),
-        ]
+        lines = [f"Mode: {execution_mode_label(state)}"]
+        if state.execution_mode == "rag":
+            lines.append(
+                f"Retrieved evidence chunks: {state.run_metadata.get('retrieval_chunks_attached', 0)}"
+            )
+        lines.extend(
+            [
+                "",
+                "DISCOVERY QUALITY",
+                (
+                    f"Coverage: {coverage['label']} - {coverage['matched_expected_count']}/"
+                    f"{coverage['expected_count']} expected Tier-1 suppliers identified."
+                    if use_expected
+                    else f"Coverage: {coverage['label']} - {coverage['tier1_supplier_count']} discovered Tier-1 suppliers identified."
+                ),
+            ]
+        )
         if verification_quality["quality_factor"] < 1.0:
             lines.append(
                 f"Verification-adjusted coverage: {coverage['verification_adjusted_label']} "

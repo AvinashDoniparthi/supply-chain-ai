@@ -4,7 +4,68 @@
       "id": "Qualcomm",
       "label": "Qualcomm",
       "node_type": "company"
+    },
+    {
+      "id": "Semiconductor Manufacturing International Corporation",
+      "label": "Semiconductor Manufacturing International Corporation",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Amkor Technology",
+      "label": "Amkor Technology",
+      "node_type": "supplier"
+    },
+    {
+      "id": "TSMC",
+      "label": "TSMC",
+      "node_type": "supplier"
+    },
+    {
+      "id": "ASML",
+      "label": "ASML",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Lam Research",
+      "label": "Lam Research",
+      "node_type": "supplier"
+    },
+    {
+      "id": "Entegris",
+      "label": "Entegris",
+      "node_type": "supplier"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "Qualcomm",
+      "target": "Semiconductor Manufacturing International Corporation",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Qualcomm",
+      "target": "Amkor Technology",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Qualcomm",
+      "target": "TSMC",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Qualcomm",
+      "target": "ASML",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Qualcomm",
+      "target": "Lam Research",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Qualcomm",
+      "target": "Entegris",
+      "relationship": "upstream_supplier"
+    }
+  ]
 }

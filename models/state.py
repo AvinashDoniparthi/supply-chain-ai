@@ -112,6 +112,7 @@ class HistoricalRun(BaseModel):
     """Snapshot of a single supply chain analysis run."""
 
     timestamp: str
+    mode: str = "llm"
     health_score: float
     health_status: str
     supplier_count: int
@@ -189,6 +190,13 @@ class AgentState(BaseModel):
     refresh_supplier_cache: bool = Field(
         default=False, description="Ignore existing supplier discovery cache and refresh it"
     )
+    supplier_cache_only: bool = Field(
+        default=False, description="Only use supplier discovery cache; do not run live discovery"
+    )
+    execution_mode: str = Field(
+        default="llm", description="Execution mode: llm or rag"
+    )
+    run_metadata: Dict[str, Any] = Field(default_factory=dict)
     mapping_queue: List[str] = Field(
         default_factory=list,
         description="Queue of company names pending supply chain discovery",
@@ -222,6 +230,7 @@ class AgentState(BaseModel):
         default_factory=dict,
         description="Confidence scores for different analysis stages (e.g., 'mapping', 'risk')",
     )
+    retrieved_evidence: Dict[str, List[Dict[str, str]]] = Field(default_factory=dict)
     final_reports: List[str] = Field(
         default_factory=list, description="Paths or content of generated reports"
     )

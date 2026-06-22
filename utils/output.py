@@ -107,6 +107,10 @@ def mode_from_args(args: argparse.Namespace) -> OutputMode:
     return parse_output_mode(getattr(args, "log_level", None) or os.getenv("LOG_LEVEL"))
 
 
+def execution_mode_label(state: AgentState) -> str:
+    return "RAG" if getattr(state, "execution_mode", "llm") == "rag" else "LLM-only"
+
+
 def risk_level_from_health(score: Optional[float]) -> str:
     if score is None:
         return "Unknown"
@@ -412,6 +416,13 @@ def render_final_report(state: AgentState, include_header: bool = True) -> None:
         emit(f"SUPPLY CHAIN ANALYSIS: {company}")
         emit("=" * 50)
         emit("")
+
+    emit(f"Mode: {execution_mode_label(state)}")
+    if getattr(state, "execution_mode", "llm") == "rag":
+        emit(
+            f"Retrieved evidence chunks: {state.run_metadata.get('retrieval_chunks_attached', 0)}"
+        )
+    emit("")
 
     emit("DISCOVERY QUALITY")
     if coverage.get("coverage_basis") == "expected_suppliers":

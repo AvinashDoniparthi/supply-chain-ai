@@ -471,7 +471,7 @@ class TestTierMapping(unittest.TestCase):
         print("\n".join(discovery_trace))
 
     @patch("agents.supplier_agent.SupplierDiscoveryScraper")
-    def test_tsmc_tier_two_semiconductor_candidates_survive_weighted_evidence(
+    def test_tsmc_tier_two_semiconductor_candidates_require_directional_evidence(
         self, mock_scraper_class
     ):
         mock_scraper = MagicMock()
@@ -541,8 +541,8 @@ class TestTierMapping(unittest.TestCase):
             self.state = supplier_agent(self.state)
 
         supplier_names = [supplier.name for supplier in self.state.suppliers]
-        self.assertIn("GlobalFoundries", supplier_names)
-        self.assertIn("United Microelectronics Corporation", supplier_names)
+        self.assertNotIn("GlobalFoundries", supplier_names)
+        self.assertNotIn("United Microelectronics Corporation", supplier_names)
 
     @patch("agents.supplier_agent.SupplierDiscoveryScraper")
     def test_max_depth_prevents_tier_3(self, mock_scraper_class):

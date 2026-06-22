@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field
 from models.state import AgentState
 from models.verification import VerificationResult
+from retrieval.rag_enrichment import enrich_supplier_evidence_with_rag
 from scraping.company_scraper import CompanyScraper
 from scraping.supplier_discovery import analyze_supplier_evidence, is_known_organization
 from utils.identity_resolution import resolver
@@ -322,6 +323,7 @@ def verification_agent(state: AgentState) -> AgentState:
         "[PIPELINE COUNT] Before verification_agent: %s suppliers",
         len(state.suppliers),
     )
+    state = enrich_supplier_evidence_with_rag(state, "verification")
     
     # Initialize providers
     providers = [

@@ -19,6 +19,11 @@
       "id": "Compal Electronics",
       "label": "Compal Electronics",
       "node_type": "supplier"
+    },
+    {
+      "id": "TSMC",
+      "label": "TSMC",
+      "node_type": "supplier"
     }
   ],
   "edges": [
@@ -35,6 +40,11 @@
     {
       "source": "Dell",
       "target": "Compal Electronics",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Dell",
+      "target": "TSMC",
       "relationship": "supplier"
     }
   ]

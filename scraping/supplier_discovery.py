@@ -114,8 +114,18 @@ PRODUCT_FRAGMENT_NAMES = {
     "power supplies",
     "battery",
     "batteries",
+    "dell inspiron",
+    "dell xps",
     "thinkpad",
     "thinkpads",
+    "macbook",
+    "iphone",
+    "ipad",
+}
+
+CUSTOMER_OR_BRAND_CONTEXT_NAMES = {
+    "apple inc",
+    "apple",
 }
 
 LOCATION_FRAGMENT_WORDS = {
@@ -125,16 +135,19 @@ LOCATION_FRAGMENT_WORDS = {
     "california",
     "china",
     "chinese",
+    "cluster",
     "cupertino",
     "east asia",
     "economic zone",
     "europe",
     "industrial park",
+    "innovation district",
     "israel",
     "japanese",
     "korean",
     "middle east",
     "north america",
+    "region",
     "south korea",
     "southeast asia",
     "taiwan",
@@ -168,7 +181,21 @@ LOCATION_ECOSYSTEM_PATTERNS = [
     r"\b(?:business|technology|industrial)\s+district\b",
     r"\b(?:supply\s+chain|manufacturing)\s+region\b",
     r"\b(?:valley|wadi|park|zone|corridor|region|hub|ecosystem)\b$",
+    r"^(?:region|cluster|technology\s+hub|industrial\s+park|economic\s+zone|innovation\s+district)$",
 ]
+
+
+def is_location_or_ecosystem_entity(name: str) -> bool:
+    clean_name = _clean_candidate_text(name)
+    if not clean_name:
+        return False
+
+    lower_name = clean_name.lower()
+    compact_name = _compact_key(clean_name)
+    return bool(
+        compact_name in LOCATION_FRAGMENT_WORDS
+        or any(re.search(pattern, lower_name) for pattern in LOCATION_ECOSYSTEM_PATTERNS)
+    )
 
 
 def _seed_evidence(source: str, supplier: str, snippet: str) -> List[Dict[str, str]]:
@@ -745,7 +772,9 @@ SUPPLIER_SIGNAL_PATTERNS = {
         r"\bfoundry\s+for\b",
         r"\bserves?\s+as\s+(?:the\s+)?main\s+supplier\s+for\b",
         r"\bprovides?\s+(?:components?|parts?|chips?|displays?|memory|services?|materials?|equipment|systems?)\s+to\b",
+        r"\bprovides?\b.{0,80}\b(?:components?|parts?|chips?|displays?|memory|services?|materials?|equipment|systems?)\b.{0,40}\b(?:to|for)\b",
         r"\bsupplies\s+(?:components?|parts?|chips?|displays?|memory|materials?|equipment|systems?)\b",
+        r"\bsupplies\b.{0,80}\b(?:components?|parts?|chips?|displays?|memory|materials?|equipment|systems?)\b",
     ],
     "medium": [
         r"\bstrategic\s+partner\b",
@@ -798,7 +827,15 @@ SUPPLIER_NEGATIVE_PATTERNS = [
     r"\bpartnered\s+with\b",
     r"\bjoint\s+venture\b",
     r"\bcustomer\b",
+    r"\bcustomers\b",
     r"\bclient\b",
+    r"\bclients\b",
+    r"\bbuyer\b",
+    r"\bbuyers\b",
+    r"\bbrand\b",
+    r"\bbrands\b",
+    r"\bproduct\s+line\b",
+    r"\bdevice\s+model\b",
     r"\bcompetitor\b",
     r"\bagainst\b",
     r"\banti-competitive\b",
@@ -903,7 +940,7 @@ COMPANY_SPECIFIC_QUERY_TEMPLATES = {
         "{company} chip manufacturing partner",
         "{company} semiconductor supply chain",
         "{company} TSMC Samsung foundry",
-        "{company} packaging supplier ASE Amkor",
+        "{company} ASE Amkor packaging supplier",
         "{company} outsourced semiconductor assembly and test",
     ],
     "dell technologies": [
@@ -938,12 +975,14 @@ MANUFACTURING_CONTEXT_TERMS = [
 def discovery_queries(company_name: str) -> List[str]:
     seen = set()
     queries = []
-    templates = list(DISCOVERY_QUERY_TEMPLATES)
     canonical_name = canonical_curated_company_name(company_name) or resolver.resolve(
         company_name
     )
     query_company = DISCOVERY_QUERY_DISPLAY_NAMES.get(canonical_name, company_name)
-    templates.extend(COMPANY_SPECIFIC_QUERY_TEMPLATES.get(_compact_key(canonical_name), []))
+    company_specific_templates = COMPANY_SPECIFIC_QUERY_TEMPLATES.get(
+        _compact_key(canonical_name), []
+    )
+    templates = list(company_specific_templates) + list(DISCOVERY_QUERY_TEMPLATES)
     for template in templates:
         query = template.format(company=query_company)
         key = query.lower()
@@ -1156,6 +1195,23 @@ def supplier_evidence_explicitly_links_candidate_to_source(
         "packaged by",
         "outsourced to",
     )
+    supplier_role_terms = (
+        r"supplier",
+        r"vendor",
+        r"component\s+supplier",
+        r"material\s+supplier",
+        r"materials\s+supplier",
+        r"equipment\s+supplier",
+        r"foundry",
+        r"osat",
+        r"packaging\s+partner",
+        r"assembly\s+partner",
+        r"assembler",
+        r"contract\s+manufacturer",
+        r"manufacturing\s+partner",
+        r"original\s+design\s+manufacturer",
+        r"odm",
+    )
 
     for candidate in candidate_variants:
         for source in source_variants:
@@ -1184,6 +1240,104 @@ def supplier_evidence_explicitly_links_candidate_to_source(
                 flags=re.IGNORECASE,
             ):
                 return True
+            if re.search(
+                rf"(?<![a-z0-9]){re.escape(candidate)}(?![a-z0-9]).{{0,120}}"
+                rf"\b(?:is|are|was|were|serves?\s+as|acts?\s+as)\b.{{0,80}}"
+                rf"\b(?:a|an|the)?\s*(?:{'|'.join(supplier_role_terms)})\b"
+                rf".{{0,80}}\b(?:to|for|of)\b.{{0,80}}"
+                rf"(?<![a-z0-9]){re.escape(source)}(?![a-z0-9])",
+                text,
+                flags=re.IGNORECASE,
+            ):
+                return True
+            if re.search(
+                rf"(?<![a-z0-9]){re.escape(source)}(?![a-z0-9]).{{0,120}}"
+                rf"\b(?:uses?|relies?\s+on|depends?\s+on)\b.{{0,100}}"
+                rf"(?<![a-z0-9]){re.escape(candidate)}(?![a-z0-9]).{{0,100}}"
+                rf"\b(?:components?|parts?|chips?|materials?|equipment|systems?|foundry|assembly|packaging|manufacturing)\b",
+                text,
+                flags=re.IGNORECASE,
+            ):
+                return True
+
+    return False
+
+
+def supplier_evidence_has_reverse_or_non_supplier_direction(
+    candidate_name: str,
+    source_company: str,
+    evidence: List[Dict[str, str]],
+) -> bool:
+    evidence_text = " ".join(
+        f"{item.get('title', '')} {item.get('snippet', '')}" for item in evidence or []
+    )
+    if not _text_mentions_entity(evidence_text, source_company):
+        return False
+    if not _text_mentions_entity(evidence_text, candidate_name):
+        return False
+
+    text = re.sub(r"<[^>]+>", " ", unescape(evidence_text or ""))
+    text = re.sub(r"\s+", " ", text).lower()
+    candidate_variants = sorted(_term_variants(candidate_name), key=len, reverse=True)
+    source_variants = sorted(_term_variants(source_company), key=len, reverse=True)
+    supplier_verbs = (
+        r"suppl(?:y|ies|ied)",
+        r"provid(?:e|es|ed)",
+        r"manufactur(?:e|es|ed)",
+        r"fabricat(?:e|es|ed)",
+        r"assembl(?:e|es|ed)",
+        r"packag(?:e|es|ed)",
+        r"sell(?:s)?",
+    )
+    customer_roles = (
+        r"customer",
+        r"client",
+        r"buyer",
+        r"brand",
+        r"product\s+line",
+        r"device\s+model",
+        r"joint\s+venture",
+        r"competitor",
+    )
+
+    for candidate in candidate_variants:
+        for source in source_variants:
+            if re.search(
+                rf"(?<![a-z0-9]){re.escape(source)}(?![a-z0-9]).{{0,120}}"
+                rf"(?:{'|'.join(supplier_verbs)}).{{0,120}}"
+                rf"\b(?:to|for|used by)\b.{{0,80}}"
+                rf"(?<![a-z0-9]){re.escape(candidate)}(?![a-z0-9])",
+                text,
+                flags=re.IGNORECASE,
+            ):
+                return True
+            if re.search(
+                rf"(?<![a-z0-9]){re.escape(candidate)}(?![a-z0-9]).{{0,80}}"
+                rf"\b(?:is|are|was|were|as|became)\b.{{0,60}}"
+                rf"\b(?:a|an|the|major|key)?\s*(?:{'|'.join(customer_roles)})s?\b"
+                rf".{{0,80}}\b(?:of|for|to)\b.{{0,80}}"
+                rf"(?<![a-z0-9]){re.escape(source)}(?![a-z0-9])",
+                text,
+                flags=re.IGNORECASE,
+            ):
+                return True
+            if re.search(
+                rf"(?<![a-z0-9]){re.escape(source)}(?![a-z0-9]).{{0,120}}"
+                rf"\b(?:customers?|clients?|buyers?|brands?|joint\s+ventures?|competitors?)\b"
+                rf".{{0,80}}\b(?:include|includes|including|such\s+as|like)\b.{{0,80}}"
+                rf"(?<![a-z0-9]){re.escape(candidate)}(?![a-z0-9])",
+                text,
+                flags=re.IGNORECASE,
+            ):
+                return True
+
+    candidate_key = _compact_key(candidate_name)
+    if candidate_key in CUSTOMER_OR_BRAND_CONTEXT_NAMES and re.search(
+        r"\b(?:customer|client|buyer|brand|product|device)\b",
+        text,
+        flags=re.IGNORECASE,
+    ):
+        return True
 
     return False
 
@@ -1315,10 +1469,8 @@ def validate_supplier_candidate_name(
     if compact_name in PERSON_FRAGMENT_NAMES:
         return False, "person name, not an organization"
     if compact_name in PRODUCT_FRAGMENT_NAMES:
-        return False, "product category, not an organization"
-    if compact_name in LOCATION_FRAGMENT_WORDS:
-        return False, "location adjective or place, not an organization"
-    if any(re.search(pattern, lower_name) for pattern in LOCATION_ECOSYSTEM_PATTERNS):
+        return False, "product or brand name, not an organization"
+    if is_location_or_ecosystem_entity(clean_name):
         return False, "location, region, or ecosystem label, not a supplier company"
     if any(re.search(pattern, lower_name) for pattern in GENERIC_ORG_PATTERNS):
         return False, "generic or malformed organization phrase"
@@ -1540,6 +1692,21 @@ def supplier_evidence_is_strong(
         )
 
     if tier >= 2:
+        if candidate_name and source_company:
+            if supplier_evidence_has_reverse_or_non_supplier_direction(
+                candidate_name, source_company, evidence
+            ):
+                return (
+                    False,
+                    f"Tier-{tier} evidence indicates customer, brand, product, partner, competitor, or reverse-supplier direction",
+                )
+            if not supplier_evidence_explicitly_links_candidate_to_source(
+                candidate_name, source_company, evidence
+            ):
+                return (
+                    False,
+                    f"Tier-{tier} evidence does not explicitly show {candidate_name} supplies, manufactures for, or provides components/materials/equipment/services to {source_company}",
+                )
         accepted = analysis["score"] >= threshold
         signal_summary = ", ".join(
             f"{signal['category']}:{signal['pattern']}"
@@ -1596,6 +1763,18 @@ class SupplierDiscoveryScraper:
         safe_name = company_name.lower().replace(" ", "_").replace(".", "")
         return os.path.join(self.cache_dir, f"{safe_name}_v{self.cache_version}.json")
 
+    def _get_legacy_cache_paths(self, company_name: str) -> List[str]:
+        safe_name = company_name.lower().replace(" ", "_").replace(".", "")
+        paths = []
+        for version in range(self.cache_version - 1, 0, -1):
+            path = os.path.join(self.cache_dir, f"{safe_name}_v{version}.json")
+            if os.path.exists(path):
+                paths.append(path)
+        unversioned_path = os.path.join(self.cache_dir, f"{safe_name}.json")
+        if os.path.exists(unversioned_path):
+            paths.append(unversioned_path)
+        return paths
+
     def _cache_enabled(self) -> bool:
         return bool(
             self.use_cache
@@ -1607,6 +1786,9 @@ class SupplierDiscoveryScraper:
             self.refresh_cache
             or getattr(self.runtime_state, "refresh_supplier_cache", False)
         )
+
+    def _cache_only_requested(self) -> bool:
+        return bool(getattr(self.runtime_state, "supplier_cache_only", False))
 
     def _sanitize_cached_suppliers(
         self, cached: Any, company_name: str
@@ -1644,12 +1826,16 @@ class SupplierDiscoveryScraper:
         """
         cache_enabled = self._cache_enabled()
         refresh_requested = self._refresh_requested()
+        cache_only_requested = self._cache_only_requested()
 
         if self.prefer_curated and cache_enabled and not refresh_requested:
-            canonical = canonical_curated_company_name(company_name)
-            if canonical and canonical in CURATED_SUPPLIER_GRAPH:
+            curated_suppliers = get_curated_suppliers(company_name)
+            if curated_suppliers:
                 logger.debug("CURATED SUPPLIER GRAPH HIT: %s", company_name)
-                return get_curated_suppliers(company_name)
+                return curated_suppliers
+            if cache_only_requested:
+                logger.debug("CURATED SUPPLIER GRAPH MISS IN CACHE-ONLY MODE: %s", company_name)
+                return []
 
         if self.runtime_state and stop_if_timed_out(self.runtime_state, self.stage_key):
             return []
@@ -1664,10 +1850,39 @@ class SupplierDiscoveryScraper:
             if cached_suppliers:
                 self.stats["Cache Used"] += 1
                 return cached_suppliers
+            if cache_only_requested:
+                logger.info(
+                    "Supplier cache for %s is empty or fully filtered; cache-only mode prevents live discovery.",
+                    company_name,
+                )
+                return []
             logger.info(
                 "Ignoring empty or fully filtered supplier cache for %s; running live discovery.",
                 company_name,
             )
+        elif cache_enabled and not refresh_requested:
+            for legacy_cache_path in self._get_legacy_cache_paths(company_name):
+                logger.debug("LEGACY CACHE HIT: %s", legacy_cache_path)
+                with open(legacy_cache_path, "r") as f:
+                    cached_suppliers = self._sanitize_cached_suppliers(
+                        json.load(f), company_name
+                    )
+                if cached_suppliers:
+                    self.stats["Cache Used"] += 1
+                    return cached_suppliers
+
+            if cache_only_requested:
+                logger.info(
+                    "No supplier cache found for %s; cache-only mode prevents live discovery.",
+                    company_name,
+                )
+                return []
+        elif cache_only_requested:
+            logger.info(
+                "No supplier cache found for %s; cache-only mode prevents live discovery.",
+                company_name,
+            )
+            return []
         elif not cache_enabled:
             logger.debug("CACHE DISABLED: %s", company_name)
         elif refresh_requested:

@@ -42,6 +42,31 @@ logger = logging.getLogger(__name__)
 MIN_RELEVANCE_SCORE = 10
 
 
+def _identity_keys(name: Optional[str]) -> set[str]:
+    if not name:
+        return set()
+    canonical = resolver.resolve(name)
+    return {
+        key.lower()
+        for key in {name, canonical}
+        if key
+    }
+
+
+def _retained_supplier_keys(state: AgentState) -> set[str]:
+    keys = set()
+    for supplier in state.suppliers:
+        keys.update(_identity_keys(supplier.name))
+        keys.update(_identity_keys(getattr(supplier, "canonical_name", None)))
+    return keys
+
+
+def _risk_is_for_retained_supplier(
+    risk: RiskAnalysis, retained_supplier_keys: set[str]
+) -> bool:
+    return bool(_identity_keys(risk.supplier_name) & retained_supplier_keys)
+
+
 def _contains_phrase(text: str, phrase: str) -> bool:
     if not phrase:
         return False
@@ -145,6 +170,82 @@ def score_article_relevance(
 
 def _matched_keywords(text: str, keywords: List[str]) -> List[str]:
     return [keyword for keyword in keywords if keyword in text]
+
+
+def _matched_labor_disruption_keywords(text: str) -> List[str]:
+    patterns = [
+        ("workers strike", r"\bworkers?\s+(?:go on\s+|are on\s+|begin\s+|launch\s+|stage\s+|continue\s+|extend\s+|join\s+)?strike\b(?!\s+(?:deal|agreement))"),
+        ("employee strike", r"\bemployees?\s+(?:go on\s+|are on\s+|begin\s+|launch\s+|stage\s+|continue\s+|extend\s+|join\s+)?strike\b(?!\s+(?:deal|agreement))"),
+        ("union strike", r"\bunion\s+(?:calls?\s+|begins?\s+|launches?\s+|stages?\s+)?strike\b(?!\s+(?:deal|agreement))"),
+        ("labor strike", r"\blabo[u]?r\s+strike\b(?!\s+(?:deal|agreement))"),
+        ("walkout", r"\bwalkout\b|\bwalk\s*out\b"),
+        ("labor stoppage", r"\blabo[u]?r\s+stoppage\b"),
+        ("work stoppage", r"\bwork\s+stoppage\b"),
+        ("industrial action", r"\bindustrial\s+action\b"),
+    ]
+    return [
+        keyword
+        for keyword, pattern in patterns
+        if re.search(pattern, text, flags=re.IGNORECASE)
+    ]
+
+
+def _is_market_price_movement_article(text: str) -> bool:
+    market_terms = [
+        "etf",
+        "stock",
+        "shares",
+        "share price",
+        "stock price",
+        "price target",
+        "trading",
+        "trades",
+        "nasdaq",
+        "nyse",
+    ]
+    movement_terms = [
+        "drop",
+        "drops",
+        "dropped",
+        "down",
+        "fall",
+        "falls",
+        "fell",
+        "slip",
+        "slips",
+        "slumped",
+        "decline",
+        "declines",
+        "lower",
+        "selloff",
+        "sell-off",
+        "tumbles",
+    ]
+    return any(_contains_phrase(text, term) for term in market_terms) and any(
+        _contains_phrase(text, term) for term in movement_terms
+    )
+
+
+def _has_direct_supplier_financial_distress(text: str) -> bool:
+    distress_terms = [
+        "bankruptcy",
+        "insolvency",
+        "insolvent",
+        "debt crisis",
+        "credit downgrade",
+        "downgraded credit",
+        "major loss",
+        "major losses",
+        "severe losses",
+        "operational distress",
+        "liquidation",
+        "defaulted",
+        "debt default",
+        "revenue collapse",
+        "plant closure",
+        "factory closure",
+    ]
+    return any(_contains_phrase(text, term) for term in distress_terms)
 
 
 def _path_display_for_supplier(state: AgentState, supplier: SupplierInfo) -> str:
@@ -639,7 +740,7 @@ class NewsRiskProvider(RiskProvider):
                 mitigation="Assess total exposure and identify immediate alternatives."
             ), critical_kws
 
-        strike_kws = _matched_keywords(text, ["strike", "labor strike", "work stoppage"])
+        strike_kws = _matched_labor_disruption_keywords(text)
         if strike_kws:
             workforce_terms = ["worker", "workforce", "employee", "union", "labor"]
             scope = _news_scope(supplier, relevance, item, strike_kws, target_company)
@@ -888,6 +989,9 @@ class FinancialRiskProvider(RiskProvider):
         title = (item.get("title", "") or "").lower()
         snippet = (item.get("snippet", "") or "").lower()
         text = f"{title} {snippet}"
+
+        if _is_market_price_movement_article(text) and not _has_direct_supplier_financial_distress(text):
+            return None, []
         
         self_terms = [
             "files for",
@@ -1018,6 +1122,7 @@ class RiskIntelligenceAgent:
         debug_log(logger, "Risk intelligence agent orchestrating risk assessments")
 
         all_risks = []
+        retained_supplier_keys = _retained_supplier_keys(state)
 
         for provider in self.providers:
             if stop_if_timed_out(state, "risk_analysis"):
@@ -1037,7 +1142,11 @@ class RiskIntelligenceAgent:
                     )
                 continue
 
-            provider_risks = provider.assess_risk(state)
+            provider_risks = [
+                risk
+                for risk in provider.assess_risk(state)
+                if _risk_is_for_retained_supplier(risk, retained_supplier_keys)
+            ]
             
             # Deduplication within provider and total
             unique_provider_risks = []

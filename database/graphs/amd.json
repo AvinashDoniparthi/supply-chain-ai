@@ -16,8 +16,8 @@
       "node_type": "supplier"
     },
     {
-      "id": "Samsung",
-      "label": "Samsung",
+      "id": "Samsung Electronics",
+      "label": "Samsung Electronics",
       "node_type": "supplier"
     },
     {
@@ -56,8 +56,8 @@
       "node_type": "supplier"
     },
     {
-      "id": "Sony Semiconductor",
-      "label": "Sony Semiconductor",
+      "id": "Sony Semiconductor Solutions",
+      "label": "Sony Semiconductor Solutions",
       "node_type": "supplier"
     }
   ],
@@ -74,7 +74,7 @@
     },
     {
       "source": "AMD",
-      "target": "Samsung",
+      "target": "Samsung Electronics",
       "relationship": "supplier"
     },
     {
@@ -105,7 +105,7 @@
     {
       "source": "AMD",
       "target": "Corning",
-      "relationship": "upstream_supplier"
+      "relationship": "supplier"
     },
     {
       "source": "AMD",
@@ -114,8 +114,8 @@
     },
     {
       "source": "AMD",
-      "target": "Sony Semiconductor",
-      "relationship": "supplier"
+      "target": "Sony Semiconductor Solutions",
+      "relationship": "upstream_supplier"
     }
   ]
 }

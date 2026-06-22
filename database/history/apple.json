@@ -670,6 +670,102 @@
         "TSMC",
         "ASML"
       ]
+    },
+    {
+      "timestamp": "2026-06-22T18:09:18.954532",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:22:31.041471",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:23:01.481335",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:23:19.214692",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:24:36.723312",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:28:42.975484",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:29:36.465526",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:31:04.934535",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
     }
   ]
 }

@@ -36,6 +36,7 @@ class HistoryAgent:
         # 2. Create current run snapshot
         current_run = HistoricalRun(
             timestamp=datetime.now().isoformat(),
+            mode=state.execution_mode,
             health_score=state.supply_chain_health.overall_score,
             health_status=state.supply_chain_health.status,
             supplier_count=len(state.suppliers),
