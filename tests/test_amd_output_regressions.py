@@ -25,7 +25,7 @@ from models.state import (
 from models.verification import VerificationResult
 from scraping.supplier_discovery import normalize_supplier_candidate_name
 from utils.identity_resolution import resolver
-from utils.output import render_final_report
+from utils.output import OutputMode, configure_output, render_final_report
 
 
 class TestAMDOutputRegressions(unittest.TestCase):
@@ -165,11 +165,12 @@ class TestAMDOutputRegressions(unittest.TestCase):
         tier1_block = summary.split("TIER 1 SUPPLIERS", 1)[1].split("TIER 2 SUPPLIERS", 1)[0]
         tier2_block = summary.split("TIER 2 SUPPLIERS", 1)[1].split("TIER 3 SUPPLIERS", 1)[0]
 
-        self.assertIn("- TSMC", tier1_block)
-        self.assertNotIn("- ASML", tier1_block)
-        self.assertIn("- ASML", tier2_block)
-        self.assertIn("Parent: Taiwan Semiconductor Manufacturing Company", tier2_block)
-        self.assertIn("Relationship: upstream_supplier", tier2_block)
+        self.assertIn("1. TSMC", tier1_block)
+        self.assertIn("Relationship : Supplier", tier1_block)
+        self.assertNotIn("1. ASML", tier1_block)
+        self.assertIn("1. ASML", tier2_block)
+        self.assertIn("Parent       : Taiwan Semiconductor Manufacturing Company", tier2_block)
+        self.assertIn("Relationship : Upstream Supplier", tier2_block)
 
     def test_verification_failure_is_data_quality_warning_not_top_risk(self):
         state = executive_report_agent(self._amd_report_state())
@@ -178,7 +179,8 @@ class TestAMDOutputRegressions(unittest.TestCase):
         warnings = summary.split("DATA QUALITY WARNINGS", 1)[1].split("CRITICAL SUPPLIERS", 1)[0]
 
         self.assertNotIn("Supplier failed verification", top_risks)
-        self.assertIn("Supplier failed verification: ASML", warnings)
+        self.assertIn("Failed Verification", warnings)
+        self.assertIn("1. ASML", warnings)
         self.assertIn("Reason: Relationship evidence could not be verified.", warnings)
 
     def test_final_renderer_uses_tier_sections_not_flat_supplier_list(self):
@@ -192,6 +194,64 @@ class TestAMDOutputRegressions(unittest.TestCase):
         self.assertNotIn("SUPPLIERS IDENTIFIED", output)
         self.assertNotIn("[HIGH] Supplier failed verification", output)
         self.assertIn("DATA QUALITY WARNINGS", output)
+
+    def test_final_report_contains_ordered_sections_and_timings(self):
+        state = executive_report_agent(self._amd_report_state())
+        state.stage_durations = {
+            "company_research": 0.0,
+            "supplier_discovery": 2.3,
+            "relationship_classification": 1.2,
+            "verification": 0.0,
+            "risk_analysis": 5.0,
+            "report_generation": 0.1,
+        }
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            render_final_report(state)
+        output = buffer.getvalue()
+
+        ordered_sections = [
+            "SUPPLY CHAIN INTELLIGENCE REPORT",
+            "Company: AMD",
+            "Mode: LLM-only",
+            "Generated At:",
+            "1. EXECUTIVE SUMMARY",
+            "2. DISCOVERY QUALITY",
+            "3. SUPPLY CHAIN HEALTH",
+            "4. SUPPLIER NETWORK",
+            "4.1 Tier 1 Suppliers",
+            "4.2 Tier 2 Suppliers",
+            "4.3 Tier 3 Suppliers",
+            "5. TOP RISKS",
+            "6. DATA QUALITY WARNINGS",
+            "7. CRITICAL SUPPLIERS",
+            "8. PERFORMANCE TIMINGS",
+            "ANALYSIS COMPLETE",
+        ]
+        positions = [output.index(section) for section in ordered_sections]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn("High\nNone identified", output)
+        self.assertIn("Medium\n1. Geopolitical risk involving TSMC", output)
+        self.assertIn("Low Verification Confidence", output)
+        self.assertIn("Failed Verification", output)
+        self.assertIn("Supplier Discovery           : 2.3s", output)
+        self.assertIn("Total Runtime                : 8.6s", output)
+
+    def test_debug_logs_do_not_appear_in_normal_report_output(self):
+        configure_output(OutputMode.NORMAL)
+        try:
+            buffer = io.StringIO()
+            with redirect_stdout(buffer):
+                render_final_report(self._amd_report_state())
+            output = buffer.getvalue()
+        finally:
+            configure_output(OutputMode.QUIET)
+
+        self.assertNotIn("[CACHE", output)
+        self.assertNotIn("[EVIDENCE", output)
+        self.assertNotIn("DEBUG FLAT SUPPLIER LIST", output)
+        self.assertNotIn("httpx", output.lower())
 
     def test_thinkpad_is_rejected_as_product_or_brand(self):
         self.assertIsNone(normalize_supplier_candidate_name("ThinkPad"))
@@ -374,7 +434,13 @@ class TestAMDOutputRegressions(unittest.TestCase):
         )
 
         state = executive_report_agent(state)
-        summary = state.executive_report.executive_summary.split("EXECUTIVE SUMMARY", 1)[1].strip()
+        summary = (
+            state.executive_report.executive_summary
+            .split("1. EXECUTIVE SUMMARY", 1)[1]
+            .split("2. DISCOVERY QUALITY", 1)[0]
+            .strip()
+        )
+        summary = summary.split("Recommendations", 1)[0].strip()
         sentences = [part for part in re.split(r"(?<=[.!?])\s+", summary) if part]
 
         self.assertLessEqual(len(sentences), 2)

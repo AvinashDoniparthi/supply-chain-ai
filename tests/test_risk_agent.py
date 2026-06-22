@@ -56,8 +56,10 @@ def test_risk_agent():
     assert not found_verification_risk, "Verification failure should not be represented as a business risk"
 
     warnings = "\n".join(data_quality_warning_lines(updated_state))
-    assert "Supplier missing verification: Unverified Corp" in warnings
-    assert "Supplier failed verification: Russian Metals" in warnings
+    assert "Missing Verification Result" in warnings
+    assert "1. Unverified Corp" in warnings
+    assert "Failed Verification" in warnings
+    assert "1. Russian Metals" in warnings
 
     print("\n--- TEST PASSED SUCCESSFULLY ---")
 

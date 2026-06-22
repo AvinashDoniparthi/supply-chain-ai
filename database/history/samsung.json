@@ -34,6 +34,25 @@
       "suppliers": [
         "Electronics business and"
       ]
+    },
+    {
+      "timestamp": "2026-06-22T18:38:15.129299",
+      "mode": "llm",
+      "health_score": 83.4,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Corning",
+        "Qualcomm",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT",
+        "VDL ETG",
+        "Amkor Technology",
+        "TSMC"
+      ]
     }
   ]
 }

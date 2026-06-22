@@ -95,6 +95,24 @@
         "Murata Manufacturing",
         "Sony Semiconductor"
       ]
+    },
+    {
+      "timestamp": "2026-06-22T18:38:31.497034",
+      "mode": "llm",
+      "health_score": 82.2,
+      "health_status": "Good",
+      "supplier_count": 8,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions"
+      ]
     }
   ]
 }

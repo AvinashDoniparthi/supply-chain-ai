@@ -11,6 +11,7 @@ from utils.output import (
     data_quality_warning_lines,
     debug_log,
     execution_mode_label,
+    format_report_lines,
     is_external_risk,
     progress,
     render_supplier_tier_lines,
@@ -45,9 +46,7 @@ class ExecutiveReportAgent:
         recommendations = self._generate_recommendations(state, coverage)
 
         # 4. Executive Summary Logic
-        summary = self._generate_executive_summary(
-            state, company_name, health, key_suppliers, major_risks, coverage
-        )
+        summary = self._summary_paragraph(state, company_name, health, key_suppliers)
 
         report = ExecutiveReport(
             company_name=company_name,
@@ -76,6 +75,14 @@ class ExecutiveReportAgent:
             debug_log(logger, "- %s", rec)
 
         state.executive_report = report
+        report.executive_summary = "\n".join(
+            format_report_lines(
+                state,
+                include_header=False,
+                include_timings=False,
+                include_footer=False,
+            )
+        )
         state.run_metadata["mode"] = state.execution_mode
         state.current_task = "Executive report generated"
         

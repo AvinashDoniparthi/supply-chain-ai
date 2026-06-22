@@ -11,7 +11,7 @@ from agents.health_agent import health_agent
 from agents.executive_report_agent import executive_report_agent
 from agents.history_agent import history_agent
 from agents.graph_export_agent import graph_export_agent
-from utils.output import emit, render_final_report
+from utils.output import OutputMode, emit, render_final_report
 
 
 def run_supply_chain_analysis(company_name: str) -> AgentState:
@@ -20,10 +20,7 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
     It executes the agents in a logical sequence to build a complete picture
     of the target company's supply chain risks.
     """
-    emit("=" * 50)
-    emit(f"SUPPLY CHAIN ANALYSIS: {company_name}")
-    emit("=" * 50)
-    emit("")
+    emit(f"Starting supply-chain analysis for {company_name}", OutputMode.DEBUG)
 
     # 1. Initialize the shared state
     state = AgentState(target_company=company_name)
@@ -38,7 +35,7 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
         # 3. Execute Supplier Agent (Map Supply Chain)
         state = supplier_agent(state)
         if not state.suppliers:
-            emit("Warning: No suppliers found for this company.")
+            emit("Warning: No suppliers found for this company.", OutputMode.NORMAL)
 
         # 4. Execute Relationship Agent (Classify Relationships)
         state = relationship_agent(state)
@@ -69,7 +66,7 @@ def run_supply_chain_analysis(company_name: str) -> AgentState:
         state.current_task = "Workflow failed"
         return state
 
-    render_final_report(state, include_header=False)
+    render_final_report(state)
 
     state.current_task = "Workflow complete"
     return state

@@ -766,6 +766,49 @@
         "TSMC",
         "ASML"
       ]
+    },
+    {
+      "timestamp": "2026-06-22T18:37:59.021987",
+      "mode": "llm",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:53:29.056699",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T18:54:20.932437",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
     }
   ]
 }

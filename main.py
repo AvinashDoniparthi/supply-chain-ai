@@ -3,13 +3,14 @@ import logging
 
 from models.state import AgentState
 from utils.output import (
+    OutputMode,
     add_output_args,
     configure_output,
     emit,
     mode_from_args,
     render_final_report,
 )
-from utils.runtime_controls import finish_all_stages, render_stage_timings
+from utils.runtime_controls import finish_all_stages
 from workflows.supply_chain_workflow import supply_chain_app
 
 logger = logging.getLogger(__name__)
@@ -31,11 +32,7 @@ def run_analysis(
     """
     Executes the supply chain analysis using the LangGraph workflow.
     """
-    emit("=" * 50)
-    emit(f"SUPPLY CHAIN ANALYSIS: {company_name}")
-    emit("=" * 50)
-    emit("")
-    emit(f"Company being analyzed: {company_name}")
+    emit(f"Starting supply-chain analysis for {company_name}", OutputMode.DEBUG)
 
     # 1. Initialize the shared state
     initial_state = AgentState(
@@ -67,8 +64,7 @@ def run_analysis(
             else AgentState(**final_state_dict)
         )
 
-        render_final_report(final_state, include_header=False)
-        render_stage_timings(final_state)
+        render_final_report(final_state)
 
         return final_state
 

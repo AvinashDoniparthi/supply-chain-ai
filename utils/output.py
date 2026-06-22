@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 from collections import defaultdict
+from datetime import datetime
 from enum import Enum
 from typing import Iterable, List, Optional
 
@@ -207,6 +208,21 @@ def _risk_label(risk: RiskAnalysis) -> str:
     return text
 
 
+def _display_label(value: Optional[str]) -> str:
+    if not value:
+        return "N/A"
+    labels = {
+        "supplier": "Supplier",
+        "upstream_supplier": "Upstream Supplier",
+        "verified": "Verified",
+        "failed": "Failed",
+        "not verified": "Not Verified",
+        "not scored": "Not Scored",
+    }
+    normalized = str(value).strip()
+    return labels.get(normalized.lower(), normalized.replace("_", " ").title())
+
+
 def _critical_suppliers(state: AgentState, limit: int = 5) -> List[str]:
     criticality = {
         c.supplier_name: c for c in state.supplier_criticality_scores
@@ -239,18 +255,29 @@ def _name_keys(name: Optional[str]) -> set[str]:
     return {key for key in keys if key}
 
 
+def _lookup_value(mapping: dict, *names: Optional[str]):
+    for name in names:
+        for key in _name_keys(name):
+            if key in mapping:
+                return mapping[key]
+    return None
+
+
+def _supplier_lookup(state: AgentState) -> dict:
+    suppliers = {}
+    for supplier in state.suppliers:
+        for key in _name_keys(supplier.name) | _name_keys(supplier.canonical_name):
+            suppliers[key] = supplier
+    return suppliers
+
+
 def _relationship_for_supplier(state: AgentState, supplier: SupplierInfo) -> str:
     rel_map = {}
     for result in state.relationship_results:
         for key in _name_keys(result.candidate_company):
             rel_map[key] = result.relationship_type
 
-    relationship = (
-        rel_map.get(supplier.name)
-        or rel_map.get(supplier.name.lower())
-        or rel_map.get(supplier.canonical_name or "")
-        or rel_map.get((supplier.canonical_name or "").lower())
-    )
+    relationship = _lookup_value(rel_map, supplier.name, supplier.canonical_name)
     if relationship == "supplier" and supplier.tier > 1:
         return "upstream_supplier"
     if relationship:
@@ -258,21 +285,25 @@ def _relationship_for_supplier(state: AgentState, supplier: SupplierInfo) -> str
     return "upstream_supplier" if supplier.tier > 1 else "supplier"
 
 
-def _confidence_for_supplier(state: AgentState, supplier: SupplierInfo) -> str:
+def _confidence_value_for_supplier(state: AgentState, supplier: SupplierInfo) -> Optional[float]:
     confidence_map = {}
     for score in state.supplier_confidence_scores:
         for key in _name_keys(score.supplier_name):
             confidence_map[key] = score.final_confidence
 
-    confidence = (
-        confidence_map.get(supplier.name)
-        or confidence_map.get(supplier.name.lower())
-        or confidence_map.get(supplier.canonical_name or "")
-        or confidence_map.get((supplier.canonical_name or "").lower())
-        or supplier.propagated_confidence
-        or supplier.discovery_confidence
-    )
-    return f"{confidence:.2f}" if confidence else "not scored"
+    confidence = _lookup_value(confidence_map, supplier.name, supplier.canonical_name)
+    if confidence is not None:
+        return confidence
+    if supplier.propagated_confidence is not None:
+        return supplier.propagated_confidence
+    if supplier.discovery_confidence is not None:
+        return supplier.discovery_confidence
+    return None
+
+
+def _confidence_for_supplier(state: AgentState, supplier: SupplierInfo) -> str:
+    confidence = _confidence_value_for_supplier(state, supplier)
+    return f"{confidence:.2f}" if confidence is not None else "Not Scored"
 
 
 def _verification_for_supplier(state: AgentState, supplier: SupplierInfo) -> str:
@@ -281,16 +312,11 @@ def _verification_for_supplier(state: AgentState, supplier: SupplierInfo) -> str
         for key in _name_keys(result.supplier_name):
             verification_map[key] = result
 
-    result = (
-        verification_map.get(supplier.name)
-        or verification_map.get(supplier.name.lower())
-        or verification_map.get(supplier.canonical_name or "")
-        or verification_map.get((supplier.canonical_name or "").lower())
-    )
+    result = _lookup_value(verification_map, supplier.name, supplier.canonical_name)
     if not result:
-        return "not verified"
+        return "Not Verified"
     status = "verified" if result.verified else "failed"
-    return f"{status} ({result.confidence_score:.2f})"
+    return f"{_display_label(status)} ({result.confidence_score:.2f})"
 
 
 def _path_for_supplier(supplier: SupplierInfo) -> str:
@@ -302,6 +328,10 @@ def _path_for_supplier(supplier: SupplierInfo) -> str:
     return " -> ".join(path)
 
 
+def _field_line(label: str, value: str) -> str:
+    return f"   {label:<12} : {value}"
+
+
 def render_supplier_tier_lines(state: AgentState) -> List[str]:
     lines = []
     suppliers_by_tier = defaultdict(list)
@@ -310,27 +340,39 @@ def render_supplier_tier_lines(state: AgentState) -> List[str]:
 
     max_tier = max([3, *suppliers_by_tier.keys()]) if state.suppliers else 3
     for tier in range(1, max_tier + 1):
+        if tier <= 3:
+            lines.append(f"4.{tier} Tier {tier} Suppliers")
         lines.append(f"TIER {tier} SUPPLIERS")
+        if tier == 1:
+            lines.append(f"Direct suppliers to {state.target_company or 'the target company'}")
+        else:
+            lines.append(f"Upstream suppliers connected through Tier {tier - 1} suppliers")
+        lines.append("")
         tier_suppliers = sorted(
             suppliers_by_tier.get(tier, []),
             key=lambda supplier: supplier.name,
         )
         if not tier_suppliers:
-            lines.append("Insufficient Data" if tier == 1 else "None identified")
+            lines.append("None identified")
             if tier != max_tier:
                 lines.append("")
             continue
 
-        for supplier in tier_suppliers:
-            lines.append(f"- {supplier.name}")
+        for index, supplier in enumerate(tier_suppliers, start=1):
+            lines.append(f"{index}. {supplier.name}")
             if tier > 1:
-                lines.append(f"  Parent: {supplier.parent_company or 'N/A'}")
-                lines.append(f"  Path: {_path_for_supplier(supplier)}")
-            lines.append(f"  Confidence: {_confidence_for_supplier(state, supplier)}")
+                lines.append(_field_line("Parent", supplier.parent_company or "N/A"))
+                lines.append(_field_line("Path", _path_for_supplier(supplier)))
             lines.append(
-                f"  Relationship: {_relationship_for_supplier(state, supplier)}"
+                _field_line(
+                    "Relationship",
+                    _display_label(_relationship_for_supplier(state, supplier)),
+                )
             )
-            lines.append(f"  Verification: {_verification_for_supplier(state, supplier)}")
+            lines.append(_field_line("Confidence", _confidence_for_supplier(state, supplier)))
+            lines.append(_field_line("Verification", _verification_for_supplier(state, supplier)))
+            if index != len(tier_suppliers):
+                lines.append("")
         if tier != max_tier:
             lines.append("")
 
@@ -343,41 +385,46 @@ def data_quality_warning_lines(state: AgentState) -> List[str]:
         for key in _name_keys(result.supplier_name):
             verification_map[key] = result
 
-    lines = []
+    grouped = {
+        "Low Verification Confidence": [],
+        "Failed Verification": [],
+        "Missing Verification Result": [],
+    }
     for supplier in sorted(state.suppliers, key=lambda item: item.name):
-        result = (
-            verification_map.get(supplier.name)
-            or verification_map.get(supplier.name.lower())
-            or verification_map.get(supplier.canonical_name or "")
-            or verification_map.get((supplier.canonical_name or "").lower())
-        )
         if not state.verification_results:
             continue
+        result = _lookup_value(verification_map, supplier.name, supplier.canonical_name)
         if not result:
-            lines.extend(
-                [
-                    f"- Supplier missing verification: {supplier.name}",
-                    "  Reason: No verification result was produced for this supplier.",
-                    "  Confidence: 0.00",
-                ]
+            grouped["Missing Verification Result"].append(
+                (
+                    supplier.name,
+                    "0.00",
+                    "No verification result was produced for this supplier.",
+                )
             )
         elif not result.verified:
-            lines.extend(
-                [
-                    f"- Supplier failed verification: {supplier.name}",
-                    f"  Reason: {result.reasoning}",
-                    f"  Confidence: {result.confidence_score:.2f}",
-                ]
+            grouped["Failed Verification"].append(
+                (supplier.name, f"{result.confidence_score:.2f}", result.reasoning)
             )
         elif result.confidence_score < 0.8:
-            lines.extend(
-                [
-                    f"- Low verification confidence: {supplier.name}",
-                    f"  Reason: {result.reasoning}",
-                    f"  Confidence: {result.confidence_score:.2f}",
-                ]
+            grouped["Low Verification Confidence"].append(
+                (supplier.name, f"{result.confidence_score:.2f}", result.reasoning)
             )
 
+    lines = []
+    for group_name, entries in grouped.items():
+        lines.append(group_name)
+        if not entries:
+            lines.append("None identified")
+        else:
+            for index, (name, confidence, reason) in enumerate(entries, start=1):
+                lines.append(f"{index}. {name}")
+                lines.append(f"   Confidence: {confidence}")
+                lines.append(f"   Reason: {reason}")
+                if index != len(entries):
+                    lines.append("")
+        if group_name != list(grouped.keys())[-1]:
+            lines.append("")
     return lines
 
 
@@ -400,113 +447,259 @@ def render_risk_summary(risks: Iterable[RiskAnalysis]) -> List[str]:
     return lines if emitted_any else []
 
 
-def render_final_report(state: AgentState, include_header: bool = True) -> None:
-    company = state.company.name if state.company else state.target_company or "N/A"
-    risks = unique_risks(r for r in state.risk_assessments if is_external_risk(r))
-    health = state.supply_chain_health
+def _generated_at(state: AgentState) -> str:
+    generated_at = state.run_metadata.get("generated_at")
+    if generated_at:
+        return str(generated_at)
+    generated_at = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
+    state.run_metadata["generated_at"] = generated_at
+    return generated_at
+
+
+def _executive_summary_lines(state: AgentState) -> List[str]:
     report = state.executive_report
-    critical_suppliers = _critical_suppliers(state)
-    top_risks = risks[:3]
+    health = state.supply_chain_health
+    summary = ""
+    summary_includes_recommendations = False
+    if report and report.executive_summary:
+        summary = report.executive_summary.strip()
+        if "1. EXECUTIVE SUMMARY" in summary:
+            summary = summary.split("1. EXECUTIVE SUMMARY", 1)[1]
+            next_section = summary.find("\n2. DISCOVERY QUALITY")
+            if next_section != -1:
+                summary = summary[:next_section].strip()
+            summary_includes_recommendations = "Recommendations" in summary
+        elif summary.startswith("EXECUTIVE SUMMARY"):
+            summary = summary.split("EXECUTIVE SUMMARY", 1)[1].strip()
+    if not summary and health:
+        summary = health.summary
+    if not summary:
+        summary = "None identified"
+
+    lines = [summary]
+    if report and report.recommendations and not summary_includes_recommendations:
+        lines.extend(["", "Recommendations"])
+        for index, recommendation in enumerate(report.recommendations, start=1):
+            lines.append(f"{index}. {recommendation}")
+    return lines
+
+
+def _discovery_quality_lines(state: AgentState) -> List[str]:
     coverage = calculate_discovery_coverage(state)
     verification_quality = calculate_verification_quality(state)
-    warning_lines = data_quality_warning_lines(state)
-
-    if include_header:
-        emit("=" * 50)
-        emit(f"SUPPLY CHAIN ANALYSIS: {company}")
-        emit("=" * 50)
-        emit("")
-
-    emit(f"Mode: {execution_mode_label(state)}")
-    if getattr(state, "execution_mode", "llm") == "rag":
-        emit(
-            f"Retrieved evidence chunks: {state.run_metadata.get('retrieval_chunks_attached', 0)}"
-        )
-    emit("")
-
-    emit("DISCOVERY QUALITY")
+    lines = []
     if coverage.get("coverage_basis") == "expected_suppliers":
-        emit(
+        lines.append(
             f"Coverage: {coverage['label']} - {coverage['matched_expected_count']}/"
             f"{coverage['expected_count']} expected Tier-1 suppliers identified."
         )
     else:
-        emit(
+        lines.append(
             f"Coverage: {coverage['label']} - "
             f"{coverage['tier1_supplier_count']} discovered Tier-1 suppliers identified."
         )
-    if coverage.get("coverage_basis") == "expected_suppliers" and coverage["missing_expected_suppliers"]:
-        emit("Missing expected suppliers: " + ", ".join(coverage["missing_expected_suppliers"][:5]))
+    if coverage.get("coverage_basis") == "expected_suppliers":
+        missing = coverage["missing_expected_suppliers"]
+        false_positive = coverage["false_positive_suppliers"]
+        lines.append(
+            "Missing expected suppliers: "
+            + (", ".join(missing[:5]) if missing else "None identified")
+        )
+        lines.append(
+            "Unexpected Tier-1 candidates: "
+            + (", ".join(false_positive[:5]) if false_positive else "None identified")
+        )
     if verification_quality["quality_factor"] < 1.0:
-        emit(
+        lines.append(
             f"Verification-adjusted coverage: {coverage['verification_adjusted_label']} "
             f"({coverage['verification_adjusted_ratio']:.0%}; "
             f"{verification_quality['verified_count']}/{verification_quality['total_count']} suppliers verified)."
         )
+    if getattr(state, "execution_mode", "llm") == "rag":
+        lines.append(
+            f"Retrieved evidence chunks: {state.run_metadata.get('retrieval_chunks_attached', 0)}"
+        )
+    return lines
 
-    emit("")
-    emit("SUPPLY CHAIN HEALTH")
-    if health:
-        if health.status == "Insufficient Data":
-            emit(f"Insufficient Data - score capped at {health.overall_score}/100.")
-        else:
-            emit(f"{health.status} - {health.overall_score}/100.")
+
+def _health_lines(state: AgentState) -> List[str]:
+    health = state.supply_chain_health
+    if not health:
+        return ["None identified"]
+    if health.status == "Insufficient Data":
+        lines = [f"Status: Insufficient Data - score capped at {health.overall_score}/100."]
     else:
-        emit("Insufficient Data")
+        lines = [f"Status: {health.status} - {health.overall_score}/100."]
+    lines.extend(
+        [
+            f"Supplier Count: {health.supplier_count}",
+            f"Critical Suppliers: {health.critical_suppliers}",
+            f"High-Risk Suppliers: {health.high_risk_suppliers}",
+            f"Summary: {health.summary}",
+        ]
+    )
+    return lines
 
-    emit("")
-    for line in render_supplier_tier_lines(state):
+
+def _risk_title(risk: RiskAnalysis) -> str:
+    risk_type = _display_label(risk.risk_type)
+    return f"{risk_type} risk involving {risk.supplier_name}"
+
+
+def _risk_lines(state: AgentState) -> List[str]:
+    supplier_lookup = _supplier_lookup(state)
+    grouped = defaultdict(list)
+    for risk in unique_risks(r for r in state.risk_assessments if is_external_risk(r)):
+        grouped[_display_label(risk.severity)].append(risk)
+
+    lines = []
+    severities = ["Critical", "High", "Medium", "Low"]
+    emitted_any = False
+    for severity in severities:
+        entries = grouped.get(severity, [])
+        if not entries and severity == "Critical":
+            continue
+        lines.append(severity)
+        if not entries:
+            lines.append("None identified")
+        else:
+            emitted_any = True
+            for index, risk in enumerate(entries, start=1):
+                lines.append(f"{index}. {_risk_title(risk)}")
+                supplier = _lookup_value(supplier_lookup, risk.supplier_name)
+                if supplier:
+                    path = _path_for_supplier(supplier)
+                    if path != "N/A":
+                        lines.append(f"   Affected Path: {path}")
+                lines.append(f"   Reason: {_risk_label(risk)}")
+                lines.append(f"   Confidence: {risk.confidence:.2f}")
+                if risk.mitigation:
+                    lines.append(f"   Mitigation: {risk.mitigation}")
+                if index != len(entries):
+                    lines.append("")
+        if severity != severities[-1]:
+            lines.append("")
+    if not emitted_any:
+        lines.extend(["", "No supplier-specific risks detected"])
+    return lines
+
+
+def _critical_supplier_lines(state: AgentState) -> List[str]:
+    criticality_map = {}
+    for criticality in state.supplier_criticality_scores:
+        for key in _name_keys(criticality.supplier_name):
+            criticality_map[key] = criticality
+
+    entries = []
+    for supplier in state.suppliers:
+        criticality = _lookup_value(criticality_map, supplier.name, supplier.canonical_name)
+        if not criticality:
+            continue
+        if criticality.criticality_level in {"Critical", "High"} or criticality.criticality_score >= 0.75:
+            entries.append((supplier, criticality))
+
+    entries.sort(key=lambda item: item[1].criticality_score, reverse=True)
+    if not entries:
+        return ["None identified"]
+
+    lines = []
+    for index, (supplier, criticality) in enumerate(entries[:5], start=1):
+        lines.append(f"{index}. {supplier.name}")
+        lines.append(_field_line("Tier", str(supplier.tier)))
+        lines.append(_field_line("Confidence", _confidence_for_supplier(state, supplier)))
+        lines.append(_field_line("Reason", criticality.reasoning))
+        if index != min(len(entries), 5):
+            lines.append("")
+    return lines
+
+
+def _timing_lines(state: AgentState) -> List[str]:
+    from utils.runtime_controls import STAGE_ORDER, finish_all_stages, stage_elapsed
+
+    finish_all_stages(state)
+    lines = []
+    total = 0.0
+    for stage_key, label in STAGE_ORDER:
+        elapsed = stage_elapsed(state, stage_key)
+        total += elapsed
+        lines.append(f"{label:<29}: {elapsed:.1f}s")
+    lines.extend(["", f"{'Total Runtime':<29}: {total:.1f}s"])
+    return lines
+
+
+def format_report_lines(
+    state: AgentState,
+    *,
+    include_header: bool = True,
+    include_timings: bool = True,
+    include_footer: bool = True,
+) -> List[str]:
+    company = state.company.name if state.company else state.target_company or "N/A"
+    lines = []
+
+    if include_header:
+        lines.extend(
+            [
+                "=" * 50,
+                "SUPPLY CHAIN INTELLIGENCE REPORT",
+                "=" * 50,
+                "",
+            ]
+        )
+
+    lines.extend(
+        [
+            f"Company: {company}",
+            f"Mode: {execution_mode_label(state)}",
+            f"Generated At: {_generated_at(state)}",
+            "",
+            "1. EXECUTIVE SUMMARY",
+        ]
+    )
+    lines.extend(_executive_summary_lines(state))
+
+    lines.extend(["", "2. DISCOVERY QUALITY"])
+    lines.extend(_discovery_quality_lines(state))
+
+    lines.extend(["", "3. SUPPLY CHAIN HEALTH"])
+    lines.extend(_health_lines(state))
+
+    lines.extend(["", "4. SUPPLIER NETWORK"])
+    lines.extend(render_supplier_tier_lines(state))
+
+    lines.extend(["", "5. TOP RISKS"])
+    lines.extend(_risk_lines(state))
+
+    lines.extend(["", "6. DATA QUALITY WARNINGS"])
+    lines.extend(data_quality_warning_lines(state) or ["None identified"])
+
+    lines.extend(["", "7. CRITICAL SUPPLIERS"])
+    lines.extend(_critical_supplier_lines(state))
+
+    if include_timings:
+        lines.extend(["", "8. PERFORMANCE TIMINGS"])
+        lines.extend(_timing_lines(state))
+
+    if include_footer:
+        lines.extend(
+            [
+                "",
+                "=" * 50,
+                "ANALYSIS COMPLETE",
+                "=" * 50,
+            ]
+        )
+    return lines
+
+
+def render_final_report(state: AgentState, include_header: bool = True) -> None:
+    for line in format_report_lines(state, include_header=include_header):
         emit(line)
-
     if is_debug():
-        emit("")
+        emit("", OutputMode.DEBUG)
         emit("DEBUG FLAT SUPPLIER LIST", OutputMode.DEBUG)
         if state.suppliers:
             for supplier in state.suppliers:
                 emit(f"- {supplier.name}", OutputMode.DEBUG)
         else:
-            emit("Insufficient Data", OutputMode.DEBUG)
-
-    emit("")
-    emit("TOP RISKS")
-    if top_risks:
-        for risk in top_risks:
-            emit(f"- [{risk.severity.upper()}] {_risk_label(risk)}")
-    elif coverage["label"] in {"Low", "Insufficient Data"}:
-        emit("Insufficient Data")
-    else:
-        emit("No supplier-specific risks detected")
-
-    emit("")
-    emit("DATA QUALITY WARNINGS")
-    if warning_lines:
-        for line in warning_lines:
-            emit(line)
-    else:
-        emit("None")
-
-    emit("")
-    emit("CRITICAL SUPPLIERS")
-    for supplier in critical_suppliers:
-        emit(f"- {supplier}")
-
-    emit("")
-    emit("EXECUTIVE SUMMARY")
-    if report:
-        summary_lines = report.executive_summary.splitlines()
-        in_summary = False
-        for line in summary_lines:
-            if line == "EXECUTIVE SUMMARY":
-                in_summary = True
-                continue
-            if in_summary and line:
-                emit(line)
-    elif health:
-        emit(health.summary)
-    else:
-        emit("Insufficient Data")
-
-    emit("")
-    emit("=" * 50)
-    emit("ANALYSIS COMPLETE")
-    emit("=" * 50)
+            emit("None identified", OutputMode.DEBUG)

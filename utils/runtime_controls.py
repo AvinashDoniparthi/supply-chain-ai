@@ -22,9 +22,9 @@ STAGE_TIMEOUT_MESSAGES = {
 
 
 def _emit(message: str = "") -> None:
-    from utils.output import emit
+    from utils.output import OutputMode, emit
 
-    emit(message)
+    emit(message, OutputMode.NORMAL)
 
 
 def _now() -> float:
