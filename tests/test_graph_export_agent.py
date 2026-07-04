@@ -57,6 +57,70 @@ class TestGraphExportAgent(unittest.TestCase):
             self.assertEqual(data["edges"][0]["source"], self.company_name)
             self.assertEqual(data["edges"][1]["relationship"], "partner")
 
+    def test_graph_preserves_supplier_tiers_and_parent_edges(self):
+        """Tier 3 suppliers should be exported under their immediate parent."""
+        self.state.suppliers = [
+            SupplierInfo(
+                name="FoundryCo",
+                canonical_name="FoundryCo",
+                location="Taiwan",
+                tier=1,
+                parent_company=self.company_name,
+            ),
+            SupplierInfo(
+                name="ToolCo",
+                canonical_name="ToolCo",
+                location="Netherlands",
+                tier=2,
+                parent_company="FoundryCo",
+            ),
+            SupplierInfo(
+                name="OpticsCo",
+                canonical_name="OpticsCo",
+                location="Germany",
+                tier=3,
+                parent_company="ToolCo",
+            ),
+        ]
+        self.state.relationship_results = [
+            RelationshipResult(
+                target_company=self.company_name,
+                candidate_company="FoundryCo",
+                relationship_type="supplier",
+                confidence_score=1.0,
+                reasoning="...",
+                evidence_text="...",
+            ),
+            RelationshipResult(
+                target_company="FoundryCo",
+                candidate_company="ToolCo",
+                relationship_type="upstream_supplier",
+                confidence_score=1.0,
+                reasoning="...",
+                evidence_text="...",
+            ),
+            RelationshipResult(
+                target_company="ToolCo",
+                candidate_company="OpticsCo",
+                relationship_type="upstream_supplier",
+                confidence_score=1.0,
+                reasoning="...",
+                evidence_text="...",
+            ),
+        ]
+
+        updated_state = self.agent.export_graph(self.state)
+        nodes_by_id = {node.id: node for node in updated_state.supply_chain_graph.nodes}
+        edge_pairs = {
+            (edge.source, edge.target): edge.relationship
+            for edge in updated_state.supply_chain_graph.edges
+        }
+
+        self.assertEqual(nodes_by_id["OpticsCo"].tier, 3)
+        self.assertEqual(nodes_by_id["OpticsCo"].parent_company, "ToolCo")
+        self.assertEqual(edge_pairs[("FoundryCo", "ToolCo")], "upstream_supplier")
+        self.assertEqual(edge_pairs[("ToolCo", "OpticsCo")], "upstream_supplier")
+
     def test_empty_supplier_handling(self):
         """Test handling of empty supplier list."""
         self.state.suppliers = []

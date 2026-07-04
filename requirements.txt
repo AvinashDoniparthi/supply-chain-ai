@@ -17,6 +17,6 @@ openai
 langchain
 langchain-openai
 langchain-google-genai
+langchain-chroma
 chromadb
 langchain-community
-

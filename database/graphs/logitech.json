@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {
+      "id": "Logitech",
+      "label": "Logitech",
+      "node_type": "company",
+      "tier": 0
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {
+      "id": "GoPro",
+      "label": "GoPro",
+      "node_type": "company",
+      "tier": 0
+    }
+  ],
+  "edges": []
+}

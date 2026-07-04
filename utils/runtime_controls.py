@@ -1,4 +1,5 @@
 import time
+from contextlib import contextmanager
 from typing import Any, Optional
 
 
@@ -8,8 +9,17 @@ STAGE_ORDER = [
     ("relationship_classification", "Relationship Classification"),
     ("verification", "Verification"),
     ("risk_analysis", "Risk Analysis"),
-    ("report_generation", "Report Generation"),
+    ("confidence_scoring", "Confidence Scoring"),
+    ("criticality_scoring", "Criticality Scoring"),
+    ("health_scoring", "Health Scoring"),
+    ("executive_report_generation", "Report Generation"),
+    ("history_persistence", "History Persistence"),
+    ("graph_export", "Graph Export"),
 ]
+
+STAGE_DISPLAY_ALIASES = {
+    "executive_report_generation": ("report_generation",),
+}
 
 STAGE_TIMEOUT_MESSAGES = {
     "company_research": "Company research exceeded {timeout} seconds. Continuing with available company data.",
@@ -17,7 +27,7 @@ STAGE_TIMEOUT_MESSAGES = {
     "relationship_classification": "Relationship classification exceeded {timeout} seconds. Continuing with classified relationships.",
     "verification": "Verification exceeded {timeout} seconds. Continuing with verified suppliers.",
     "risk_analysis": "Risk analysis exceeded {timeout} seconds. Continuing with generated risks.",
-    "report_generation": "Report generation exceeded {timeout} seconds. Continuing with partial report.",
+    "executive_report_generation": "Report generation exceeded {timeout} seconds. Continuing with partial report.",
 }
 
 
@@ -41,6 +51,12 @@ def start_stage(state: Any, stage_key: str) -> None:
     if stage_key not in state.stage_started_at:
         state.stage_started_at[stage_key] = _now()
     state.active_stage = stage_key
+
+
+def set_stage_status(state: Any, stage_key: str, status: str) -> None:
+    if state is None or not status:
+        return
+    state.stage_statuses[stage_key] = status
 
 
 def finish_stage(state: Any, stage_key: str) -> None:
@@ -73,6 +89,17 @@ def stage_elapsed(state: Any, stage_key: str) -> float:
     return elapsed
 
 
+@contextmanager
+def timed_stage(state: Any, stage_name: str, status: str = "live"):
+    start_stage(state, stage_name)
+    try:
+        yield
+    finally:
+        if state is not None and stage_name not in state.stage_statuses:
+            set_stage_status(state, stage_name, status)
+        finish_stage(state, stage_name)
+
+
 def stage_timed_out(state: Any, stage_key: str) -> bool:
     return stage_elapsed(state, stage_key) >= _timeout_value(state)
 
@@ -98,6 +125,7 @@ def timeout_stage(state: Any, stage_key: str) -> bool:
                 "status": "timeout",
             }
         )
+        set_stage_status(state, stage_key, "timeout")
     finish_stage(state, stage_key)
     return True
 
@@ -200,7 +228,11 @@ def can_consume_llm_call(
 
 
 def render_stage_timings(state: Any) -> None:
+    from utils.output import _format_stage_duration
+
     finish_all_stages(state)
     _emit("")
     for stage_key, label in STAGE_ORDER:
-        _emit(f"{label}: {stage_elapsed(state, stage_key):.1f} seconds")
+        elapsed = stage_elapsed(state, stage_key)
+        status = getattr(state, "stage_statuses", {}).get(stage_key, "live")
+        _emit(f"{label}: {_format_stage_duration(elapsed, status)}")

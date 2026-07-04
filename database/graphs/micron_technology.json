@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {
+      "id": "Micron Technology",
+      "label": "Micron Technology",
+      "node_type": "company",
+      "tier": 0
+    }
+  ],
+  "edges": []
+}

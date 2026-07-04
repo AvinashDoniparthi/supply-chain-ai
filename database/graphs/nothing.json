@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {
+      "id": "Nothing",
+      "label": "Nothing",
+      "node_type": "company",
+      "tier": 0
+    }
+  ],
+  "edges": []
+}

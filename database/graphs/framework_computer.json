@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {
+      "id": "Framework Computer",
+      "label": "Framework Computer",
+      "node_type": "company",
+      "tier": 0
+    }
+  ],
+  "edges": []
+}

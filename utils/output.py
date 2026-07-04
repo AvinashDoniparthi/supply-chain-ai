@@ -614,17 +614,89 @@ def _critical_supplier_lines(state: AgentState) -> List[str]:
 
 
 def _timing_lines(state: AgentState) -> List[str]:
-    from utils.runtime_controls import STAGE_ORDER, finish_all_stages, stage_elapsed
+    from utils.runtime_controls import (
+        STAGE_ORDER,
+        finish_all_stages,
+    )
 
     finish_all_stages(state)
     lines = []
     total = 0.0
     for stage_key, label in STAGE_ORDER:
-        elapsed = stage_elapsed(state, stage_key)
+        elapsed = _display_stage_elapsed(state, stage_key)
+        status = _display_stage_status(state, stage_key)
         total += elapsed
-        lines.append(f"{label:<29}: {elapsed:.1f}s")
+        lines.append(f"{label:<29}: {_format_stage_duration(elapsed, status)}")
     lines.extend(["", f"{'Total Runtime':<29}: {total:.1f}s"])
     return lines
+
+
+def _rag_tier_three_lines(state: AgentState) -> List[str]:
+    tier_three = [supplier for supplier in state.suppliers if getattr(supplier, "tier", 0) >= 3]
+    if not tier_three:
+        return []
+
+    rag_report = str(getattr(state, "rag_report", "") or "")
+    if tier_three and all(supplier.name in rag_report for supplier in tier_three):
+        return []
+
+    lines = ["", "TIER 3 SUPPLIERS"]
+    for index, supplier in enumerate(sorted(tier_three, key=lambda item: item.name), start=1):
+        lines.append(f"{index}. {supplier.name}")
+        lines.append(_field_line("Path", _path_for_supplier(supplier)))
+        lines.append(_field_line("Verification", _verification_for_supplier(state, supplier)))
+        if index != len(tier_three):
+            lines.append("")
+    return lines
+
+
+def _display_stage_elapsed(state: AgentState, stage_key: str) -> float:
+    from utils.runtime_controls import STAGE_DISPLAY_ALIASES, stage_elapsed
+
+    elapsed = stage_elapsed(state, stage_key)
+    if elapsed > 0 or stage_key in state.stage_durations or stage_key in state.stage_started_at:
+        return elapsed
+
+    for alias in STAGE_DISPLAY_ALIASES.get(stage_key, ()):
+        alias_elapsed = stage_elapsed(state, alias)
+        if (
+            alias_elapsed > 0
+            or alias in state.stage_durations
+            or alias in state.stage_started_at
+        ):
+            return alias_elapsed
+    return elapsed
+
+
+def _display_stage_status(state: AgentState, stage_key: str) -> str:
+    from utils.runtime_controls import STAGE_DISPLAY_ALIASES
+
+    status = state.stage_statuses.get(stage_key, "live")
+    if status != "live" or stage_key in state.stage_statuses:
+        return status
+
+    for alias in STAGE_DISPLAY_ALIASES.get(stage_key, ()):
+        if alias in state.stage_statuses:
+            return state.stage_statuses[alias]
+    return status
+
+
+def _format_stage_duration(elapsed: float, status: str) -> str:
+    if status == "skipped":
+        return "Skipped"
+
+    if elapsed < 0.1:
+        duration = "<0.1s"
+    else:
+        duration = f"{elapsed:.1f}s"
+
+    if status == "cache_hit":
+        return f"{duration} (cache)"
+    if status == "curated_hit":
+        return f"{duration} (curated)"
+    if status in {"heuristic", "llm", "timeout"}:
+        return f"{duration} ({status})"
+    return duration
 
 
 def format_report_lines(
@@ -647,10 +719,38 @@ def format_report_lines(
             ]
         )
 
+    if getattr(state, "execution_mode", "llm") == "rag" and getattr(
+        state, "rag_report", None
+    ):
+        lines.extend(
+            [
+                f"Company: {company}",
+                f"Mode: {execution_mode_label(state)}",
+                f"Max Depth: {state.max_depth}",
+                f"Generated At: {_generated_at(state)}",
+                f"Retrieved Context Chunks: {len(state.rag_context)}",
+                "",
+                "RAG REPORT",
+            ]
+        )
+        lines.extend(str(state.rag_report).strip().splitlines())
+        lines.extend(_rag_tier_three_lines(state))
+        if include_footer:
+            lines.extend(
+                [
+                    "",
+                    "=" * 50,
+                    "ANALYSIS COMPLETE",
+                    "=" * 50,
+                ]
+            )
+        return lines
+
     lines.extend(
         [
             f"Company: {company}",
             f"Mode: {execution_mode_label(state)}",
+            f"Max Depth: {state.max_depth}",
             f"Generated At: {_generated_at(state)}",
             "",
             "1. EXECUTIVE SUMMARY",

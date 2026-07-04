@@ -3,17 +3,22 @@
     {
       "id": "Apple",
       "label": "Apple",
-      "node_type": "company"
+      "node_type": "company",
+      "tier": 0
     },
     {
       "id": "TSMC",
       "label": "TSMC",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Apple"
     },
     {
       "id": "ASML",
       "label": "ASML",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
     }
   ],
   "edges": [
@@ -23,9 +28,9 @@
       "relationship": "supplier"
     },
     {
-      "source": "Apple",
+      "source": "TSMC",
       "target": "ASML",
-      "relationship": "supplier"
+      "relationship": "upstream_supplier"
     }
   ]
 }

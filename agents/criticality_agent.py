@@ -5,6 +5,7 @@ from models.relationship import RelationshipResult
 from models.verification import VerificationResult
 from utils.identity_resolution import resolver
 from utils.output import agent_event, debug_log
+from utils.runtime_controls import timed_stage
 
 logger = logging.getLogger(__name__)
 
@@ -174,4 +175,5 @@ class CriticalityAgent:
 
 def criticality_agent(state: AgentState) -> AgentState:
     agent = CriticalityAgent()
-    return agent.calculate_criticality(state)
+    with timed_stage(state, "criticality_scoring"):
+        return agent.calculate_criticality(state)

@@ -3,52 +3,99 @@
     {
       "id": "Samsung",
       "label": "Samsung",
-      "node_type": "company"
+      "node_type": "company",
+      "tier": 0
     },
     {
       "id": "ASML",
       "label": "ASML",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Samsung"
     },
     {
       "id": "Corning",
       "label": "Corning",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Samsung"
     },
     {
       "id": "Qualcomm",
       "label": "Qualcomm",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Samsung"
     },
     {
       "id": "Murata Manufacturing",
       "label": "Murata Manufacturing",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Samsung"
     },
     {
       "id": "Sony Semiconductor Solutions",
       "label": "Sony Semiconductor Solutions",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Samsung"
     },
     {
       "id": "Carl Zeiss SMT",
       "label": "Carl Zeiss SMT",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "ASML"
+    },
+    {
+      "id": "Trumpf",
+      "label": "Trumpf",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "ASML"
     },
     {
       "id": "VDL ETG",
       "label": "VDL ETG",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "ASML"
     },
     {
       "id": "Amkor Technology",
       "label": "Amkor Technology",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Qualcomm"
     },
     {
       "id": "TSMC",
       "label": "TSMC",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Qualcomm"
+    },
+    {
+      "id": "Applied Materials",
+      "label": "Applied Materials",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
+    },
+    {
+      "id": "Lam Research",
+      "label": "Lam Research",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
+    },
+    {
+      "id": "Tokyo Electron",
+      "label": "Tokyo Electron",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
     }
   ],
   "edges": [
@@ -78,24 +125,44 @@
       "relationship": "supplier"
     },
     {
-      "source": "Samsung",
+      "source": "ASML",
       "target": "Carl Zeiss SMT",
       "relationship": "upstream_supplier"
     },
     {
-      "source": "Samsung",
+      "source": "ASML",
+      "target": "Trumpf",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "ASML",
       "target": "VDL ETG",
       "relationship": "upstream_supplier"
     },
     {
-      "source": "Samsung",
+      "source": "Qualcomm",
       "target": "Amkor Technology",
       "relationship": "upstream_supplier"
     },
     {
-      "source": "Samsung",
+      "source": "Qualcomm",
       "target": "TSMC",
-      "relationship": "supplier"
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Applied Materials",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Lam Research",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Tokyo Electron",
+      "relationship": "upstream_supplier"
     }
   ]
 }

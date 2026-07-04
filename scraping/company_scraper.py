@@ -8,6 +8,7 @@ import re
 from utils.runtime_controls import (
     can_consume_web_query,
     remaining_stage_timeout,
+    set_stage_status,
     stop_if_timed_out,
 )
 
@@ -45,12 +46,15 @@ class CompanyScraper:
             cached = self._load_cached_result(company_name)
             if cached:
                 logger.info("Using cached company data for %s", company_name)
+                set_stage_status(self.runtime_state, self.stage_key, "cache_hit")
                 return cached
 
             if self.runtime_state and stop_if_timed_out(
                 self.runtime_state, self.stage_key
             ):
                 return self._get_empty_result(company_name)
+
+            set_stage_status(self.runtime_state, self.stage_key, "live")
 
             # Step 1: Search Wikipedia for the company
             search_url = "https://en.wikipedia.org/w/api.php"

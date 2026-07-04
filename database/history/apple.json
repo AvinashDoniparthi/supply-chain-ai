@@ -809,6 +809,1024 @@
         "TSMC",
         "ASML"
       ]
+    },
+    {
+      "timestamp": "2026-06-22T19:10:05.990219",
+      "mode": "llm",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T20:35:19.548555",
+      "mode": "llm",
+      "health_score": 72.6,
+      "health_status": "Moderate",
+      "supplier_count": 9,
+      "risk_count": 9,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T20:39:31.900927",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T20:45:33.195188",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T20:49:07.220343",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T20:49:30.339975",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T21:00:00.710855",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T21:01:56.695928",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T21:02:19.719305",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T21:02:52.892647",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T21:06:34.808083",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T21:26:08.347575",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:07:20.402070",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:14:42.811805",
+      "mode": "rag",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:24:08.477884",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:24:46.846970",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:28:20.819072",
+      "mode": "rag",
+      "health_score": 77.6,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:29:56.198451",
+      "mode": "rag",
+      "health_score": 77.7,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:35:56.620631",
+      "mode": "rag",
+      "health_score": 76.9,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:41:48.329429",
+      "mode": "rag",
+      "health_score": 77.1,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:47:04.233467",
+      "mode": "rag",
+      "health_score": 77.1,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:47:40.235334",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:49:21.609928",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:50:12.566750",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-22T22:52:57.380355",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:40:57.888110",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:44:50.731426",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:45:52.849966",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:50:39.797396",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:52:03.894655",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:52:54.864316",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:54:08.047241",
+      "mode": "rag",
+      "health_score": 77.2,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:56:07.589968",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:56:40.528489",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:56:41.785601",
+      "mode": "rag",
+      "health_score": 76.1,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:59:30.688814",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T09:59:55.233723",
+      "mode": "rag",
+      "health_score": 76.1,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:01:33.844994",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:01:39.789579",
+      "mode": "rag",
+      "health_score": 76.1,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:20:25.681629",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:20:31.918401",
+      "mode": "rag",
+      "health_score": 76.1,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:31:58.560865",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:32:04.436277",
+      "mode": "rag",
+      "health_score": 76.1,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:40:47.837232",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:42:39.848732",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T10:44:23.999757",
+      "mode": "rag",
+      "health_score": 76.0,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T11:15:54.493539",
+      "mode": "llm",
+      "health_score": 76.5,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-24T11:16:01.022910",
+      "mode": "rag",
+      "health_score": 76.1,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-06-28T09:29:30.421839",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-28T09:33:13.382473",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-06-28T09:38:54.181936",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T10:49:18.165123",
+      "mode": "rag",
+      "health_score": 76.0,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T10:52:30.618272",
+      "mode": "rag",
+      "health_score": 76.0,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T10:53:06.619170",
+      "mode": "rag",
+      "health_score": 76.0,
+      "health_status": "Good",
+      "supplier_count": 12,
+      "risk_count": 3,
+      "suppliers": [
+        "TSMC",
+        "Hon Hai Precision Industry",
+        "Pegatron",
+        "Broadcom",
+        "Murata Manufacturing",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T10:53:20.196072",
+      "mode": "llm",
+      "health_score": 50.4,
+      "health_status": "Weak",
+      "supplier_count": 2,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "ASML"
+      ]
     }
   ]
 }

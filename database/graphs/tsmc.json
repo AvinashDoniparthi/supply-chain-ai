@@ -1,0 +1,108 @@
+{
+  "nodes": [
+    {
+      "id": "TSMC",
+      "label": "TSMC",
+      "node_type": "company",
+      "tier": 0
+    },
+    {
+      "id": "ASML",
+      "label": "ASML",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "TSMC"
+    },
+    {
+      "id": "Applied Materials",
+      "label": "Applied Materials",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "TSMC"
+    },
+    {
+      "id": "Lam Research",
+      "label": "Lam Research",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "TSMC"
+    },
+    {
+      "id": "Tokyo Electron",
+      "label": "Tokyo Electron",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "TSMC"
+    },
+    {
+      "id": "Entegris",
+      "label": "Entegris",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "TSMC"
+    },
+    {
+      "id": "Carl Zeiss SMT",
+      "label": "Carl Zeiss SMT",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "ASML"
+    },
+    {
+      "id": "Trumpf",
+      "label": "Trumpf",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "ASML"
+    },
+    {
+      "id": "VDL ETG",
+      "label": "VDL ETG",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "ASML"
+    }
+  ],
+  "edges": [
+    {
+      "source": "TSMC",
+      "target": "ASML",
+      "relationship": "supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Applied Materials",
+      "relationship": "supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Lam Research",
+      "relationship": "supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Tokyo Electron",
+      "relationship": "supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Entegris",
+      "relationship": "supplier"
+    },
+    {
+      "source": "ASML",
+      "target": "Carl Zeiss SMT",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "ASML",
+      "target": "Trumpf",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "ASML",
+      "target": "VDL ETG",
+      "relationship": "upstream_supplier"
+    }
+  ]
+}

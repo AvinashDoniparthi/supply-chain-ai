@@ -18,6 +18,7 @@ from utils.runtime_controls import (
     can_consume_llm_call,
     emit_skip_once,
     finish_stage,
+    set_stage_status,
     start_stage,
     stop_if_timed_out,
 )
@@ -286,11 +287,13 @@ def relationship_agent(state: AgentState) -> AgentState:
             "relationship_llm",
             "Relationship LLM skipped in fast mode.",
         )
+        set_stage_status(state, "relationship_classification", "heuristic")
         active_classifier = HeuristicRelationshipClassifier()
     else:
         try:
             active_classifier: RelationshipClassifier = get_classifier()
             if isinstance(active_classifier, LLMRelationshipClassifier):
+                set_stage_status(state, "relationship_classification", "llm")
                 print_llm_config_once(active_classifier.config)
         except ValueError as exc:
             debug_log(
@@ -298,6 +301,7 @@ def relationship_agent(state: AgentState) -> AgentState:
                 "LLM classifier unavailable; using deterministic relationship classifier: %s",
                 exc,
             )
+            set_stage_status(state, "relationship_classification", "heuristic")
             active_classifier = HeuristicRelationshipClassifier()
 
     for supplier in state.suppliers:

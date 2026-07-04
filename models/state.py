@@ -124,6 +124,8 @@ class GraphNode(BaseModel):
     id: str
     label: str
     node_type: str
+    tier: Optional[int] = None
+    parent_company: Optional[str] = None
 
 
 class GraphEdge(BaseModel):
@@ -151,7 +153,7 @@ class AgentState(BaseModel):
         default=0, description="Current depth of the active discovery node"
     )
     max_depth: int = Field(
-        default=2, description="Maximum depth for recursive supplier discovery"
+        default=3, description="Maximum depth for recursive supplier discovery"
     )
     max_candidates_per_company: int = Field(
         default=5,
@@ -231,6 +233,8 @@ class AgentState(BaseModel):
         description="Confidence scores for different analysis stages (e.g., 'mapping', 'risk')",
     )
     retrieved_evidence: Dict[str, List[Dict[str, str]]] = Field(default_factory=dict)
+    rag_context: List[str] = Field(default_factory=list)
+    rag_report: Optional[str] = None
     final_reports: List[str] = Field(
         default_factory=list, description="Paths or content of generated reports"
     )
@@ -242,6 +246,7 @@ class AgentState(BaseModel):
     active_stage: Optional[str] = None
     stage_started_at: Dict[str, float] = Field(default_factory=dict)
     stage_durations: Dict[str, float] = Field(default_factory=dict)
+    stage_statuses: Dict[str, str] = Field(default_factory=dict)
     timed_out_stages: List[str] = Field(default_factory=list)
     limit_events: List[str] = Field(default_factory=list)
     skip_events: List[str] = Field(default_factory=list)

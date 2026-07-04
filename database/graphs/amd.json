@@ -3,62 +3,99 @@
     {
       "id": "AMD",
       "label": "AMD",
-      "node_type": "company"
+      "node_type": "company",
+      "tier": 0
     },
     {
       "id": "TSMC",
       "label": "TSMC",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "AMD"
     },
     {
       "id": "GlobalFoundries",
       "label": "GlobalFoundries",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "AMD"
     },
     {
       "id": "Samsung Electronics",
       "label": "Samsung Electronics",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "AMD"
     },
     {
       "id": "ASE Technology",
       "label": "ASE Technology",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "AMD"
     },
     {
       "id": "Amkor Technology",
       "label": "Amkor Technology",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "AMD"
     },
     {
       "id": "ASML",
       "label": "ASML",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
+    },
+    {
+      "id": "Applied Materials",
+      "label": "Applied Materials",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
     },
     {
       "id": "Lam Research",
       "label": "Lam Research",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
     },
     {
-      "id": "Entegris",
-      "label": "Entegris",
-      "node_type": "supplier"
-    },
-    {
-      "id": "Corning",
-      "label": "Corning",
-      "node_type": "supplier"
+      "id": "Tokyo Electron",
+      "label": "Tokyo Electron",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
     },
     {
       "id": "Murata Manufacturing",
       "label": "Murata Manufacturing",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Samsung Electronics"
     },
     {
       "id": "Sony Semiconductor Solutions",
       "label": "Sony Semiconductor Solutions",
-      "node_type": "supplier"
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Samsung Electronics"
+    },
+    {
+      "id": "Carl Zeiss SMT",
+      "label": "Carl Zeiss SMT",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "ASML"
+    },
+    {
+      "id": "VDL ETG",
+      "label": "VDL ETG",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "ASML"
     }
   ],
   "edges": [
@@ -88,33 +125,43 @@
       "relationship": "supplier"
     },
     {
-      "source": "AMD",
+      "source": "TSMC",
       "target": "ASML",
       "relationship": "upstream_supplier"
     },
     {
-      "source": "AMD",
+      "source": "TSMC",
+      "target": "Applied Materials",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "TSMC",
       "target": "Lam Research",
       "relationship": "upstream_supplier"
     },
     {
-      "source": "AMD",
-      "target": "Entegris",
+      "source": "TSMC",
+      "target": "Tokyo Electron",
       "relationship": "upstream_supplier"
     },
     {
-      "source": "AMD",
-      "target": "Corning",
-      "relationship": "supplier"
-    },
-    {
-      "source": "AMD",
+      "source": "Samsung Electronics",
       "target": "Murata Manufacturing",
       "relationship": "upstream_supplier"
     },
     {
-      "source": "AMD",
+      "source": "Samsung Electronics",
       "target": "Sony Semiconductor Solutions",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "ASML",
+      "target": "Carl Zeiss SMT",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "ASML",
+      "target": "VDL ETG",
       "relationship": "upstream_supplier"
     }
   ]

@@ -13,6 +13,7 @@ from utils.identity_resolution import resolver
 from utils.runtime_controls import (
     can_consume_web_query,
     remaining_stage_timeout,
+    set_stage_status,
     stop_if_timed_out,
 )
 
@@ -1832,6 +1833,7 @@ class SupplierDiscoveryScraper:
             curated_suppliers = get_curated_suppliers(company_name)
             if curated_suppliers:
                 logger.debug("CURATED SUPPLIER GRAPH HIT: %s", company_name)
+                set_stage_status(self.runtime_state, self.stage_key, "curated_hit")
                 return curated_suppliers
             if cache_only_requested:
                 logger.debug("CURATED SUPPLIER GRAPH MISS IN CACHE-ONLY MODE: %s", company_name)
@@ -1849,6 +1851,7 @@ class SupplierDiscoveryScraper:
                 )
             if cached_suppliers:
                 self.stats["Cache Used"] += 1
+                set_stage_status(self.runtime_state, self.stage_key, "cache_hit")
                 return cached_suppliers
             if cache_only_requested:
                 logger.info(
@@ -1869,6 +1872,7 @@ class SupplierDiscoveryScraper:
                     )
                 if cached_suppliers:
                     self.stats["Cache Used"] += 1
+                    set_stage_status(self.runtime_state, self.stage_key, "cache_hit")
                     return cached_suppliers
 
             if cache_only_requested:
@@ -1890,6 +1894,7 @@ class SupplierDiscoveryScraper:
 
         logger.debug("CACHE MISS: %s", company_name)
         logger.info(f"Searching for real suppliers of {company_name} via Wikipedia...")
+        set_stage_status(self.runtime_state, self.stage_key, "live")
 
         discovered_data = []
         seen_results = set()

@@ -195,6 +195,40 @@ class TestAMDOutputRegressions(unittest.TestCase):
         self.assertNotIn("[HIGH] Supplier failed verification", output)
         self.assertIn("DATA QUALITY WARNINGS", output)
 
+    def test_final_renderer_displays_tier_3_supplier_rows(self):
+        state = self._amd_report_state()
+        state.suppliers.append(
+            SupplierInfo(
+                name="Carl Zeiss SMT",
+                canonical_name="Carl Zeiss SMT",
+                location="Germany",
+                products=["Lithography optics"],
+                tier=3,
+                parent_company="ASML",
+                relationship_path=[
+                    "AMD",
+                    "Taiwan Semiconductor Manufacturing Company",
+                    "ASML",
+                    "Carl Zeiss SMT",
+                ],
+                discovery_confidence=0.86,
+                propagated_confidence=0.78,
+            )
+        )
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            render_final_report(state)
+        output = buffer.getvalue()
+
+        tier3_block = output.split("TIER 3 SUPPLIERS", 1)[1].split("5. TOP RISKS", 1)[0]
+        self.assertIn("1. Carl Zeiss SMT", tier3_block)
+        self.assertIn("Parent       : ASML", tier3_block)
+        self.assertIn(
+            "Path         : AMD -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT",
+            tier3_block,
+        )
+
     def test_final_report_contains_ordered_sections_and_timings(self):
         state = executive_report_agent(self._amd_report_state())
         state.stage_durations = {

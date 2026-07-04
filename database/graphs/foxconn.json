@@ -1,0 +1,204 @@
+{
+  "nodes": [
+    {
+      "id": "Foxconn",
+      "label": "Foxconn",
+      "node_type": "company",
+      "tier": 0
+    },
+    {
+      "id": "Apple Inc.",
+      "label": "Apple Inc.",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Foxconn"
+    },
+    {
+      "id": "E Ink Corporation",
+      "label": "E Ink Corporation",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Foxconn"
+    },
+    {
+      "id": "Netronix Inc",
+      "label": "Netronix Inc",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Foxconn"
+    },
+    {
+      "id": "Geely Holding Group",
+      "label": "Geely Holding Group",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Foxconn"
+    },
+    {
+      "id": "PTT Public Co",
+      "label": "PTT Public Co",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Foxconn"
+    },
+    {
+      "id": "TSMC",
+      "label": "TSMC",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Apple Inc."
+    },
+    {
+      "id": "Broadcom",
+      "label": "Broadcom",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Apple Inc."
+    },
+    {
+      "id": "Samsung Electronics",
+      "label": "Samsung Electronics",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Apple Inc."
+    },
+    {
+      "id": "Corning",
+      "label": "Corning",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Apple Inc."
+    },
+    {
+      "id": "ASML",
+      "label": "ASML",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
+    },
+    {
+      "id": "Applied Materials",
+      "label": "Applied Materials",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
+    },
+    {
+      "id": "Lam Research",
+      "label": "Lam Research",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
+    },
+    {
+      "id": "Tokyo Electron",
+      "label": "Tokyo Electron",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Taiwan Semiconductor Manufacturing Company"
+    },
+    {
+      "id": "Qualcomm",
+      "label": "Qualcomm",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Samsung Electronics"
+    },
+    {
+      "id": "Murata Manufacturing",
+      "label": "Murata Manufacturing",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Samsung Electronics"
+    },
+    {
+      "id": "Sony Semiconductor Solutions",
+      "label": "Sony Semiconductor Solutions",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "Samsung Electronics"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Foxconn",
+      "target": "Apple Inc.",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Foxconn",
+      "target": "E Ink Corporation",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Foxconn",
+      "target": "Netronix Inc",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Foxconn",
+      "target": "Geely Holding Group",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Foxconn",
+      "target": "PTT Public Co",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Apple Inc.",
+      "target": "TSMC",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Apple Inc.",
+      "target": "Broadcom",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Apple Inc.",
+      "target": "Samsung Electronics",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Apple Inc.",
+      "target": "Corning",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "ASML",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Applied Materials",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Lam Research",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "TSMC",
+      "target": "Tokyo Electron",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Samsung Electronics",
+      "target": "Qualcomm",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Samsung Electronics",
+      "target": "Murata Manufacturing",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Samsung Electronics",
+      "target": "Sony Semiconductor Solutions",
+      "relationship": "upstream_supplier"
+    }
+  ]
+}

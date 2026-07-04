@@ -33,6 +33,73 @@ python3 main.py --company Qualcomm
 python3 main.py --company Dell
 ```
 
+## Product Benchmark
+
+Run the product-level benchmark as four separate timed samples so you can inspect each run independently:
+
+```bash
+python3 product_benchmark.py --sample-id 1 --sample-label morning
+python3 product_benchmark.py --sample-id 2 --sample-label afternoon
+python3 product_benchmark.py --sample-id 3 --sample-label evening
+python3 product_benchmark.py --sample-id 4 --sample-label night
+```
+
+Each invocation runs the same matrix:
+
+* Companies: Apple, Samsung, Nvidia, AMD, Intel, Tesla
+* Modes: `llm`, `rag`
+* Config: `max_depth=3`, `skip_news=True`
+
+Outputs are written per sample:
+
+```text
+database/benchmarks/product_level/sample_1_morning/
+database/benchmarks/product_level/sample_2_afternoon/
+database/benchmarks/product_level/sample_3_evening/
+database/benchmarks/product_level/sample_4_night/
+```
+
+Each sample folder contains:
+
+* `apple_product_benchmark.csv`
+* `samsung_product_benchmark.csv`
+* `nvidia_product_benchmark.csv`
+* `amd_product_benchmark.csv`
+* `intel_product_benchmark.csv`
+* `tesla_product_benchmark.csv`
+* `master_results.csv`
+* `sample_summary.md`
+
+A global combined file is also rebuilt after each completed sample:
+
+* `database/benchmarks/product_level/all_samples_master_results.csv`
+
+Use `--overwrite` if you need to replace an existing sample folder with the same sample ID and label.
+
+## HTTP API
+
+Start the local API server:
+
+```bash
+python3 api_server.py --host 127.0.0.1 --port 8000
+```
+
+Health check:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Analyze a company:
+
+```bash
+curl -X POST http://127.0.0.1:8000/analyze \
+  -H 'Content-Type: application/json' \
+  -d '{"company":"Dell","execution_mode":"rag"}'
+```
+
+The response includes the full serialized analysis state, including the executive report, supply chain graph, risk assessments, and run metadata.
+
 For LLM/RAG comparison:
 
 ```bash

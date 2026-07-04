@@ -1,10 +1,10 @@
 import json
 import os
 import logging
-from typing import List, Dict, Any, Optional
 from models.state import AgentState, GraphNode, GraphEdge, SupplyChainGraph
+from utils.identity_resolution import resolver
 from utils.output import agent_event, debug_log
-from utils.runtime_controls import finish_stage
+from utils.runtime_controls import timed_stage
 
 logger = logging.getLogger(__name__)
 
@@ -30,12 +30,29 @@ class GraphExportAgent:
         root_node = GraphNode(
             id=company_name,
             label=company_name,
-            node_type="company"
+            node_type="company",
+            tier=0,
         )
         nodes.append(root_node)
 
         # Map relationships for quick lookup
-        relationship_map = {r.candidate_company: r.relationship_type for r in state.relationship_results}
+        relationship_map = {}
+        for result in state.relationship_results:
+            relationship_map[result.candidate_company] = result.relationship_type
+            relationship_map[resolver.resolve(result.candidate_company)] = (
+                result.relationship_type
+            )
+
+        node_id_by_company = {
+            company_name: company_name,
+            resolver.resolve(company_name): company_name,
+        }
+        for supplier in state.suppliers:
+            node_id_by_company[supplier.name] = supplier.name
+            node_id_by_company[resolver.resolve(supplier.name)] = supplier.name
+            if supplier.canonical_name:
+                node_id_by_company[supplier.canonical_name] = supplier.name
+                node_id_by_company[resolver.resolve(supplier.canonical_name)] = supplier.name
 
         # 2. Create supplier nodes and edges
         for supplier in state.suppliers:
@@ -43,14 +60,28 @@ class GraphExportAgent:
             supplier_node = GraphNode(
                 id=supplier.name,
                 label=supplier.name,
-                node_type="supplier"
+                node_type="supplier",
+                tier=supplier.tier,
+                parent_company=supplier.parent_company,
             )
             nodes.append(supplier_node)
 
-            # Create edge
-            rel_type = relationship_map.get(supplier.name, "supplier")
+            parent_name = supplier.parent_company if supplier.tier > 1 else company_name
+            source_id = (
+                node_id_by_company.get(parent_name or "")
+                or node_id_by_company.get(resolver.resolve(parent_name or ""))
+                or company_name
+            )
+            rel_type = (
+                relationship_map.get(supplier.name)
+                or relationship_map.get(supplier.canonical_name or "")
+                or relationship_map.get(
+                    resolver.resolve(supplier.canonical_name or supplier.name)
+                )
+                or ("upstream_supplier" if supplier.tier > 1 else "supplier")
+            )
             edge = GraphEdge(
-                source=company_name,
+                source=source_id,
                 target=supplier.name,
                 relationship=rel_type
             )
@@ -66,7 +97,7 @@ class GraphExportAgent:
         try:
             with open(export_file, "w") as f:
                 # Use model_dump for Pydantic v2
-                json.dump(graph.model_dump(), f, indent=2)
+                json.dump(graph.model_dump(exclude_none=True), f, indent=2)
             debug_log(logger, "Nodes Created: %s", len(nodes))
             debug_log(logger, "Edges Created: %s", len(edges))
             debug_log(logger, "Graph Saved: %s", export_file)
@@ -82,10 +113,10 @@ class GraphExportAgent:
         })
 
         agent_event("Graph export agent completed")
-        finish_stage(state, "report_generation")
 
         return state
 
 def graph_export_agent(state: AgentState) -> AgentState:
     agent = GraphExportAgent()
-    return agent.export_graph(state)
+    with timed_stage(state, "graph_export"):
+        return agent.export_graph(state)

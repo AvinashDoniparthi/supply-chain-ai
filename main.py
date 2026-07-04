@@ -2,6 +2,7 @@ import argparse
 import logging
 
 from models.state import AgentState
+from retrieval.knowledge_base_ingestion import index_knowledge_base
 from utils.output import (
     OutputMode,
     add_output_args,
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 def run_analysis(
     company_name: str,
     *,
-    max_depth: int = 2,
+    max_depth: int = 3,
     max_candidates_per_company: int = 5,
     timeout_seconds: int = 180,
     skip_risk: bool = False,
@@ -82,8 +83,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--max-depth",
         type=int,
-        default=2,
-        help="Maximum recursive supplier discovery depth. Default: 2.",
+        default=3,
+        help="Maximum recursive supplier discovery depth. Default: 3.",
     )
     parser.add_argument(
         "--max-candidates-per-company",
@@ -106,6 +107,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--skip-news",
         action="store_true",
         help="Skip live news and financial risk providers.",
+    )
+    parser.add_argument(
+        "--index-knowledge-base",
+        action="store_true",
+        help="Index the knowledge_base/ folder into ChromaDB and exit.",
     )
     parser.add_argument(
         "--mode",
@@ -139,6 +145,9 @@ def main():
     """
     parser = build_parser()
     args = parser.parse_args()
+    if args.index_knowledge_base:
+        index_knowledge_base()
+        return
     configure_output(mode_from_args(args))
     company_name = args.company_flag or args.company or "AMD"
 

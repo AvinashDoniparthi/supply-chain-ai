@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import List, Dict, Any, Optional
 from models.state import AgentState, HistoricalRun
 from utils.output import agent_event, debug_log
+from utils.runtime_controls import timed_stage
 
 logger = logging.getLogger(__name__)
 
@@ -113,4 +114,5 @@ class HistoryAgent:
 
 def history_agent(state: AgentState) -> AgentState:
     agent = HistoryAgent()
-    return agent.process_history(state)
+    with timed_stage(state, "history_persistence"):
+        return agent.process_history(state)

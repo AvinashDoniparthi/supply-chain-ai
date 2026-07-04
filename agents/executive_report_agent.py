@@ -1,6 +1,7 @@
 import logging
 import re
 from typing import List, Dict, Any, Optional
+from chains.rag_report_chain import generate_rag_report
 from models.state import AgentState, ExecutiveReport, RiskAnalysis, SupplierCriticality, SupplierConfidence
 from utils.supply_chain_metrics import (
     calculate_discovery_coverage,
@@ -16,6 +17,7 @@ from utils.output import (
     progress,
     render_supplier_tier_lines,
 )
+from utils.runtime_controls import timed_stage
 
 logger = logging.getLogger(__name__)
 
@@ -74,15 +76,27 @@ class ExecutiveReportAgent:
         for rec in report.recommendations:
             debug_log(logger, "- %s", rec)
 
-        state.executive_report = report
-        report.executive_summary = "\n".join(
-            format_report_lines(
-                state,
-                include_header=False,
-                include_timings=False,
-                include_footer=False,
+        if state.execution_mode == "rag":
+            company_for_retrieval = state.company.name if state.company else company_name
+            state.executive_report = report
+            rag_report, rag_context = generate_rag_report(
+                company_for_retrieval,
+                state=state,
             )
-        )
+            state.rag_context = rag_context
+            state.rag_report = rag_report
+            state.run_metadata["rag_context_chunks"] = len(rag_context)
+            report.executive_summary = rag_report
+        else:
+            state.executive_report = report
+            report.executive_summary = "\n".join(
+                format_report_lines(
+                    state,
+                    include_header=False,
+                    include_timings=False,
+                    include_footer=False,
+                )
+            )
         state.run_metadata["mode"] = state.execution_mode
         state.current_task = "Executive report generated"
         
@@ -371,4 +385,5 @@ class ExecutiveReportAgent:
 
 def executive_report_agent(state: AgentState) -> AgentState:
     agent = ExecutiveReportAgent()
-    return agent.generate_report(state)
+    with timed_stage(state, "executive_report_generation"):
+        return agent.generate_report(state)

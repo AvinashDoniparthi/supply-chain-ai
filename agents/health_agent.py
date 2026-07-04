@@ -8,6 +8,7 @@ from utils.supply_chain_metrics import (
 )
 from utils.identity_resolution import resolver
 from utils.output import agent_event, debug_log, is_external_risk
+from utils.runtime_controls import timed_stage
 
 logger = logging.getLogger(__name__)
 
@@ -195,4 +196,5 @@ class SupplyChainHealthAgent:
 
 def health_agent(state: AgentState) -> AgentState:
     agent = SupplyChainHealthAgent()
-    return agent.generate_health_report(state)
+    with timed_stage(state, "health_scoring"):
+        return agent.generate_health_report(state)

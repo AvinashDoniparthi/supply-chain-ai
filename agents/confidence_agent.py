@@ -10,7 +10,7 @@ from utils.supply_chain_metrics import (
 )
 from utils.identity_resolution import resolver
 from utils.output import agent_event, debug_log, is_external_risk
-from utils.runtime_controls import start_stage
+from utils.runtime_controls import timed_stage
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,6 @@ class SupplierConfidenceAgent:
     """
 
     def calculate_supplier_confidence(self, state: AgentState) -> AgentState:
-        start_stage(state, "report_generation")
         agent_event("Confidence agent started")
         
         confidence_scores = []
@@ -241,4 +240,5 @@ class SupplierConfidenceAgent:
 
 def confidence_agent(state: AgentState) -> AgentState:
     agent = SupplierConfidenceAgent()
-    return agent.calculate_supplier_confidence(state)
+    with timed_stage(state, "confidence_scoring"):
+        return agent.calculate_supplier_confidence(state)

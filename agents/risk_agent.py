@@ -6,15 +6,17 @@ from typing import List, Dict, Any, Optional, Union
 
 from models.state import AgentState, RiskAnalysis, SupplierInfo
 from utils.supply_chain_metrics import calculate_discovery_coverage
-from utils.identity_resolution import resolver
+from utils.identity_resolution import compact_key, resolver
 from utils.output import OutputMode, agent_event, debug_log, emit, progress
 from utils.runtime_controls import (
     can_consume_web_query,
     emit_skip_once,
     finish_stage,
     remaining_stage_timeout,
+    set_stage_status,
     start_stage,
     stop_if_timed_out,
+    timed_stage,
 )
 
 """
@@ -166,6 +168,32 @@ def _path_display_for_supplier(state: AgentState, supplier: SupplierInfo) -> str
     if not display_path and target:
         display_path = [target, supplier.name]
     return " -> ".join(display_path)
+
+
+def _risk_matches_known_entity(state: AgentState, risk: RiskAnalysis) -> bool:
+    """Keep only risks that refer to the current target company or its suppliers."""
+    allowed_keys = set()
+
+    def add_entity(name: Optional[str]) -> None:
+        if not name:
+            return
+        allowed_keys.add(compact_key(name))
+        allowed_keys.add(compact_key(resolver.resolve(name)))
+        for alias in resolver.aliases_for(name):
+            allowed_keys.add(compact_key(alias))
+
+    add_entity(state.target_company)
+    add_entity(state.company.name if state.company else None)
+    for supplier in state.suppliers:
+        add_entity(supplier.name)
+        add_entity(supplier.canonical_name)
+
+    risk_name = getattr(risk, "supplier_name", "") or ""
+    risk_keys = {
+        compact_key(risk_name),
+        compact_key(resolver.resolve(risk_name)),
+    }
+    return any(key and key in allowed_keys for key in risk_keys)
 
 
 def _supplier_region(location: str) -> Optional[str]:
@@ -639,10 +667,26 @@ class NewsRiskProvider(RiskProvider):
                 mitigation="Assess total exposure and identify immediate alternatives."
             ), critical_kws
 
-        strike_kws = _matched_keywords(text, ["strike", "labor strike", "work stoppage"])
-        if strike_kws:
+        strike_kws = _matched_keywords(text, ["union strike", "labor strike", "work stoppage"])
+        if strike_kws or _contains_phrase(text, "strike"):
             workforce_terms = ["worker", "workforce", "employee", "union", "labor"]
+            if not strike_kws:
+                strike_kws = ["strike"]
             scope = _news_scope(supplier, relevance, item, strike_kws, target_company)
+            deal_terms = ["deal", "agreement", "partnership", "transaction"]
+            if (
+                any(term in text for term in deal_terms)
+                and not any(term in text for term in workforce_terms + facility_terms)
+            ):
+                return None, []
+
+            if not any(term in text for term in workforce_terms + facility_terms) and scope not in {
+                "direct_facility",
+                "direct_supplier",
+                "target_impact",
+            }:
+                return None, []
+
             severity = (
                 "High"
                 if scope in {"direct_facility", "direct_supplier", "target_impact"}
@@ -992,6 +1036,7 @@ class RiskIntelligenceAgent:
         debug_log(logger, "Suppliers sent to risk analysis: %s", len(state.suppliers))
 
         if state.skip_risk:
+            set_stage_status(state, "risk_analysis", "skipped")
             emit_skip_once(state, "risk_analysis", "Risk analysis skipped in fast mode.")
             emit_skip_once(state, "news_risk", "News risk skipped in fast mode.")
             state.confidence_scores["risk_analysis"] = 0.75
@@ -1034,10 +1079,13 @@ class RiskIntelligenceAgent:
                         state,
                         "financial_news_risk",
                         "Financial news risk skipped in fast mode.",
-                    )
+                )
                 continue
 
             provider_risks = provider.assess_risk(state)
+            provider_risks = [
+                risk for risk in provider_risks if _risk_matches_known_entity(state, risk)
+            ]
             
             # Deduplication within provider and total
             unique_provider_risks = []
@@ -1098,4 +1146,6 @@ class RiskIntelligenceAgent:
 def risk_agent(state: AgentState) -> AgentState:
     """Entry point for the risk agent."""
     agent = RiskIntelligenceAgent()
-    return agent.run(state)
+    status = "skipped" if state.skip_risk else "live"
+    with timed_stage(state, "risk_analysis", status=status):
+        return agent.run(state)

@@ -3,7 +3,8 @@
     {
       "id": "Microsoft",
       "label": "Microsoft",
-      "node_type": "company"
+      "node_type": "company",
+      "tier": 0
     }
   ],
   "edges": []

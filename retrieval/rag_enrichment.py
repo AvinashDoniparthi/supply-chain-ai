@@ -73,6 +73,9 @@ def enrich_supplier_evidence_with_rag(
     total_added = 0
     retrieved_by_supplier: Dict[str, List[Dict[str, str]]] = {}
     for supplier in state.suppliers:
+        company_name = state.target_company or (
+            state.company.name if state.company else None
+        )
         query_parts = [
             state.target_company or "",
             supplier.parent_company or "",
@@ -85,7 +88,10 @@ def enrich_supplier_evidence_with_rag(
             continue
 
         try:
-            documents = search_analysis(query)[:max_chunks_per_supplier]
+            documents = search_analysis(
+                query,
+                company=company_name,
+            )[:max_chunks_per_supplier]
         except Exception as exc:
             logger.warning("RAG retrieval skipped for %s during %s: %s", supplier.name, stage, exc)
             continue
