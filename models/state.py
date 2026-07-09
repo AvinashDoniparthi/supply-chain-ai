@@ -38,6 +38,18 @@ class SupplierInfo(BaseModel):
         default=None,
         description="The company this supplier directly sells to in the context of this branch",
     )
+    product_name: Optional[str] = Field(
+        default=None,
+        description="Product context for benchmark-specific supplier discovery",
+    )
+    component_name: Optional[str] = Field(
+        default=None,
+        description="Component context for benchmark-specific supplier discovery",
+    )
+    benchmark_target_query: Optional[str] = Field(
+        default=None,
+        description="Full benchmark target string used during discovery",
+    )
     relationship_path: List[str] = Field(
         default_factory=list,
         description="Full ancestry path from the target company down to this supplier",
@@ -148,6 +160,16 @@ class AgentState(BaseModel):
     # Core target information
     target_company: Optional[str] = Field(
         default=None, description="The initial company name provided for research"
+    )
+    product_name: Optional[str] = Field(
+        default=None, description="Product name when benchmarking a specific product"
+    )
+    component_name: Optional[str] = Field(
+        default=None, description="Component name when benchmarking a specific component"
+    )
+    benchmark_target_query: Optional[str] = Field(
+        default=None,
+        description="Full benchmark search target combining company, product, and component context",
     )
     current_depth: int = Field(
         default=0, description="Current depth of the active discovery node"

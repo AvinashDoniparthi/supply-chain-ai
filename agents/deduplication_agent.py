@@ -48,19 +48,24 @@ def deduplication_agent(state: AgentState) -> AgentState:
             debug_log(logger, "  - %s", s.name)
 
         # Merge logic
-        primary = group[0]  # Use the first one as the base
+        # Preserve one real ancestry path rather than concatenating rendered paths.
+        primary = max(
+            group,
+            key=lambda s: (
+                len(getattr(s, "relationship_path", []) or []),
+                getattr(s, "propagated_confidence", 0.0),
+                getattr(s, "discovery_confidence", 0.0),
+            ),
+        )
 
         merged_products = set()
         merged_evidence = []
         max_confidence = 0.0
         max_propagated_confidence = 0.0
         parent_companies = []
-        relationship_paths = []
-
         # Track unique evidence links
         seen_links = set()
         seen_parent_companies = set()
-        seen_relationship_paths = set()
 
         for s in group:
             merged_products.update(s.products)
@@ -80,11 +85,14 @@ def deduplication_agent(state: AgentState) -> AgentState:
                 parent_companies.append(s.parent_company)
                 seen_parent_companies.add(s.parent_company)
 
-            if s.relationship_path:
-                path_key = " -> ".join(s.relationship_path)
-                if path_key not in seen_relationship_paths:
-                    relationship_paths.append(path_key)
-                    seen_relationship_paths.add(path_key)
+        relationship_path = list(primary.relationship_path or [])
+        if not relationship_path:
+            for s in group:
+                if s.relationship_path:
+                    relationship_path = list(s.relationship_path)
+                    break
+        if not relationship_path and primary.parent_company:
+            relationship_path = [primary.parent_company, c_name]
 
         # Create a new merged supplier info
         merged_supplier = SupplierInfo(
@@ -99,8 +107,9 @@ def deduplication_agent(state: AgentState) -> AgentState:
             status="Active",
             discovery_confidence=max_confidence,
             propagated_confidence=max_propagated_confidence,
-            parent_company="; ".join(parent_companies) if parent_companies else None,
-            relationship_path=relationship_paths,
+            parent_company=primary.parent_company
+            or (parent_companies[0] if parent_companies else None),
+            relationship_path=relationship_path,
             evidence=merged_evidence,
         )
 

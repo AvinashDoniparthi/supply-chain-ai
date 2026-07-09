@@ -9,6 +9,7 @@ from providers.llm_provider import get_llm
 from retrieval.vector_store import (
     SOURCE_ANALYSIS_STATE,
     SOURCE_KNOWLEDGE_BASE,
+    SOURCE_KNOWLEDGE_REPORT,
     index_analysis_state,
     retrieve_context,
     retrieve_context_documents,
@@ -261,7 +262,7 @@ def _merge_section_chunks(
 
 
 def _source_mix(documents: Iterable[Any]) -> Dict[str, int]:
-    mix = {SOURCE_KNOWLEDGE_BASE: 0, SOURCE_ANALYSIS_STATE: 0}
+    mix = {SOURCE_KNOWLEDGE_REPORT: 0, SOURCE_ANALYSIS_STATE: 0}
     for document in documents:
         metadata = getattr(document, "metadata", {}) or {}
         source_type = metadata.get("source_type")
@@ -765,14 +766,14 @@ def generate_rag_report(
             query=query,
             company=company,
             k=section_k,
-            source_priority=[SOURCE_KNOWLEDGE_BASE, SOURCE_ANALYSIS_STATE],
+            source_priority=[SOURCE_KNOWLEDGE_REPORT, SOURCE_ANALYSIS_STATE],
             provider=provider,
         )
         documents = retrieve_context_documents(
             query=query,
             company=company,
             k=section_k,
-            source_priority=[SOURCE_KNOWLEDGE_BASE, SOURCE_ANALYSIS_STATE],
+            source_priority=[SOURCE_KNOWLEDGE_REPORT, SOURCE_ANALYSIS_STATE],
             provider=provider,
         )
         retrieved_documents.extend(documents)
@@ -797,10 +798,19 @@ def generate_rag_report(
 
     source_mix = _source_mix(retrieved_documents)
     if state is not None:
-        state.run_metadata["knowledge_base_chunks"] = source_mix[SOURCE_KNOWLEDGE_BASE]
+        state.run_metadata["knowledge_report_chunks"] = source_mix[SOURCE_KNOWLEDGE_REPORT]
+        state.run_metadata["knowledge_base_chunks"] = source_mix[SOURCE_KNOWLEDGE_REPORT]
         state.run_metadata["analysis_state_chunks"] = source_mix[SOURCE_ANALYSIS_STATE]
         state.run_metadata["retrieval_chunks_attached"] = len(context_chunks)
         state.run_metadata["retrieval_source_mix"] = source_mix
+        logger.debug(
+            "Knowledge Report Chunks Retrieved: %s",
+            source_mix[SOURCE_KNOWLEDGE_REPORT],
+        )
+        logger.debug(
+            "Analysis-State Chunks Retrieved: %s",
+            source_mix[SOURCE_ANALYSIS_STATE],
+        )
 
     if not context_chunks:
         return MISSING_CONTEXT_MESSAGE, []

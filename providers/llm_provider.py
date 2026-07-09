@@ -12,6 +12,8 @@ DEFAULT_MODELS = {
     "google": "gemini-2.5-flash",
     "openai": "gpt-4.1-mini",
 }
+DEFAULT_TIMEOUT_SECONDS = 30.0
+MIN_GOOGLE_TIMEOUT_SECONDS = 10.0
 _config_printed = False
 
 
@@ -42,6 +44,16 @@ def _env_key(provider: str) -> tuple[str | None, str]:
     api_key = os.environ.get(env_var)
     key_source = env_var if api_key else "missing"
     return api_key, key_source
+
+
+def _resolve_timeout(provider: str, kwargs: dict) -> float:
+    if provider == "openai":
+        raw_timeout = kwargs.get("request_timeout", os.getenv("LLM_TIMEOUT_SECONDS", DEFAULT_TIMEOUT_SECONDS))
+        return float(raw_timeout)
+
+    raw_timeout = kwargs.get("timeout", os.getenv("LLM_TIMEOUT_SECONDS", DEFAULT_TIMEOUT_SECONDS))
+    resolved_timeout = float(raw_timeout)
+    return max(MIN_GOOGLE_TIMEOUT_SECONDS, resolved_timeout)
 
 
 def resolve_provider(provider: str | None = None, model: str | None = None, **kwargs) -> LLMConfig:
@@ -139,12 +151,13 @@ def get_llm(provider: str | None = None, model: str | None = None, **kwargs):
 
     if provider == "openai":
         kwargs.setdefault("max_retries", int(os.getenv("LLM_MAX_RETRIES", "2")))
-        kwargs.setdefault("request_timeout", float(os.getenv("LLM_TIMEOUT_SECONDS", "8")))
+        kwargs["request_timeout"] = _resolve_timeout(provider, kwargs)
         logger.debug(
-            "[LLM PROVIDER] provider=%s model=%s api_key_source=%s",
+            "[LLM PROVIDER] provider=%s model=%s api_key_source=%s timeout_seconds=%s",
             provider,
             config.model,
             config.key_source,
+            kwargs["request_timeout"],
         )
 
         return ChatOpenAI(
@@ -155,12 +168,13 @@ def get_llm(provider: str | None = None, model: str | None = None, **kwargs):
 
     elif provider in ["gemini", "google"]:
         kwargs.setdefault("max_retries", int(os.getenv("LLM_MAX_RETRIES", "2")))
-        kwargs.setdefault("timeout", float(os.getenv("LLM_TIMEOUT_SECONDS", "8")))
+        kwargs["timeout"] = _resolve_timeout(provider, kwargs)
         logger.debug(
-            "[LLM PROVIDER] provider=%s model=%s api_key_source=%s",
+            "[LLM PROVIDER] provider=%s model=%s api_key_source=%s timeout_seconds=%s",
             provider,
             config.model,
             config.key_source,
+            kwargs["timeout"],
         )
 
         return ChatGoogleGenerativeAI(

@@ -13,7 +13,12 @@ from retrieval.knowledge_base_ingestion import (
     index_knowledge_base,
     load_knowledge_base_documents,
 )
-from retrieval.vector_store import index_analysis_state, retrieve_context, retrieve_context_documents
+from retrieval.vector_store import (
+    SOURCE_KNOWLEDGE_REPORT,
+    index_analysis_state,
+    retrieve_context,
+    retrieve_context_documents,
+)
 
 
 class DeterministicEmbeddings(Embeddings):
@@ -71,34 +76,36 @@ def test_load_knowledge_base_documents_reads_supported_files(tmp_path):
     base_dir = tmp_path / "knowledge_base"
     apple_dir = base_dir / "Apple"
     apple_dir.mkdir(parents=True)
-    (apple_dir / "apple_supplier_notes.md").write_text(
-        "# Apple Supplier Notes\nKnown supplier evidence:\nTODO\n",
+    (apple_dir / "apple_supply_chain_report.md").write_text(
+        "# Apple\n\n## Report Metadata\n- Generated Timestamp: 2026-07-05T00:00:00+00:00\n- Mode: llm\n- Max Depth: 3\n",
         encoding="utf-8",
     )
-    (apple_dir / "apple_sources.csv").write_text(
-        "source,notes\nreport,placeholder row\n",
+    (apple_dir / "apple_supplier_notes.md").write_text(
+        "# Apple Supplier Notes\nKnown supplier evidence:\nTODO\n",
         encoding="utf-8",
     )
 
     documents = load_knowledge_base_documents(base_dir=str(base_dir))
 
-    assert len(documents) == 2
-    assert all(doc.metadata["source_type"] == "knowledge_base" for doc in documents)
+    assert len(documents) == 1
+    assert all(doc.metadata["source_type"] == SOURCE_KNOWLEDGE_REPORT for doc in documents)
     assert all(doc.metadata["company"] == "Apple" for doc in documents)
     assert all(doc.metadata["company_key"] == "apple" for doc in documents)
     assert {doc.metadata["file_name"] for doc in documents} == {
-        "apple_supplier_notes.md",
-        "apple_sources.csv",
+        "apple_supply_chain_report.md",
     }
+    assert documents[0].metadata["generated_timestamp"] == "2026-07-05T00:00:00+00:00"
+    assert documents[0].metadata["mode"] == "llm"
+    assert documents[0].metadata["max_depth"] == "3"
 
 
-def test_indexing_and_retrieval_prefers_knowledge_base(tmp_path, monkeypatch):
+def test_indexing_and_retrieval_prefers_knowledge_report(tmp_path, monkeypatch):
     _configure_vector_store(monkeypatch, tmp_path)
     base_dir = tmp_path / "knowledge_base"
     apple_dir = base_dir / "Apple"
     apple_dir.mkdir(parents=True)
-    (apple_dir / "apple_supplier_notes.md").write_text(
-        "# Apple Supplier Notes\nKnown supplier evidence:\nTSMC placeholder note.\n",
+    (apple_dir / "apple_supply_chain_report.md").write_text(
+        "# Apple\n\n## Executive Summary\nApple depends on TSMC.\n\n## Report Metadata\n- Generated Timestamp: 2026-07-05T00:00:00+00:00\n- Mode: rag\n- Max Depth: 3\n",
         encoding="utf-8",
     )
 
@@ -108,11 +115,11 @@ def test_indexing_and_retrieval_prefers_knowledge_base(tmp_path, monkeypatch):
 
     docs = retrieve_context_documents("TSMC supplier note", "Apple", k=4)
     assert len(docs) > 0
-    assert docs[0].metadata["source_type"] == "knowledge_base"
+    assert docs[0].metadata["source_type"] == SOURCE_KNOWLEDGE_REPORT
 
     chunks = retrieve_context("TSMC supplier note", "Apple", k=4)
     assert len(chunks) > 0
-    assert "TSMC placeholder note" in chunks[0]
+    assert "Apple depends on TSMC" in chunks[0]
 
 
 def test_retrieval_falls_back_to_analysis_state(tmp_path, monkeypatch):
@@ -131,8 +138,8 @@ def test_rag_report_records_source_mix(tmp_path, monkeypatch):
     base_dir = tmp_path / "knowledge_base"
     apple_dir = base_dir / "Apple"
     apple_dir.mkdir(parents=True)
-    (apple_dir / "apple_supplier_notes.md").write_text(
-        "# Apple Supplier Notes\nKnown supplier evidence:\nTSMC placeholder note.\n",
+    (apple_dir / "apple_supply_chain_report.md").write_text(
+        "# Apple\n\n## Executive Summary\nApple depends on TSMC.\n\n## Report Metadata\n- Generated Timestamp: 2026-07-05T00:00:00+00:00\n- Mode: rag\n- Max Depth: 3\n",
         encoding="utf-8",
     )
 
@@ -150,8 +157,9 @@ def test_rag_report_records_source_mix(tmp_path, monkeypatch):
 
     assert report
     assert len(context) > 0
+    assert state.run_metadata["knowledge_report_chunks"] > 0
     assert state.run_metadata["knowledge_base_chunks"] > 0
     assert state.run_metadata["analysis_state_chunks"] > 0
     assert state.run_metadata["retrieval_chunks_attached"] > 0
-    assert state.run_metadata["retrieval_source_mix"]["knowledge_base"] > 0
+    assert state.run_metadata["retrieval_source_mix"]["knowledge_report"] > 0
     assert state.run_metadata["retrieval_source_mix"]["analysis_state"] > 0

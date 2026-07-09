@@ -23,7 +23,8 @@ COLLECTION_NAME = "supply_chain_knowledge"
 _DEFAULT_CHROMA_CACHE = Path("database/chroma_cache")
 _LOCAL_EMBEDDING_DIMENSIONS = 384
 SOURCE_ANALYSIS_STATE = "analysis_state"
-SOURCE_KNOWLEDGE_BASE = "knowledge_base"
+SOURCE_KNOWLEDGE_REPORT = "knowledge_report"
+SOURCE_KNOWLEDGE_BASE = SOURCE_KNOWLEDGE_REPORT
 
 
 class LocalHashEmbeddings(Embeddings):
@@ -473,9 +474,9 @@ def _retrieve_documents(
         logger.debug("RAG retrieval skipped because Chroma collection is empty.")
         return []
 
-    sources = list(source_priority or [SOURCE_KNOWLEDGE_BASE, SOURCE_ANALYSIS_STATE])
-    if SOURCE_KNOWLEDGE_BASE not in sources:
-        sources.insert(0, SOURCE_KNOWLEDGE_BASE)
+    sources = list(source_priority or [SOURCE_KNOWLEDGE_REPORT, SOURCE_ANALYSIS_STATE])
+    if SOURCE_KNOWLEDGE_REPORT not in sources:
+        sources.insert(0, SOURCE_KNOWLEDGE_REPORT)
     if SOURCE_ANALYSIS_STATE not in sources:
         sources.append(SOURCE_ANALYSIS_STATE)
 

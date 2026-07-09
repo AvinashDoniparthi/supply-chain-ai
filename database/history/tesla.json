@@ -150,6 +150,726 @@
         "Ganfeng Lithium",
         "Tianqi Lithium"
       ]
+    },
+    {
+      "timestamp": "2026-07-04T16:17:06.265967",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:18:49.792036",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:20:21.285412",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:38:56.022569",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:40:28.022220",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:42:09.135080",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:43:59.534278",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:45:28.776890",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:47:08.253630",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:49:00.539505",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:50:28.014353",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:52:08.835766",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:54:00.709625",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:55:28.486870",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:57:08.048589",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:59:00.829893",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T17:00:28.065774",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T17:02:08.326727",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T17:03:59.970383",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T17:06:28.034684",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:58:47.495934",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:00:26.581302",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:02:10.779699",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:04:05.315426",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:05:40.054488",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:07:12.547349",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:09:05.384964",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:10:35.933431",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:12:10.466087",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:14:05.329321",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:15:35.985909",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:17:11.064550",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:19:06.209540",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:20:36.815826",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:22:12.799926",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:24:07.293161",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:25:50.772348",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:27:22.702614",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:29:08.301973",
+      "mode": "llm",
+      "health_score": 68.3,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T19:30:57.452893",
+      "mode": "rag",
+      "health_score": 68.7,
+      "health_status": "Moderate",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
     }
   ]
 }

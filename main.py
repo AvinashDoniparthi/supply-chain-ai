@@ -2,6 +2,7 @@ import argparse
 import logging
 
 from models.state import AgentState
+from retrieval.knowledge_report_generator import generate_knowledge_report
 from retrieval.knowledge_base_ingestion import index_knowledge_base
 from utils.output import (
     OutputMode,
@@ -20,6 +21,9 @@ logger = logging.getLogger(__name__)
 def run_analysis(
     company_name: str,
     *,
+    product: str | None = None,
+    component: str | None = None,
+    benchmark_target_query: str | None = None,
     max_depth: int = 3,
     max_candidates_per_company: int = 5,
     timeout_seconds: int = 180,
@@ -34,10 +38,18 @@ def run_analysis(
     Executes the supply chain analysis using the LangGraph workflow.
     """
     emit(f"Starting supply-chain analysis for {company_name}", OutputMode.DEBUG)
+    benchmark_query = benchmark_target_query
+    if benchmark_query is None and (product or component):
+        benchmark_query = " ".join(
+            part for part in [company_name, product, component] if part
+        ).strip() or None
 
     # 1. Initialize the shared state
     initial_state = AgentState(
         target_company=company_name,
+        product_name=product,
+        component_name=component,
+        benchmark_target_query=benchmark_query,
         current_task=f"Starting analysis for {company_name}",
         max_depth=max_depth,
         max_candidates_per_company=max_candidates_per_company,
@@ -48,7 +60,12 @@ def run_analysis(
         refresh_supplier_cache=refresh_supplier_cache,
         supplier_cache_only=supplier_cache_only,
         execution_mode=execution_mode,
-        run_metadata={"mode": execution_mode},
+        run_metadata={
+            "mode": execution_mode,
+            "product_name": product,
+            "component_name": component,
+            "benchmark_target_query": benchmark_query,
+        },
     )
 
     try:
@@ -66,6 +83,16 @@ def run_analysis(
         )
 
         render_final_report(final_state)
+
+        try:
+            report_path = generate_knowledge_report(final_state)
+            emit(
+                f"Knowledge report generated: {report_path}",
+                OutputMode.DEBUG,
+            )
+            index_knowledge_base()
+        except Exception as exc:
+            logger.warning("Knowledge report generation or indexing failed: %s", exc)
 
         return final_state
 
@@ -111,7 +138,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--index-knowledge-base",
         action="store_true",
-        help="Index the knowledge_base/ folder into ChromaDB and exit.",
+        help="Index knowledge_base/ markdown reports into ChromaDB and exit.",
+    )
+    parser.add_argument(
+        "--reindex-knowledge-base",
+        action="store_true",
+        help="Re-index knowledge_base/ markdown reports into ChromaDB and exit.",
     )
     parser.add_argument(
         "--mode",
@@ -145,7 +177,7 @@ def main():
     """
     parser = build_parser()
     args = parser.parse_args()
-    if args.index_knowledge_base:
+    if args.index_knowledge_base or args.reindex_knowledge_base:
         index_knowledge_base()
         return
     configure_output(mode_from_args(args))

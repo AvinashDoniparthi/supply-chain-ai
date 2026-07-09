@@ -35,6 +35,13 @@
       "parent_company": "Tesla"
     },
     {
+      "id": "Sumitomo Metal Mining",
+      "label": "Sumitomo Metal Mining",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Panasonic"
+    },
+    {
       "id": "Mitsubishi Materials",
       "label": "Mitsubishi Materials",
       "node_type": "supplier",
@@ -76,6 +83,11 @@
       "source": "Tesla",
       "target": "Samsung SDI",
       "relationship": "supplier"
+    },
+    {
+      "source": "Panasonic",
+      "target": "Sumitomo Metal Mining",
+      "relationship": "upstream_supplier"
     },
     {
       "source": "Panasonic",

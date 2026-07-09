@@ -1,63 +1,32 @@
 from __future__ import annotations
 
-import csv
 import logging
 from pathlib import Path
+import re
 from typing import Any, Dict, List, Optional
 
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from retrieval.vector_store import SOURCE_KNOWLEDGE_BASE, _company_key, _vector_store
+from retrieval.vector_store import (
+    SOURCE_KNOWLEDGE_REPORT,
+    _company_key,
+    _vector_store,
+)
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_TEXT_EXTENSIONS = {".txt", ".md", ".csv"}
-SUPPORTED_PDF_EXTENSIONS = {".pdf"}
+SUPPORTED_TEXT_EXTENSIONS = {".md"}
 
 
 def _read_text_file(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="ignore")
 
 
-def _read_csv_file(path: Path) -> str:
-    rows: List[str] = []
-    with path.open("r", encoding="utf-8", newline="") as handle:
-        reader = csv.reader(handle)
-        for row in reader:
-            rows.append(", ".join(cell.strip() for cell in row if cell.strip()))
-    return "\n".join(line for line in rows if line)
-
-
-def _read_pdf_file(path: Path) -> str:
-    try:
-        from pypdf import PdfReader
-    except Exception:
-        try:
-            from PyPDF2 import PdfReader  # type: ignore
-        except Exception:
-            logger.debug("PDF ingestion skipped because no PDF reader is installed: %s", path)
-            return ""
-
-    try:
-        reader = PdfReader(str(path))
-        pages = []
-        for page in reader.pages:
-            pages.append(page.extract_text() or "")
-        return "\n".join(part for part in pages if part.strip())
-    except Exception as exc:
-        logger.warning("Failed to read PDF %s: %s", path, exc)
-        return ""
-
-
 def _read_file(path: Path) -> str:
     suffix = path.suffix.lower()
-    if suffix in {".txt", ".md"}:
+    if suffix in {".md"}:
         return _read_text_file(path)
-    if suffix == ".csv":
-        return _read_csv_file(path)
-    if suffix in SUPPORTED_PDF_EXTENSIONS:
-        return _read_pdf_file(path)
     return ""
 
 
@@ -71,6 +40,32 @@ def _company_from_path(base_dir: Path, path: Path) -> Optional[str]:
     return relative.parts[0]
 
 
+def _is_knowledge_report(path: Path) -> bool:
+    return path.name.endswith("_supply_chain_report.md")
+
+
+def _extract_report_metadata(content: str) -> Dict[str, str]:
+    metadata: Dict[str, str] = {}
+    in_metadata = False
+    for raw_line in content.splitlines():
+        line = raw_line.strip()
+        if line == "## Report Metadata":
+            in_metadata = True
+            continue
+        if in_metadata and line.startswith("## "):
+            break
+        if not in_metadata or not line.startswith("- "):
+            continue
+        key_value = line[2:]
+        if ":" not in key_value:
+            continue
+        key, value = key_value.split(":", 1)
+        normalized_key = re.sub(r"[^a-z0-9]+", "_", key.strip().lower()).strip("_")
+        if normalized_key:
+            metadata[normalized_key] = value.strip()
+    return metadata
+
+
 def load_knowledge_base_documents(base_dir: str = "knowledge_base") -> List[Document]:
     base_path = Path(base_dir)
     if not base_path.exists():
@@ -80,26 +75,35 @@ def load_knowledge_base_documents(base_dir: str = "knowledge_base") -> List[Docu
     for path in sorted(base_path.rglob("*")):
         if not path.is_file():
             continue
-        if path.suffix.lower() not in SUPPORTED_TEXT_EXTENSIONS | SUPPORTED_PDF_EXTENSIONS:
+        if path.suffix.lower() not in SUPPORTED_TEXT_EXTENSIONS:
             continue
 
         company = _company_from_path(base_path, path)
         if not company:
             continue
 
+        if not _is_knowledge_report(path):
+            continue
+
         content = _read_file(path).strip()
         if not content:
             continue
+
+        report_metadata = _extract_report_metadata(content)
 
         documents.append(
             Document(
                 page_content=content,
                 metadata={
-                    "source_type": SOURCE_KNOWLEDGE_BASE,
+                    "source_type": SOURCE_KNOWLEDGE_REPORT,
                     "company": company,
                     "company_key": _company_key(company),
                     "file_name": path.name,
                     "path": str(path),
+                    "generated_timestamp": report_metadata.get("generated_timestamp"),
+                    "mode": report_metadata.get("mode"),
+                    "max_depth": report_metadata.get("max_depth"),
+                    "doc_type": "knowledge_report",
                 },
             )
         )
@@ -149,3 +153,7 @@ def index_knowledge_base(base_dir: str = "knowledge_base", provider: Optional[st
         + (str(collection_count) if collection_count is not None else "unavailable")
     )
     return vector_store
+
+
+def reindex_knowledge_base(base_dir: str = "knowledge_base", provider: Optional[str] = None):
+    return index_knowledge_base(base_dir=base_dir, provider=provider)

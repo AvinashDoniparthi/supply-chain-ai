@@ -2,8 +2,10 @@ from models.state import AgentState, SupplierInfo
 from scraping.supplier_discovery import (
     SupplierDiscoveryScraper,
     candidate_competes_with_target,
+    component_tier1_supplier_hints,
     supplier_evidence_is_strong,
     supplier_evidence_explicitly_links_candidate_to_source,
+    supplier_evidence_mentions_component,
     is_location_or_ecosystem_entity,
     normalize_supplier_candidate_name,
     validate_supplier_candidate_name,
@@ -179,8 +181,15 @@ def supplier_agent(state: AgentState) -> AgentState:
         # prevents re-enqueueing duplicates, but dequeued companies must still be
         # processed so their downstream suppliers are discovered.
 
+        is_root_target = canonical_current == resolver.resolve(target_name)
+        discovery_target = (
+            state.benchmark_target_query
+            if is_root_target and state.benchmark_target_query
+            else current_company
+        )
+
         discovery = SupplierDiscoveryScraper(runtime_state=state, prefer_curated=True)
-        discovered_data = discovery.find_suppliers(current_company)
+        discovered_data = discovery.find_suppliers(discovery_target)
 
         # If the discovery returned nothing, attempt common aliases from the
         # identity resolver mapping (e.g. 'TSMC' -> 'Taiwan Semiconductor...')
@@ -222,6 +231,22 @@ def supplier_agent(state: AgentState) -> AgentState:
                 )
                 continue
 
+            if (
+                state.component_name
+                and candidate_tier == 1
+                and is_root_target
+                and not supplier_evidence_mentions_component(
+                    data.get("source_evidence", []),
+                    product_name=state.product_name,
+                    component_name=state.component_name,
+                    target_query=state.benchmark_target_query,
+                )
+            ):
+                logger.info(
+                    f"[FILTER] Rejected: {raw_candidate_name} Reason: Missing component-specific evidence for {state.component_name}"
+                )
+                continue
+
             candidate_name = normalize_supplier_candidate_name(
                 raw_candidate_name, current_company
             )
@@ -230,6 +255,17 @@ def supplier_agent(state: AgentState) -> AgentState:
                     f"[FILTER] Rejected: {raw_candidate_name} Reason: Not an identifiable organization"
                 )
                 continue
+
+            if state.component_name and candidate_tier == 1 and is_root_target:
+                hints = component_tier1_supplier_hints(state.component_name)
+                if hints:
+                    candidate_hint_match = resolver.resolve(candidate_name)
+                    normalized_hints = {resolver.resolve(hint) for hint in hints}
+                    if candidate_hint_match not in normalized_hints:
+                        logger.info(
+                            f"[FILTER] Rejected: {candidate_name} Reason: Not in component-specific supplier hint set for {state.component_name}"
+                        )
+                        continue
 
             if candidate_name != raw_candidate_name:
                 logger.info(
@@ -368,6 +404,9 @@ def supplier_agent(state: AgentState) -> AgentState:
                 discovery_confidence=data["confidence"],
                 propagated_confidence=propagated_confidence,
                 parent_company=parent_company_name,
+                product_name=state.product_name,
+                component_name=state.component_name,
+                benchmark_target_query=state.benchmark_target_query,
                 relationship_path=relationship_path,
                 evidence=data.get("source_evidence", []),
             )

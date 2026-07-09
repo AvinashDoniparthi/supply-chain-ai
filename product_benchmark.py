@@ -12,6 +12,9 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 EVALUATION_STATUS_SUCCESS = "success"
 EVALUATION_STATUS_FAILURE = "system_failure"
+EVALUATION_STATUS_INSUFFICIENT_COMPONENT_SUPPLIER_EVIDENCE = (
+    "insufficient_component_supplier_evidence"
+)
 
 FAST_FAIL_ENV = {
     "LLM_MAX_RETRIES": "0",
@@ -232,6 +235,10 @@ def _run_analysis(*args: Any, **kwargs: Any) -> Any:
     return benchmark_run_analysis(*args, **kwargs)
 
 
+def _benchmark_target_query(company: str, product: str, component: str) -> str:
+    return " ".join(part for part in [company, product, component] if part).strip()
+
+
 def _load_reference_dataset() -> Dict[Tuple[str, str, str, int], Dict[str, Any]]:
     if not REFERENCE_DATASET_PATH.exists():
         return {}
@@ -425,7 +432,17 @@ def calculate_component_metrics(
 
     discovered_suppliers = _discovered_supplier_set(state) if state is not None else []
     reference_metrics = _reference_metrics(discovered_suppliers, reference_suppliers)
-    evaluation_status = EVALUATION_STATUS_FAILURE if error else EVALUATION_STATUS_SUCCESS
+    component_evidence_missing = bool(
+        component
+        and state is not None
+        and not getattr(state, "suppliers", [])
+        and not error
+    )
+    evaluation_status = (
+        EVALUATION_STATUS_INSUFFICIENT_COMPONENT_SUPPLIER_EVIDENCE
+        if component_evidence_missing
+        else (EVALUATION_STATUS_FAILURE if error else EVALUATION_STATUS_SUCCESS)
+    )
 
     token_usage = _estimated_token_usage(state) if state is not None else None
     retrieval_grounding_score = _retrieval_grounding_score(state) if state is not None else None
@@ -434,6 +451,21 @@ def calculate_component_metrics(
         if state is not None and supplier_data["supplier_count"]
         else (0.0 if state is not None else None)
     )
+
+    evaluation_note = _evaluation_note(
+        state=state, error=error, reference_suppliers=reference_suppliers
+    )
+    if component_evidence_missing:
+        evaluation_note = "No component-specific supplier evidence found."
+        supplier_data = {
+            **supplier_data,
+            "tier1_suppliers": "not_available",
+            "tier2_suppliers": "not_available",
+            "tier3_suppliers": "not_available",
+            "tier1_count": 0,
+            "tier2_count": 0,
+            "tier3_count": 0,
+        }
 
     return {
         "company": company,
@@ -446,9 +478,7 @@ def calculate_component_metrics(
         "max_depth": max_depth,
         "skip_news": skip_news,
         "evaluation_status": evaluation_status,
-        "evaluation_note": _evaluation_note(
-            state=state, error=error, reference_suppliers=reference_suppliers
-        ),
+        "evaluation_note": evaluation_note,
         "tier1_suppliers": supplier_data["tier1_suppliers"],
         "tier2_suppliers": supplier_data["tier2_suppliers"],
         "tier3_suppliers": supplier_data["tier3_suppliers"],
@@ -501,6 +531,9 @@ def _run_single(
     try:
         state = _run_analysis(
             company,
+            product=product,
+            component=component,
+            benchmark_target_query=_benchmark_target_query(company, product, component),
             max_depth=max_depth,
             skip_news=skip_news,
             execution_mode=mode,
@@ -525,13 +558,26 @@ def _run_single(
     )
 
 
-def _selected_products(companies: Sequence[str]) -> List[Tuple[str, str, List[str]]]:
+def _selected_products(
+    companies: Sequence[str],
+    components_filter: Optional[Sequence[str]] = None,
+) -> List[Tuple[str, str, List[str]]]:
     selected: List[Tuple[str, str, List[str]]] = []
+    normalized_filter = {
+        _canonical(component) for component in components_filter or [] if component
+    }
     for company in companies:
         product_info = PRODUCT_COMPONENT_MAP.get(company)
         if not product_info:
             continue
-        selected.append((company, product_info["product"], list(product_info["components"])))
+        components = list(product_info["components"])
+        if normalized_filter:
+            components = [
+                component
+                for component in components
+                if _canonical(component) in normalized_filter
+            ]
+        selected.append((company, product_info["product"], components))
     return selected
 
 
@@ -574,6 +620,37 @@ def write_master_csv(output_dir: Path, rows: Sequence[Dict[str, Any]]) -> Path:
 
 def _rows_by_company(rows: Sequence[Dict[str, Any]], company: str) -> List[Dict[str, Any]]:
     return [row for row in rows if row.get("company") == company]
+
+
+def _supplier_list_key(value: Any) -> str:
+    if value in (None, "", "not_available"):
+        return "not_available"
+    if isinstance(value, str):
+        return "; ".join(part.strip() for part in value.split(";") if part.strip())
+    return str(value)
+
+
+def _component_supplier_uniformity_warning(company_rows: Sequence[Dict[str, Any]]) -> Optional[str]:
+    if len(company_rows) <= 1:
+        return None
+
+    counts: Dict[str, int] = {}
+    total = 0
+    for row in company_rows:
+        key = _supplier_list_key(row.get("tier1_suppliers"))
+        counts[key] = counts.get(key, 0) + 1
+        total += 1
+
+    if not total:
+        return None
+
+    most_common = max(counts.values()) if counts else 0
+    if most_common / total > 0.8:
+        return (
+            "WARNING: Component outputs appear identical. "
+            "Component context may not be influencing discovery."
+        )
+    return None
 
 
 def _mean_or_none(values: Iterable[Any], digits: int = 2) -> Optional[float]:
@@ -622,6 +699,15 @@ def write_sample_summary(
             lines.append(
                 f"- {row['company']} / {row['component']} / {row['mode']}: {row.get('errors', '') or 'Unknown error'}"
             )
+
+    warnings = [
+        _component_supplier_uniformity_warning(_rows_by_company(rows, company))
+        for company in companies
+    ]
+    warnings = [warning for warning in warnings if warning]
+    if warnings:
+        lines.extend(["", "## Warnings"])
+        lines.extend(f"- {warning}" for warning in warnings)
 
     path = output_dir / "sample_summary.md"
     path.write_text("\n".join(lines), encoding="utf-8")
@@ -684,6 +770,7 @@ def _run_sample_benchmark(
     sample_id: int,
     sample_label: str,
     companies: Sequence[str],
+    components: Optional[Sequence[str]] = None,
     modes: Sequence[str],
     max_depth: int,
     skip_news: bool,
@@ -701,7 +788,7 @@ def _run_sample_benchmark(
     previous_env = {key: os.environ.get(key) for key in FAST_FAIL_ENV}
     os.environ.update(FAST_FAIL_ENV)
     try:
-        for company, product, components in _selected_products(companies):
+        for company, product, components in _selected_products(companies, components):
             for component in components:
                 tiered_reference = _reference_suppliers_for_component(
                     reference_rows, company, product, component
@@ -736,6 +823,7 @@ def run_product_benchmark(
     sample_id: int,
     sample_label: str,
     companies: Sequence[str],
+    components: Optional[Sequence[str]] = None,
     modes: Sequence[str],
     max_depth: int,
     skip_news: bool,
@@ -745,6 +833,7 @@ def run_product_benchmark(
         sample_id=sample_id,
         sample_label=sample_label,
         companies=companies,
+        components=components,
         modes=modes,
         max_depth=max_depth,
         skip_news=skip_news,
@@ -782,6 +871,11 @@ def build_parser() -> argparse.ArgumentParser:
         choices=DEFAULT_COMPANIES,
         default=DEFAULT_COMPANIES,
         help="Subset of companies to benchmark.",
+    )
+    parser.add_argument(
+        "--components",
+        default=None,
+        help="Comma-separated subset of components to benchmark for each selected company.",
     )
     parser.add_argument(
         "--modes",
@@ -822,11 +916,17 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
     companies = [company for company in args.companies if company in PRODUCT_COMPONENT_MAP]
+    components = (
+        [component.strip() for component in args.components.split(",") if component.strip()]
+        if args.components
+        else None
+    )
     try:
         _, sample_dir, master_csv_path, global_csv_path, company_csv_paths = run_product_benchmark(
             sample_id=args.sample_id,
             sample_label=args.sample_label,
             companies=companies,
+            components=components,
             modes=args.modes,
             max_depth=args.max_depth,
             skip_news=args.skip_news,

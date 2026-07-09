@@ -7,30 +7,30 @@
       "tier": 0
     },
     {
-      "id": "TSMC",
-      "label": "TSMC",
+      "id": "Hon Hai Precision Industry",
+      "label": "Hon Hai Precision Industry",
       "node_type": "supplier",
       "tier": 1,
       "parent_company": "Apple"
     },
     {
-      "id": "ASML",
-      "label": "ASML",
+      "id": "Pegatron",
+      "label": "Pegatron",
       "node_type": "supplier",
-      "tier": 2,
-      "parent_company": "Taiwan Semiconductor Manufacturing Company"
+      "tier": 1,
+      "parent_company": "Apple"
     }
   ],
   "edges": [
     {
       "source": "Apple",
-      "target": "TSMC",
+      "target": "Hon Hai Precision Industry",
       "relationship": "supplier"
     },
     {
-      "source": "TSMC",
-      "target": "ASML",
-      "relationship": "upstream_supplier"
+      "source": "Apple",
+      "target": "Pegatron",
+      "relationship": "supplier"
     }
   ]
 }

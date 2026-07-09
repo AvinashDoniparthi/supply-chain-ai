@@ -935,6 +935,326 @@ DISCOVERY_QUERY_TEMPLATES = [
     "{company} OSAT suppliers",
 ]
 
+COMPONENT_CONTEXT_QUERY_TEMPLATES = [
+    "{company} {component} suppliers",
+    "{company} {product} {component} suppliers",
+    "{company} {component} manufacturer",
+    "{company} teardown {component} supplier",
+    "{product} {component} manufacturer",
+    "{product} bill of materials {component}",
+]
+
+COMPONENT_CONTEXT_KEYWORDS = {
+    "application processor": [
+        "application processor",
+        "processor",
+        "chip",
+        "semiconductor",
+        "foundry",
+        "wafer",
+        "fab",
+        "lithography",
+        "packaging",
+        "substrate",
+        "testing",
+    ],
+    "display": [
+        "display",
+        "panel",
+        "oled",
+        "lcd",
+        "screen",
+        "module",
+    ],
+    "camera sensor": [
+        "camera",
+        "sensor",
+        "image sensor",
+        "cmos",
+        "lens",
+        "module",
+    ],
+    "camera system": [
+        "camera",
+        "sensor",
+        "image sensor",
+        "cmos",
+        "lens",
+        "module",
+    ],
+    "memory": [
+        "memory",
+        "dram",
+        "hbm",
+        "nand",
+        "ram",
+        "semiconductor",
+    ],
+    "storage": [
+        "storage",
+        "nand",
+        "ssd",
+        "flash",
+        "memory",
+    ],
+    "battery": [
+        "battery",
+        "cell",
+        "cathode",
+        "anode",
+        "lithium",
+        "pack",
+    ],
+    "battery pack": [
+        "battery",
+        "cell",
+        "cathode",
+        "anode",
+        "lithium",
+        "pack",
+    ],
+    "battery cells": [
+        "battery",
+        "cell",
+        "cathode",
+        "anode",
+        "lithium",
+        "pack",
+    ],
+    "wireless chip": [
+        "wireless",
+        "rf",
+        "modem",
+        "chip",
+        "semiconductor",
+    ],
+    "rf front-end": [
+        "rf",
+        "front-end",
+        "wireless",
+        "modem",
+        "antenna",
+    ],
+    "wireless/rf": [
+        "wireless",
+        "rf",
+        "modem",
+        "chip",
+        "semiconductor",
+    ],
+    "glass": [
+        "glass",
+        "cover glass",
+        "display cover",
+    ],
+    "assembly": [
+        "assembly",
+        "contract manufacturer",
+        "manufacturing partner",
+        "odm",
+        "oem",
+        "ems",
+        "final assembly",
+    ],
+    "final assembly": [
+        "assembly",
+        "contract manufacturer",
+        "manufacturing partner",
+        "odm",
+        "oem",
+        "ems",
+        "final assembly",
+    ],
+    "pcb/mainboard": [
+        "pcb",
+        "mainboard",
+        "board",
+        "printed circuit board",
+    ],
+    "power delivery": [
+        "power delivery",
+        "pmic",
+        "power module",
+        "semiconductor",
+    ],
+    "cooling system": [
+        "cooling",
+        "thermal",
+        "heat sink",
+        "fan",
+    ],
+    "semiconductor manufacturing": [
+        "semiconductor",
+        "foundry",
+        "wafer",
+        "fab",
+        "packaging",
+        "testing",
+    ],
+    "wafer fabrication": [
+        "wafer",
+        "fabrication",
+        "foundry",
+        "fab",
+        "semiconductor",
+    ],
+    "lithography equipment": [
+        "lithography",
+        "equipment",
+        "scanner",
+        "mask",
+        "semiconductor",
+    ],
+    "packaging": [
+        "packaging",
+        "osat",
+        "assembly",
+        "test",
+        "semiconductor",
+    ],
+    "testing": [
+        "testing",
+        "test",
+        "semiconductor",
+        "inspection",
+    ],
+}
+
+COMPONENT_TIER1_SUPPLIER_HINTS = {
+    "application processor": {
+        "TSMC",
+        "Samsung Electronics",
+        "Intel",
+        "GlobalFoundries",
+    },
+    "display": {
+        "Samsung Display",
+        "LG Display",
+        "BOE Technology Group",
+        "Sharp",
+        "Japan Display",
+    },
+    "camera sensor": {
+        "Sony Semiconductor Solutions",
+        "Samsung Electro-Mechanics",
+        "OmniVision",
+    },
+    "camera system": {
+        "Sony Semiconductor Solutions",
+        "Samsung Electro-Mechanics",
+        "OmniVision",
+    },
+    "memory": {
+        "SK hynix",
+        "Samsung Electronics",
+        "Micron Technology",
+    },
+    "storage": {
+        "Samsung Electronics",
+        "SK hynix",
+        "Kioxia",
+        "Western Digital",
+    },
+    "battery": {
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+    },
+    "battery pack": {
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+    },
+    "battery cells": {
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+    },
+    "wireless chip": {
+        "Broadcom Inc.",
+        "Qualcomm",
+        "Murata Manufacturing",
+    },
+    "rf front-end": {
+        "Broadcom Inc.",
+        "Qualcomm",
+        "Murata Manufacturing",
+    },
+    "wireless/rf": {
+        "Broadcom Inc.",
+        "Qualcomm",
+        "Murata Manufacturing",
+    },
+    "glass": {
+        "Corning Inc.",
+        "Schott",
+    },
+    "assembly": {
+        "Hon Hai Precision Industry Co., Ltd.",
+        "Pegatron Corporation",
+        "Luxshare Precision Industry Co., Ltd.",
+        "Wistron",
+        "Compal Electronics",
+        "Inventec",
+        "Quanta Computer",
+    },
+    "final assembly": {
+        "Hon Hai Precision Industry Co., Ltd.",
+        "Pegatron Corporation",
+        "Luxshare Precision Industry Co., Ltd.",
+        "Wistron",
+        "Compal Electronics",
+        "Inventec",
+        "Quanta Computer",
+    },
+}
+
+
+def _component_context_terms(component_name: Optional[str]) -> List[str]:
+    if not component_name:
+        return []
+    clean = _compact_key(component_name)
+    terms = set(COMPONENT_CONTEXT_KEYWORDS.get(clean, []))
+    if clean:
+        terms.add(clean)
+    return [term for term in terms if term]
+
+
+def component_tier1_supplier_hints(component_name: Optional[str]) -> set[str]:
+    if not component_name:
+        return set()
+    return set(COMPONENT_TIER1_SUPPLIER_HINTS.get(_compact_key(component_name), set()))
+
+
+def supplier_evidence_mentions_component(
+    evidence: List[Dict[str, str]],
+    *,
+    product_name: Optional[str] = None,
+    component_name: Optional[str] = None,
+    target_query: Optional[str] = None,
+) -> bool:
+    evidence_text = " ".join(
+        f"{item.get('title', '')} {item.get('snippet', '')}" for item in evidence or []
+    )
+    if not evidence_text:
+        return False
+    if target_query and _text_mentions_entity(evidence_text, target_query):
+        return True
+    if product_name and _text_mentions_entity(evidence_text, product_name):
+        return True
+    if component_name and _text_mentions_entity(evidence_text, component_name):
+        return True
+
+    lower_text = re.sub(r"<[^>]+>", " ", unescape(evidence_text or "")).lower()
+    lower_text = re.sub(r"\s+", " ", lower_text)
+    for term in _component_context_terms(component_name):
+        if re.search(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", lower_text):
+            return True
+    return False
+
 COMPANY_SPECIFIC_QUERY_TEMPLATES = {
     "qualcomm": [
         "{company} foundry supplier",
@@ -973,13 +1293,20 @@ MANUFACTURING_CONTEXT_TERMS = [
 ]
 
 
-def discovery_queries(company_name: str) -> List[str]:
+def discovery_queries(
+    company_name: str,
+    product_name: Optional[str] = None,
+    component_name: Optional[str] = None,
+    benchmark_target_query: Optional[str] = None,
+) -> List[str]:
     seen = set()
     queries = []
     canonical_name = canonical_curated_company_name(company_name) or resolver.resolve(
         company_name
     )
-    query_company = DISCOVERY_QUERY_DISPLAY_NAMES.get(canonical_name, company_name)
+    query_company = benchmark_target_query or DISCOVERY_QUERY_DISPLAY_NAMES.get(
+        canonical_name, company_name
+    )
     company_specific_templates = COMPANY_SPECIFIC_QUERY_TEMPLATES.get(
         _compact_key(canonical_name), []
     )
@@ -991,6 +1318,24 @@ def discovery_queries(company_name: str) -> List[str]:
             continue
         seen.add(key)
         queries.append(query)
+
+    if product_name and component_name:
+        component_templates = []
+        for template in COMPONENT_CONTEXT_QUERY_TEMPLATES:
+            component_templates.append(
+                template.format(
+                    company=query_company,
+                    product=product_name,
+                    component=component_name,
+                )
+            )
+        for query in component_templates:
+            key = query.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            queries.append(query)
+
     return queries
 
 
@@ -1914,7 +2259,14 @@ class SupplierDiscoveryScraper:
         for result in self._fetch_target_company_context(company_name):
             add_result(result)
 
-        queries = discovery_queries(company_name)
+        queries = discovery_queries(
+            company_name,
+            product_name=getattr(self.runtime_state, "product_name", None),
+            component_name=getattr(self.runtime_state, "component_name", None),
+            benchmark_target_query=getattr(
+                self.runtime_state, "benchmark_target_query", None
+            ),
+        )
         if canonical_curated_company_name(company_name) == "Qualcomm":
             logger.debug(
                 "[QUALCOMM DISCOVERY] Executing %s supplier discovery queries.",

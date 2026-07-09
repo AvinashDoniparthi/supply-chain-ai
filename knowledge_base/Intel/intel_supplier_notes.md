@@ -1,9 +1,6 @@
 # Intel Supplier Notes
-Sources to add:
-- Intel supplier list
-- Intel supply chain reports
-- industry teardown notes
 
-Known supplier evidence:
-TODO
+No supplier facts were added in this pass because I did not verify a directly citable public document that named an Intel supplier relationship without relying on a tertiary summary.
 
+| supplier | product/component | tier | evidence summary | source title | source URL | confidence |
+|---|---|---:|---|---|---|---|

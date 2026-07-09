@@ -44,7 +44,7 @@ class TestProviderResolution(unittest.TestCase):
                 resolve_provider()
 
     @patch("providers.llm_provider.ChatGoogleGenerativeAI")
-    def test_get_llm_uses_google_constructor_when_google_key_exists(
+    def test_gemini_timeout_defaults_and_clamps_to_minimum(
         self, mock_google_llm
     ):
         with patch.dict(
@@ -52,6 +52,11 @@ class TestProviderResolution(unittest.TestCase):
             {"GOOGLE_API_KEY": "google-test-key"},
             clear=True,
         ):
-            get_llm()
+            get_llm(provider="google")
             self.assertTrue(mock_google_llm.called)
+            self.assertEqual(mock_google_llm.call_args.kwargs["timeout"], 30.0)
 
+            mock_google_llm.reset_mock()
+            get_llm(provider="google", timeout=1)
+            self.assertTrue(mock_google_llm.called)
+            self.assertEqual(mock_google_llm.call_args.kwargs["timeout"], 10.0)

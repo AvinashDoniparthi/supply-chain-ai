@@ -135,6 +135,600 @@
         "Trumpf",
         "VDL ETG"
       ]
+    },
+    {
+      "timestamp": "2026-07-04T15:47:07.764201",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T15:48:59.200504",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T15:50:27.275808",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T15:52:07.918813",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T15:53:58.224030",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T15:55:21.426462",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T15:57:07.302255",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T15:58:54.601294",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:00:20.737786",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:02:07.277800",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:03:54.253149",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:05:21.176508",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:07:06.753465",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:08:54.187577",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:10:20.989784",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:12:06.038184",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:13:48.049564",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-04T16:15:15.296948",
+      "mode": "rag",
+      "health_score": 77.9,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T14:18:06.501015",
+      "mode": "llm",
+      "health_score": 82.9,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T14:34:18.224136",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T14:53:17.240821",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T14:55:08.174702",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T15:28:23.227578",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T15:30:08.964287",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T15:47:07.800094",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T15:48:54.024477",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T16:03:09.748526",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T17:04:11.340896",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:45:40.949946",
+      "mode": "llm",
+      "health_score": 83.2,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:47:07.843436",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:48:44.308464",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:50:11.599663",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:52:04.694234",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:53:45.334184",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:55:09.778878",
+      "mode": "llm",
+      "health_score": 82.6,
+      "health_status": "Good",
+      "supplier_count": 6,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "VDL ETG"
+      ]
+    },
+    {
+      "timestamp": "2026-07-09T18:57:04.823677",
+      "mode": "rag",
+      "health_score": 77.8,
+      "health_status": "Good",
+      "supplier_count": 7,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT",
+        "Trumpf",
+        "VDL ETG"
+      ]
     }
   ]
 }
