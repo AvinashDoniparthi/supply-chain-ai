@@ -114,7 +114,7 @@ def _company_name(state: Any) -> str:
 
 
 def _company_key(company: str) -> str:
-    return (company or "").lower().strip()
+    return re.sub(r"\s+", " ", (company or "").strip()).lower()
 
 
 def _clean_metadata(metadata: Dict[str, Any]) -> Dict[str, Any]:
@@ -411,41 +411,48 @@ def _search_documents(
     company_key: Optional[str] = None,
     source_type: Optional[str] = None,
 ) -> List[Document]:
-    search_filters: List[Dict[str, Any]] = []
-    primary_filter: Dict[str, Any] = {}
-    if company_key:
-        primary_filter["company_key"] = company_key
-    if source_type:
-        primary_filter["source_type"] = source_type
-    if primary_filter:
-        search_filters.append(primary_filter)
+    search_filter: Dict[str, Any] = {}
+    if company_key and source_type:
+        search_filter = {
+            "$and": [
+                {"company_key": company_key},
+                {"source_type": source_type},
+            ]
+        }
+    elif company_key:
+        search_filter["company_key"] = company_key
+    elif source_type:
+        search_filter["source_type"] = source_type
 
-    fallback_filter: Dict[str, Any] = {}
-    if source_type:
-        fallback_filter["source_type"] = source_type
-    if fallback_filter and fallback_filter not in search_filters:
-        search_filters.append(fallback_filter)
+    kwargs: Dict[str, Any] = {"k": k}
+    if search_filter:
+        kwargs["filter"] = search_filter
+    try:
+        documents = vector_store.similarity_search(query, **kwargs)
+    except Exception as exc:
+        logger.debug(
+            "Filtered retrieval failed for company_key=%s source_type=%s: %s",
+            company_key,
+            source_type,
+            exc,
+        )
+        return []
 
-    if {} not in search_filters:
-        search_filters.append({})
+    if not company_key:
+        return documents
 
-    for search_filter in search_filters:
-        kwargs: Dict[str, Any] = {"k": k}
-        if search_filter:
-            kwargs["filter"] = search_filter
-        try:
-            documents = vector_store.similarity_search(query, **kwargs)
-        except Exception as exc:
-            logger.debug(
-                "Filtered retrieval failed for company_key=%s source_type=%s: %s",
+    validated: List[Document] = []
+    for document in documents:
+        metadata = getattr(document, "metadata", {}) or {}
+        if _company_key(str(metadata.get("company_key") or metadata.get("company") or "")) != company_key:
+            logger.warning(
+                "Rejected cross-company RAG chunk: requested=%s returned=%s",
                 company_key,
-                source_type,
-                exc,
+                metadata.get("company_key") or metadata.get("company"),
             )
             continue
-        if documents:
-            return documents
-    return []
+        validated.append(document)
+    return validated
 
 
 def _retrieve_documents(
@@ -472,6 +479,10 @@ def _retrieve_documents(
 
     if collection_count == 0:
         logger.debug("RAG retrieval skipped because Chroma collection is empty.")
+        return []
+
+    if not company_key:
+        logger.debug("Company-specific retrieval requires a non-empty company key.")
         return []
 
     sources = list(source_priority or [SOURCE_KNOWLEDGE_REPORT, SOURCE_ANALYSIS_STATE])

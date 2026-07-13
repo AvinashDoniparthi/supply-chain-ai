@@ -4,6 +4,7 @@ import argparse
 import csv
 import os
 import re
+import shutil
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,6 +19,11 @@ EVALUATION_STATUS_INSUFFICIENT_COMPONENT_SUPPLIER_EVIDENCE = (
     "insufficient_component_supplier_evidence"
 )
 EVALUATION_STATUS_QUOTA_EXHAUSTED = "quota_exhausted"
+EVALUATION_STATUS_PARTIAL_SUCCESS = "partial_success"
+EVALUATION_STATUS_QUANTITATIVELY_EVALUATED = "quantitatively_evaluated"
+EVALUATION_STATUS_NOT_EVALUABLE_MISSING_REFERENCE = (
+    "not_evaluable_due_to_missing_reference"
+)
 
 FAST_FAIL_ENV = {
     "LLM_MAX_RETRIES": "0",
@@ -28,6 +34,7 @@ REFERENCE_DATASET_PATH = Path("database/benchmarks/product_reference_dataset.csv
 REFERENCE_DATASET_AUDIT_PATH = Path("database/benchmarks/product_reference_dataset_audit.md")
 OUTPUT_DIR = Path("database/benchmarks/product_level")
 GLOBAL_MASTER_CSV_PATH = OUTPUT_DIR / "all_samples_master_results.csv"
+SCHEMA_MIGRATION_REPORT_PATH = OUTPUT_DIR / "schema_migration_report.md"
 
 COMPANY_FILE_MAP = {
     "Apple": "apple_product_benchmark.csv",
@@ -146,6 +153,7 @@ CSV_FIELDNAMES = [
     "estimated_energy_consumption",
     "errors",
 ]
+PRODUCT_BENCHMARK_FIELDS = CSV_FIELDNAMES
 
 
 def _canonical(value: str) -> str:
@@ -530,10 +538,10 @@ def _evaluation_note(
     if error:
         return f"Pipeline failed due to: {error}"
     if not reference_suppliers:
-        return "Completed successfully; reference data unavailable for this component."
+        return "Tier-1 metrics are not evaluable because no verified reference is available."
     if state is not None and not getattr(state, "suppliers", []):
-        return "Completed successfully; no suppliers were discovered."
-    return "Completed successfully."
+        return "Quantitatively evaluated; no component-specific suppliers were discovered."
+    return "Tier-1 supplier discovery was quantitatively evaluated."
 
 
 def calculate_component_metrics(
@@ -569,21 +577,23 @@ def calculate_component_metrics(
         "average_confidence_score": None,
     }
 
-    discovered_suppliers = _discovered_supplier_set(state) if state is not None else []
-    reference_metrics = _tier1_reference_metrics(discovered_suppliers, reference_suppliers)
+    discovered_by_tier = _discovered_supplier_set_by_tier(state) if state is not None else {1: []}
+    reference_metrics = _tier1_reference_metrics(discovered_by_tier[1], reference_suppliers)
     component_evidence_missing = bool(
         component
         and state is not None
         and not getattr(state, "suppliers", [])
         and not error
     )
-    evaluation_status = EVALUATION_STATUS_SUCCESS
+    evaluation_status = EVALUATION_STATUS_QUANTITATIVELY_EVALUATED
     if quota_exhausted:
         evaluation_status = EVALUATION_STATUS_QUOTA_EXHAUSTED
-    elif component_evidence_missing:
-        evaluation_status = EVALUATION_STATUS_INSUFFICIENT_COMPONENT_SUPPLIER_EVIDENCE
     elif error:
         evaluation_status = EVALUATION_STATUS_FAILURE
+    elif state is not None and getattr(state, "errors", []):
+        evaluation_status = EVALUATION_STATUS_PARTIAL_SUCCESS
+    elif not reference_suppliers:
+        evaluation_status = EVALUATION_STATUS_NOT_EVALUABLE_MISSING_REFERENCE
 
     token_usage = _estimated_token_usage(state) if state is not None else None
     retrieval_grounding_score = _retrieval_grounding_score(state) if state is not None else None
@@ -600,7 +610,6 @@ def calculate_component_metrics(
         quota_exhausted=quota_exhausted,
     )
     if component_evidence_missing and not quota_exhausted:
-        evaluation_note = "No component-specific supplier evidence found."
         supplier_data = {
             **supplier_data,
             "tier1_suppliers": "not_available",
@@ -610,6 +619,8 @@ def calculate_component_metrics(
             "tier2_count": 0,
             "tier3_count": 0,
         }
+    elif evaluation_status == EVALUATION_STATUS_PARTIAL_SUCCESS:
+        evaluation_note = "Analysis completed, but one or more non-critical persistence stages failed."
 
     tier2_details = _tier_qualitative_details(state, 2) if state is not None else {
         "tier2_discovered_suppliers": "not_available",
@@ -767,7 +778,19 @@ def _normalized_row(row: Dict[str, Any]) -> Dict[str, Any]:
     return normalized
 
 
+def _validate_rows_for_schema(rows: Sequence[Dict[str, Any]]) -> None:
+    expected = set(PRODUCT_BENCHMARK_FIELDS)
+    for index, row in enumerate(rows, start=1):
+        unknown = set(row) - expected
+        if unknown:
+            raise ValueError(
+                f"Benchmark row {index} contains fields outside the canonical schema: "
+                + ", ".join(sorted(unknown))
+            )
+
+
 def write_company_csv(output_dir: Path, company: str, rows: Sequence[Dict[str, Any]]) -> Path:
+    _validate_rows_for_schema(rows)
     file_name = COMPANY_FILE_MAP.get(company, f"{_slugify_company(company)}_product_benchmark.csv")
     path = output_dir / file_name
     with path.open("w", newline="", encoding="utf-8") as handle:
@@ -779,6 +802,7 @@ def write_company_csv(output_dir: Path, company: str, rows: Sequence[Dict[str, A
 
 
 def write_master_csv(output_dir: Path, rows: Sequence[Dict[str, Any]]) -> Path:
+    _validate_rows_for_schema(rows)
     path = output_dir / "master_results.csv"
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=CSV_FIELDNAMES)
@@ -843,8 +867,19 @@ def write_sample_summary(
     fast_benchmark: bool,
 ) -> Path:
     successful_rows = [row for row in rows if row.get("evaluation_status") == EVALUATION_STATUS_SUCCESS]
+    quantitative_rows = [
+        row
+        for row in rows
+        if row.get("evaluation_status") == EVALUATION_STATUS_QUANTITATIVELY_EVALUATED
+    ]
+    not_evaluable_rows = [
+        row
+        for row in rows
+        if row.get("evaluation_status") == EVALUATION_STATUS_NOT_EVALUABLE_MISSING_REFERENCE
+    ]
     failed_rows = [row for row in rows if row.get("evaluation_status") == EVALUATION_STATUS_FAILURE]
     quota_rows = [row for row in rows if row.get("evaluation_status") == EVALUATION_STATUS_QUOTA_EXHAUSTED]
+    partial_rows = [row for row in rows if row.get("evaluation_status") == EVALUATION_STATUS_PARTIAL_SUCCESS]
     tier2_rows = [row for row in rows if row.get("tier2_discovered_suppliers") not in ("", "not_available")]
     tier3_rows = [row for row in rows if row.get("tier3_discovered_suppliers") not in ("", "not_available")]
     lines = [
@@ -860,8 +895,11 @@ def write_sample_summary(
         f"- Fast Benchmark: {fast_benchmark}",
         f"- Total rows: {len(rows)}",
         f"- Successful rows: {len(successful_rows)}",
+        f"- Quantitatively evaluated rows: {len(quantitative_rows)}",
+        f"- Not evaluable due to missing reference: {len(not_evaluable_rows)}",
         f"- Failed rows: {len(failed_rows)}",
         f"- Quota-exhausted rows: {len(quota_rows)}",
+        f"- Partial-success rows: {len(partial_rows)}",
         "",
         "Quantitative evaluation was performed only for Tier 1 supplier relationships because reliable public ground-truth data is available primarily at Tier 1. Tier 2 and Tier 3 supplier relationships were evaluated qualitatively through discovered supply-chain paths, verification status, and confidence scores.",
         "",
@@ -914,7 +952,11 @@ def _sample_sort_key(path: Path) -> Tuple[int, str]:
     return (int(match.group(1)), match.group(2))
 
 
-def rebuild_all_samples_master() -> Path:
+def rebuild_all_samples_master(
+    *,
+    skip_incompatible: bool = True,
+    migration_warnings: Optional[List[str]] = None,
+) -> Path:
     _ensure_output_dir()
     combined_rows: List[Dict[str, Any]] = []
     for sample_dir in sorted(
@@ -926,6 +968,19 @@ def rebuild_all_samples_master() -> Path:
             continue
         with master_path.open("r", newline="", encoding="utf-8") as handle:
             reader = csv.DictReader(handle)
+            header = list(reader.fieldnames or [])
+            if header != PRODUCT_BENCHMARK_FIELDS:
+                if skip_incompatible:
+                    logger_message = f"Incompatible benchmark schema excluded from global master: {master_path}"
+                    print(f"WARNING: {logger_message}")
+                    if migration_warnings is not None:
+                        migration_warnings.append(
+                            f"{master_path}: incompatible schema excluded from global master"
+                        )
+                    continue
+                raise ValueError(
+                    f"Incompatible benchmark schema in {master_path}; run schema migration first."
+                )
             for row in reader:
                 row = dict(row)
                 if not row.get("sample_id"):
@@ -958,6 +1013,117 @@ def rebuild_all_samples_master() -> Path:
     return GLOBAL_MASTER_CSV_PATH
 
 
+def migrate_product_benchmark_schema() -> Path:
+    """Migrate retained product benchmark CSVs without executing benchmark runs."""
+    _ensure_output_dir()
+    folders_scanned: List[str] = []
+    files_migrated: List[str] = []
+    files_excluded: List[str] = []
+    incompatible_files: List[str] = []
+    missing_fields_filled: Dict[str, List[str]] = {}
+
+    sample_dirs = sorted(
+        [path for path in OUTPUT_DIR.iterdir() if path.is_dir() and path.name.startswith("sample_")],
+        key=_sample_sort_key,
+    )
+    for sample_dir in sample_dirs:
+        folders_scanned.append(str(sample_dir))
+        sample_number = _sample_sort_key(sample_dir)[0]
+        if sample_number in {1, 2, 3, 4}:
+            for csv_path in sorted(sample_dir.glob("*.csv")):
+                files_excluded.append(str(csv_path))
+                incompatible_files.append(
+                    f"{csv_path}: protected official sample was not modified"
+                )
+            continue
+        for csv_path in sorted(sample_dir.glob("*.csv")):
+            with csv_path.open("r", newline="", encoding="utf-8") as handle:
+                reader = csv.DictReader(handle)
+                header = list(reader.fieldnames or [])
+                rows = [dict(row) for row in reader]
+
+            unknown = sorted(set(header) - set(PRODUCT_BENCHMARK_FIELDS))
+            if not header or unknown:
+                files_excluded.append(str(csv_path))
+                incompatible_files.append(
+                    f"{csv_path}: " + (f"unknown fields {', '.join(unknown)}" if unknown else "missing header")
+                )
+                continue
+
+            missing = [field for field in PRODUCT_BENCHMARK_FIELDS if field not in header]
+            if missing:
+                missing_fields_filled[str(csv_path)] = missing
+            normalized_rows = [_normalized_row(row) for row in rows]
+            _validate_rows_for_schema(normalized_rows)
+            with csv_path.open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(handle, fieldnames=PRODUCT_BENCHMARK_FIELDS)
+                writer.writeheader()
+                writer.writerows(normalized_rows)
+            files_migrated.append(str(csv_path))
+
+        master_path = sample_dir / "master_results.csv"
+        if master_path.exists() and str(master_path) not in files_excluded:
+            with master_path.open("r", newline="", encoding="utf-8") as handle:
+                rows = list(csv.DictReader(handle))
+            if rows:
+                sample_id = int(rows[0].get("sample_id") or _sample_sort_key(sample_dir)[0])
+                sample_label = rows[0].get("sample_label") or sample_dir.name.split("_", 2)[-1]
+                companies = list(dict.fromkeys(row.get("company", "") for row in rows if row.get("company")))
+                modes = list(dict.fromkeys(row.get("mode", "") for row in rows if row.get("mode")))
+                max_depth = int(rows[0].get("max_depth") or DEFAULT_MAX_DEPTH)
+                skip_news = str(rows[0].get("skip_news", "True")).lower() in {"true", "1", "yes"}
+                write_sample_summary(
+                    sample_dir,
+                    rows,
+                    sample_id=sample_id,
+                    sample_label=sample_label,
+                    companies=companies,
+                    modes=modes,
+                    max_depth=max_depth,
+                    skip_news=skip_news,
+                    fast_benchmark=False,
+                )
+
+    rebuild_all_samples_master(
+        skip_incompatible=True,
+        migration_warnings=incompatible_files,
+    )
+
+    lines = [
+        "# Product Benchmark Schema Migration Report",
+        "",
+        f"- Canonical columns: {len(PRODUCT_BENCHMARK_FIELDS)}",
+        f"- Folders scanned: {len(folders_scanned)}",
+        f"- Files migrated: {len(files_migrated)}",
+        f"- Files excluded: {len(files_excluded)}",
+        f"- Incompatible files detected: {len(incompatible_files)}",
+        "",
+        "## Folders Scanned",
+        *(f"- {item}" for item in folders_scanned),
+        "",
+        "## Files Migrated",
+        *(f"- {item}" for item in files_migrated),
+        "",
+        "## Files Excluded",
+        *(f"- {item}" for item in files_excluded),
+        "",
+        "## Missing Fields Filled",
+        *(
+            f"- {path}: {', '.join(fields)}"
+            for path, fields in sorted(missing_fields_filled.items())
+        ),
+        "",
+        "## Incompatible Files Detected",
+        *(f"- {item}" for item in incompatible_files),
+    ]
+    for heading in ("## Files Migrated", "## Files Excluded", "## Missing Fields Filled", "## Incompatible Files Detected"):
+        index = lines.index(heading)
+        if index == len(lines) - 1 or lines[index + 1] == "":
+            lines.insert(index + 1, "- None")
+    SCHEMA_MIGRATION_REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return SCHEMA_MIGRATION_REPORT_PATH
+
+
 def _run_sample_benchmark(
     *,
     sample_id: int,
@@ -976,7 +1142,16 @@ def _run_sample_benchmark(
             f"Sample output folder already exists: {sample_dir}. Use --overwrite to replace it."
         )
 
-    sample_dir.mkdir(parents=True, exist_ok=True)
+    if sample_dir.exists():
+        resolved_output = OUTPUT_DIR.resolve()
+        resolved_sample = sample_dir.resolve()
+        if (
+            resolved_sample.parent != resolved_output
+            or not resolved_sample.name.startswith("sample_")
+        ):
+            raise ValueError(f"Refusing to delete unsafe benchmark path: {sample_dir}")
+        shutil.rmtree(sample_dir)
+    sample_dir.mkdir(parents=True, exist_ok=False)
     reference_rows = _load_reference_dataset()
     rows: List[Dict[str, Any]] = []
     previous_env = {key: os.environ.get(key) for key in FAST_FAIL_ENV}
@@ -1195,8 +1370,13 @@ def run_product_benchmark(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Product-level supply chain benchmark")
-    parser.add_argument("--sample-id", type=int, required=True, help="Timed sample identifier.")
-    parser.add_argument("--sample-label", required=True, help="Timed sample label.")
+    parser.add_argument("--sample-id", type=int, help="Timed sample identifier.")
+    parser.add_argument("--sample-label", help="Timed sample label.")
+    parser.add_argument(
+        "--migrate-schema",
+        action="store_true",
+        help="Migrate retained benchmark CSVs to the canonical schema without running a benchmark.",
+    )
     parser.add_argument(
         "--companies",
         nargs="*",
@@ -1252,6 +1432,13 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
+    if args.migrate_schema:
+        report_path = migrate_product_benchmark_schema()
+        print("Product benchmark schema migration completed.")
+        print(f"Migration report: {report_path}")
+        return 0
+    if args.sample_id is None or not args.sample_label:
+        parser.error("--sample-id and --sample-label are required unless --migrate-schema is used.")
     companies = [company for company in args.companies if company in PRODUCT_COMPONENT_MAP]
     components = (
         [component.strip() for component in args.components.split(",") if component.strip()]

@@ -3,6 +3,7 @@ import sys
 import os
 import json
 import shutil
+from unittest.mock import patch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -130,6 +131,14 @@ class TestGraphExportAgent(unittest.TestCase):
         
         self.assertEqual(len(graph.nodes), 1) # Only root
         self.assertEqual(len(graph.edges), 0)
+
+    def test_write_error_is_recorded_without_false_success(self):
+        with patch("builtins.open", side_effect=PermissionError("denied")):
+            updated_state = self.agent.export_graph(self.state)
+        self.assertEqual(updated_state.stage_statuses["graph_export"], "failed")
+        self.assertTrue(any("Graph export failed" in error for error in updated_state.errors))
+        self.assertEqual(updated_state.history[-1]["status"], "failed")
+        self.assertNotIn("file", updated_state.history[-1])
 
 if __name__ == '__main__':
     unittest.main()

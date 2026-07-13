@@ -65,7 +65,6 @@ Quantitative evaluation was performed only for Tier 1 supplier relationships bec
 | Estimated API Cost | `token_usage / 1000 * cost_per_1k_tokens` | Uses the fixed benchmark cost proxy. |
 | Estimated Energy Consumption | `runtime_seconds * 0.000015 + token_usage * 0.000000004` | Hybrid runtime-plus-token proxy; higher token usage increases energy. |
 | Coverage Score | `recall * 100` | Tier-1 coverage against the benchmark reference set. |
-| Tier 2 / Tier 3 Statistics | `tier2_count`, `tier3_count` | Qualitative discovery statistics, not used for TP/FP/FN scoring. |
 | Tier Discovery Effectiveness | `100 * (0.7 * weighted_depth_ratio + 0.3 * precision)` | Weighted depth ratio uses `tier1 + 0.5*tier2 + 0.25*tier3`. |
 
 Reference policy: benchmark ground truth comes from repository graphs/history where available, plus static/manual benchmark priors for missing companies. All 15 requested companies are included in the run matrix.
@@ -136,21 +135,21 @@ These are not counted as system failures. They represent cases where public supp
 
 | Company | LLM Accuracy | RAG Accuracy | LLM Coverage | RAG Coverage | LLM Latency | RAG Latency |
 |---|---:|---:|---:|---:|---:|---:|
-| Apple | 55.56 | 52.63 | 71.43 | 71.43 | 5.39 | 6.00 |
-| Samsung | 58.82 | 55.56 | 100.00 | 100.00 | 4.95 | 4.44 |
-| Nvidia | 30.77 | 40.00 | 66.67 | 100.00 | 4.32 | 4.52 |
-| AMD | 55.56 | 52.63 | 100.00 | 100.00 | 6.16 | 6.11 |
-| Intel | 72.73 | 66.67 | 80.00 | 80.00 | 1.61 | 1.71 |
-| Microsoft | 0.00 | 0.00 | 0.00 | 0.00 | 0.22 | 0.22 |
-| Tesla | 66.67 | 72.73 | 100.00 | 100.00 | 3.48 | 2.16 |
-| TSMC | 83.33 | 76.92 | 100.00 | 100.00 | 1.82 | 1.94 |
-| ASML | 80.00 | 100.00 | 66.67 | 100.00 | 0.69 | 0.95 |
-| Foxconn | 20.00 | 19.05 | 40.00 | 40.00 | 9.76 | 7.71 |
-| Micron Technology | 0.00 | 0.00 | 0.00 | 0.00 | 0.54 | 0.55 |
-| Logitech | 0.00 | 0.00 | 0.00 | 0.00 | 0.37 | 0.20 |
-| Sonos | 0.00 | 0.00 | 0.00 | 0.00 | 0.20 | 0.23 |
-| GoPro | 0.00 | 0.00 | 0.00 | 0.00 | 0.20 | 0.20 |
-| Framework Computer | 0.00 | 0.00 | 0.00 | 0.00 | 0.21 | 0.21 |
+| Apple | 55.56 | 52.63 | 71.43 | 71.43 | 5.39 | 6.0 |
+| Samsung | 58.82 | 55.56 | 100.0 | 100.0 | 4.95 | 4.44 |
+| Nvidia | 30.77 | 40.0 | 66.67 | 100.0 | 4.32 | 4.52 |
+| AMD | 55.56 | 52.63 | 100.0 | 100.0 | 6.16 | 6.11 |
+| Intel | 72.73 | 66.67 | 80.0 | 80.0 | 1.61 | 1.71 |
+| Microsoft | 0.0 | 0.0 | 0.0 | 0.0 | 0.22 | 0.22 |
+| Tesla | 66.67 | 72.73 | 100.0 | 100.0 | 3.48 | 2.16 |
+| TSMC | 83.33 | 76.92 | 100.0 | 100.0 | 1.82 | 1.94 |
+| ASML | 80.0 | 100.0 | 66.67 | 100.0 | 0.69 | 0.95 |
+| Foxconn | 20.0 | 19.05 | 40.0 | 40.0 | 9.76 | 7.71 |
+| Micron Technology | 0.0 | 0.0 | 0.0 | 0.0 | 0.54 | 0.55 |
+| Logitech | 0.0 | 0.0 | 0.0 | 0.0 | 0.37 | 0.2 |
+| Sonos | 0.0 | 0.0 | 0.0 | 0.0 | 0.2 | 0.23 |
+| GoPro | 0.0 | 0.0 | 0.0 | 0.0 | 0.2 | 0.2 |
+| Framework Computer | 0.0 | 0.0 | 0.0 | 0.0 | 0.21 | 0.21 |
 
 ## Thesis Conclusion
 

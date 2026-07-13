@@ -804,6 +804,9 @@ def generate_rag_report(
         state.run_metadata["analysis_state_chunks"] = source_mix[SOURCE_ANALYSIS_STATE]
         state.run_metadata["retrieval_chunks_attached"] = len(context_chunks)
         state.run_metadata["retrieval_source_mix"] = source_mix
+        state.run_metadata["retrieval_status"] = (
+            "success" if retrieved_documents else "insufficient_company_context"
+        )
         logger.debug(
             "Knowledge Report Chunks Retrieved: %s",
             source_mix[SOURCE_KNOWLEDGE_REPORT],

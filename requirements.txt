@@ -20,3 +20,4 @@ langchain-google-genai
 langchain-chroma
 chromadb
 langchain-community
+pytest

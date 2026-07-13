@@ -7,13 +7,14 @@ from utils.output import agent_event, debug_log
 from utils.runtime_controls import timed_stage
 
 logger = logging.getLogger(__name__)
+DEFAULT_GRAPH_EXPORT_DIR = "database/graphs"
 
 class GraphExportAgent:
     """
     Generates visualization-ready supply chain network data.
     """
 
-    def __init__(self, export_dir: str = "database/graphs"):
+    def __init__(self, export_dir: str = DEFAULT_GRAPH_EXPORT_DIR):
         self.export_dir = export_dir
         if not os.path.exists(self.export_dir):
             os.makedirs(self.export_dir)
@@ -94,6 +95,7 @@ class GraphExportAgent:
         safe_name = company_name.lower().replace(" ", "_").replace(".", "")
         export_file = os.path.join(self.export_dir, f"{safe_name}.json")
         
+        write_succeeded = False
         try:
             with open(export_file, "w") as f:
                 # Use model_dump for Pydantic v2
@@ -101,22 +103,28 @@ class GraphExportAgent:
             debug_log(logger, "Nodes Created: %s", len(nodes))
             debug_log(logger, "Edges Created: %s", len(edges))
             debug_log(logger, "Graph Saved: %s", export_file)
+            write_succeeded = True
         except Exception as e:
-            logger.error(f"Failed to export graph to {export_file}: {e}")
+            error = f"Graph export failed for {export_file}: {e}"
+            logger.error(error)
+            state.errors.append(error)
+            state.stage_statuses["graph_export"] = "failed"
 
         state.current_task = "Graph export completed"
-        state.history.append({
-            "agent": "graph_export_agent",
-            "action": "exported_graph",
-            "file": export_file,
-            "status": "success"
-        })
+        state.history.append(
+            {
+                "agent": "graph_export_agent",
+                "action": "exported_graph" if write_succeeded else "graph_export_failed",
+                **({"file": export_file} if write_succeeded else {}),
+                "status": "success" if write_succeeded else "failed",
+            }
+        )
 
         agent_event("Graph export agent completed")
 
         return state
 
 def graph_export_agent(state: AgentState) -> AgentState:
-    agent = GraphExportAgent()
+    agent = GraphExportAgent(export_dir=DEFAULT_GRAPH_EXPORT_DIR)
     with timed_stage(state, "graph_export"):
         return agent.export_graph(state)

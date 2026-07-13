@@ -8,13 +8,14 @@ from utils.output import agent_event, debug_log
 from utils.runtime_controls import timed_stage
 
 logger = logging.getLogger(__name__)
+DEFAULT_HISTORY_DIR = "database/history"
 
 class HistoryAgent:
     """
     Manages persistent historical storage and trend detection for supply chain analysis.
     """
 
-    def __init__(self, history_dir: str = "database/history"):
+    def __init__(self, history_dir: str = DEFAULT_HISTORY_DIR):
         self.history_dir = history_dir
         if not os.path.exists(self.history_dir):
             os.makedirs(self.history_dir)
@@ -49,8 +50,21 @@ class HistoryAgent:
         trends = self._detect_trends(current_run, previous_run)
 
         # 4. Append current run and save
-        history_data["runs"].append(current_run.dict())
-        self._save_history(history_file, history_data)
+        history_data["runs"].append(current_run.model_dump())
+        try:
+            self._save_history(history_file, history_data)
+        except Exception as exc:
+            error = f"History persistence failed for {history_file}: {exc}"
+            logger.error(error)
+            state.errors.append(error)
+            state.stage_statuses["history_persistence"] = "failed"
+            state.history.append({
+                "agent": "history_agent",
+                "action": "history_persistence_failed",
+                "status": "failed",
+                "error": error,
+            })
+            return state
 
         # Update state with historical runs for the current session if needed
         state.historical_runs = [HistoricalRun(**r) for r in history_data["runs"]]
@@ -92,11 +106,8 @@ class HistoryAgent:
         }
 
     def _save_history(self, file_path: str, data: Dict[str, Any]):
-        try:
-            with open(file_path, "w") as f:
-                json.dump(data, f, indent=2)
-        except Exception as e:
-            logger.error(f"Failed to save history to {file_path}: {e}")
+        with open(file_path, "w") as f:
+            json.dump(data, f, indent=2)
 
     def _detect_trends(self, current: HistoricalRun, previous: Optional[Dict[str, Any]]) -> Dict[str, float]:
         if not previous:
@@ -113,6 +124,6 @@ class HistoryAgent:
         }
 
 def history_agent(state: AgentState) -> AgentState:
-    agent = HistoryAgent()
+    agent = HistoryAgent(history_dir=DEFAULT_HISTORY_DIR)
     with timed_stage(state, "history_persistence"):
         return agent.process_history(state)

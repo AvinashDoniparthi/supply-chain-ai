@@ -163,3 +163,52 @@ def test_rag_report_records_source_mix(tmp_path, monkeypatch):
     assert state.run_metadata["retrieval_chunks_attached"] > 0
     assert state.run_metadata["retrieval_source_mix"]["knowledge_report"] > 0
     assert state.run_metadata["retrieval_source_mix"]["analysis_state"] > 0
+    assert state.run_metadata["retrieval_status"] == "success"
+
+
+def test_company_retrieval_never_crosses_company_boundaries(tmp_path, monkeypatch):
+    _configure_vector_store(monkeypatch, tmp_path)
+    base_dir = tmp_path / "knowledge_base"
+    for company, text in {
+        "Apple": "Apple depends on TSMC for processors.",
+        "Tesla": "Tesla depends on Panasonic for batteries.",
+        "Samsung": "Samsung sources optics components.",
+        "Nvidia": "NVIDIA depends on advanced packaging.",
+    }.items():
+        company_dir = base_dir / company
+        company_dir.mkdir(parents=True)
+        (company_dir / f"{company.lower()}_supply_chain_report.md").write_text(
+            f"# {company}\n\n{text}\n", encoding="utf-8"
+        )
+    index_knowledge_base(base_dir=str(base_dir))
+
+    apple = retrieve_context_documents("batteries packaging optics", "Apple", k=10)
+    tesla = retrieve_context_documents("processors TSMC", "Tesla", k=10)
+    assert apple and all(doc.metadata["company_key"] == "apple" for doc in apple)
+    assert tesla and all(doc.metadata["company_key"] == "tesla" for doc in tesla)
+
+
+def test_missing_company_context_returns_empty(tmp_path, monkeypatch):
+    _configure_vector_store(monkeypatch, tmp_path)
+    base_dir = tmp_path / "knowledge_base"
+    apple_dir = base_dir / "Apple"
+    apple_dir.mkdir(parents=True)
+    (apple_dir / "apple_supply_chain_report.md").write_text("# Apple\nTSMC supplier", encoding="utf-8")
+    index_knowledge_base(base_dir=str(base_dir))
+    assert retrieve_context_documents("supplier", "Missing Company", k=4) == []
+    assert retrieve_context("supplier", "Missing Company", k=4) == []
+
+
+def test_same_company_fallback_supplements_across_source_types(tmp_path, monkeypatch):
+    _configure_vector_store(monkeypatch, tmp_path)
+    base_dir = tmp_path / "knowledge_base"
+    apple_dir = base_dir / "Apple"
+    apple_dir.mkdir(parents=True)
+    (apple_dir / "apple_supply_chain_report.md").write_text("# Apple\nTSMC supplier", encoding="utf-8")
+    index_knowledge_base(base_dir=str(base_dir))
+    index_analysis_state(_create_sample_state())
+    docs = retrieve_context_documents("Apple supplier health", "Apple", k=6)
+    sources = {doc.metadata["source_type"] for doc in docs}
+    assert SOURCE_KNOWLEDGE_REPORT in sources
+    assert vector_store.SOURCE_ANALYSIS_STATE in sources
+    assert all(doc.metadata["company_key"] == "apple" for doc in docs)

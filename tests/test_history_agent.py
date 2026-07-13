@@ -3,6 +3,7 @@ import sys
 import os
 import json
 import shutil
+from unittest.mock import patch
 from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -92,6 +93,14 @@ class TestHistoryAgent(unittest.TestCase):
         self.assertEqual(trends["health_delta"], 0.0)
         self.assertEqual(trends["supplier_delta"], 0)
         self.assertEqual(trends["risk_delta"], 0)
+
+    def test_write_error_is_recorded_without_false_success(self):
+        with patch.object(self.agent, "_save_history", side_effect=PermissionError("denied")):
+            updated_state = self.agent.process_history(self.state)
+        self.assertEqual(updated_state.stage_statuses["history_persistence"], "failed")
+        self.assertTrue(any("History persistence failed" in error for error in updated_state.errors))
+        self.assertEqual(updated_state.history[-1]["status"], "failed")
+        self.assertFalse(any(item.get("status") == "success" for item in updated_state.history))
 
 if __name__ == '__main__':
     unittest.main()

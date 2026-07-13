@@ -126,7 +126,7 @@ class ProductComponentBenchmarkTests(unittest.TestCase):
         self.assertEqual(result["tier1_suppliers"], "TSMC")
         self.assertEqual(result["component"], "Application Processor")
 
-    def test_missing_component_evidence_returns_insufficient_status(self) -> None:
+    def test_missing_reference_returns_not_evaluable_status(self) -> None:
         state = _state_for_component("Assembly", [])
         result = product_benchmark.calculate_component_metrics(
             company="Apple",
@@ -146,10 +146,13 @@ class ProductComponentBenchmarkTests(unittest.TestCase):
 
         self.assertEqual(
             result["evaluation_status"],
-            product_benchmark.EVALUATION_STATUS_INSUFFICIENT_COMPONENT_SUPPLIER_EVIDENCE,
+            product_benchmark.EVALUATION_STATUS_NOT_EVALUABLE_MISSING_REFERENCE,
         )
         self.assertEqual(result["tier1_suppliers"], "not_available")
-        self.assertEqual(result["evaluation_note"], "No component-specific supplier evidence found.")
+        self.assertEqual(
+            result["evaluation_note"],
+            "Tier-1 metrics are not evaluable because no verified reference is available.",
+        )
 
     def test_component_specific_runs_do_not_reuse_identical_suppliers(self) -> None:
         component_states = {
@@ -411,6 +414,131 @@ class ProductComponentBenchmarkTests(unittest.TestCase):
         self.assertEqual(metrics["coverage_score"], "not_available")
         self.assertEqual(metrics["tier2_discovered_suppliers"], "not_available")
         self.assertEqual(metrics["tier3_discovered_suppliers"], "not_available")
+
+    def test_tier2_and_tier3_do_not_reduce_tier1_precision(self) -> None:
+        state = _state_for_component(
+            "Application Processor",
+            [_supplier("TSMC", 1), _supplier("ASML", 2), _supplier("Zeiss", 3)],
+        )
+        metrics = product_benchmark.calculate_component_metrics(
+            company="Apple", product="iPhone 16 Pro", component="Application Processor",
+            sample_id=199, sample_label="test", timestamp="2026-07-13T00:00:00+00:00",
+            mode="rag", max_depth=3, skip_news=True, state=state,
+            runtime_seconds=1.0, error=None,
+            reference_suppliers=["Taiwan Semiconductor Manufacturing Company"],
+        )
+        self.assertEqual(metrics["precision"], 100.0)
+        self.assertEqual(metrics["recall"], 100.0)
+        self.assertEqual(metrics["f1_score"], 100.0)
+        self.assertEqual(metrics["hallucination_rate"], 0.0)
+        self.assertEqual(
+            metrics["evaluation_status"],
+            product_benchmark.EVALUATION_STATUS_QUANTITATIVELY_EVALUATED,
+        )
+
+    def test_verified_reference_with_no_discovery_is_still_quantitatively_evaluated(self) -> None:
+        metrics = product_benchmark.calculate_component_metrics(
+            company="Samsung", product="Galaxy S25 Ultra", component="Application Processor",
+            sample_id=199, sample_label="test", timestamp="x", mode="llm", max_depth=3,
+            skip_news=True, state=_state_for_component("Application Processor", []),
+            runtime_seconds=1.0, error=None, reference_suppliers=["Qualcomm"],
+        )
+        self.assertEqual(
+            metrics["evaluation_status"],
+            product_benchmark.EVALUATION_STATUS_QUANTITATIVELY_EVALUATED,
+        )
+        self.assertEqual(metrics["precision"], 0.0)
+        self.assertEqual(metrics["recall"], 0.0)
+
+    def test_extra_tier1_supplier_is_false_positive(self) -> None:
+        state = _state_for_component(
+            "Application Processor", [_supplier("TSMC", 1), _supplier("Broadcom", 1)]
+        )
+        metrics = product_benchmark.calculate_component_metrics(
+            company="Apple", product="iPhone 16 Pro", component="Application Processor",
+            sample_id=199, sample_label="test", timestamp="x", mode="llm", max_depth=3,
+            skip_news=True, state=state, runtime_seconds=1.0, error=None,
+            reference_suppliers=["TSMC"],
+        )
+        self.assertEqual(metrics["precision"], 50.0)
+        self.assertEqual(metrics["hallucination_rate"], 50.0)
+
+    def test_missed_tier1_reference_is_false_negative(self) -> None:
+        state = _state_for_component("Application Processor", [_supplier("TSMC", 1)])
+        metrics = product_benchmark.calculate_component_metrics(
+            company="Apple", product="iPhone 16 Pro", component="Application Processor",
+            sample_id=199, sample_label="test", timestamp="x", mode="llm", max_depth=3,
+            skip_news=True, state=state, runtime_seconds=1.0, error=None,
+            reference_suppliers=["TSMC", "Broadcom"],
+        )
+        self.assertEqual(metrics["recall"], 50.0)
+        self.assertEqual(metrics["coverage_score"], 50.0)
+
+    def test_overwrite_removes_all_stale_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir, patch.object(
+            product_benchmark, "OUTPUT_DIR", Path(tmpdir)
+        ), patch.object(
+            product_benchmark, "GLOBAL_MASTER_CSV_PATH", Path(tmpdir) / "all_samples_master_results.csv"
+        ), patch.object(product_benchmark, "REFERENCE_DATASET_PATH", Path(tmpdir) / "missing.csv"), patch.object(
+            product_benchmark, "_run_analysis", return_value=_state_for_component("Application Processor", [_supplier("TSMC", 1)])
+        ), patch.object(
+            product_benchmark, "PRODUCT_COMPONENT_MAP",
+            {"Apple": {"product": "iPhone 16 Pro", "components": ["Application Processor"]}},
+        ):
+            sample_dir = product_benchmark.get_sample_output_dir(199, "overwrite")
+            sample_dir.mkdir(parents=True)
+            for name in ("stale_company.csv", "master_results.csv", "sample_summary.md"):
+                (sample_dir / name).write_text("stale", encoding="utf-8")
+            product_benchmark.run_product_benchmark(
+                sample_id=199, sample_label="overwrite", companies=["Apple"], modes=["llm"],
+                max_depth=3, skip_news=True, overwrite=True,
+            )
+            self.assertFalse((sample_dir / "stale_company.csv").exists())
+            self.assertNotEqual((sample_dir / "master_results.csv").read_text(), "stale")
+            self.assertNotEqual((sample_dir / "sample_summary.md").read_text(), "stale")
+
+    def test_non_overwrite_preserves_collision_protection(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir, patch.object(product_benchmark, "OUTPUT_DIR", Path(tmpdir)):
+            product_benchmark.get_sample_output_dir(199, "collision").mkdir(parents=True)
+            with self.assertRaises(FileExistsError):
+                product_benchmark._run_sample_benchmark(
+                    sample_id=199, sample_label="collision", companies=[], modes=[], max_depth=3,
+                    skip_news=True, overwrite=False,
+                )
+
+    def test_overwrite_rejects_unsafe_deletion_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            unsafe = Path(tmpdir) / "outside"
+            unsafe.mkdir()
+            with patch.object(product_benchmark, "OUTPUT_DIR", Path(tmpdir) / "product_level"), patch.object(
+                product_benchmark, "get_sample_output_dir", return_value=unsafe
+            ):
+                with self.assertRaises(ValueError):
+                    product_benchmark._run_sample_benchmark(
+                        sample_id=199, sample_label="unsafe", companies=[], modes=[], max_depth=3,
+                        skip_news=True, overwrite=True,
+                    )
+
+    def test_persistence_failure_marks_partial_success(self) -> None:
+        state = _state_for_component("Application Processor", [_supplier("TSMC", 1)])
+        state.errors.append("Graph export failed")
+        metrics = product_benchmark.calculate_component_metrics(
+            company="Apple", product="iPhone 16 Pro", component="Application Processor",
+            sample_id=199, sample_label="test", timestamp="x", mode="llm", max_depth=3,
+            skip_news=True, state=state, runtime_seconds=1.0, error=None,
+            reference_suppliers=["TSMC"],
+        )
+        self.assertEqual(metrics["evaluation_status"], product_benchmark.EVALUATION_STATUS_PARTIAL_SUCCESS)
+
+    def test_schema_migration_cli_does_not_require_benchmark_arguments(self) -> None:
+        report_path = Path("migration-report.md")
+        with patch.object(
+            product_benchmark,
+            "migrate_product_benchmark_schema",
+            return_value=report_path,
+        ) as migrate, patch("sys.argv", ["product_benchmark.py", "--migrate-schema"]):
+            self.assertEqual(product_benchmark.main(), 0)
+        migrate.assert_called_once_with()
 
     def test_component_rows_remain_distinct_across_components(self) -> None:
         with product_benchmark.REFERENCE_DATASET_PATH.open("r", encoding="utf-8", newline="") as handle:
