@@ -14,6 +14,7 @@ from retrieval.vector_store import (
     retrieve_context,
     retrieve_context_documents,
 )
+from utils.runtime_controls import is_fast_benchmark, is_quota_error, mark_quota_exhausted
 
 
 logger = logging.getLogger(__name__)
@@ -815,6 +816,9 @@ def generate_rag_report(
     if not context_chunks:
         return MISSING_CONTEXT_MESSAGE, []
 
+    if is_fast_benchmark(state):
+        return _fallback_report(company, section_chunks, state=state), context_chunks
+
     try:
         llm = get_llm(provider=provider, model=model)
         chain = rag_report_prompt | llm | StrOutputParser()
@@ -826,6 +830,8 @@ def generate_rag_report(
         )
     except Exception as exc:
         logger.warning("RAG report LLM generation skipped: %s", exc)
+        if state is not None and is_quota_error(exc):
+            mark_quota_exhausted(state, f"RAG report generation quota exhausted for {company}: {exc}")
         return _fallback_report(company, section_chunks, state=state), context_chunks
 
     report_text = (report or "").strip()

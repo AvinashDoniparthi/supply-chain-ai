@@ -1,3 +1,4 @@
+import csv
 import tempfile
 import unittest
 from pathlib import Path
@@ -36,6 +37,35 @@ def _state_for_component(component: str, suppliers: list[SupplierInfo]) -> Agent
 
 
 class ProductComponentBenchmarkTests(unittest.TestCase):
+    def test_reference_dataset_has_one_supplier_per_row_and_verified_rows_have_sources(self) -> None:
+        with product_benchmark.REFERENCE_DATASET_PATH.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+
+        self.assertGreater(len(rows), 0)
+        for row in rows:
+            with self.subTest(row=row):
+                self.assertNotIn(";", row["reference_supplier"])
+                self.assertNotIn(";", row["canonical_supplier_name"])
+                if row["verification_status"] == "verified":
+                    self.assertNotEqual(row["source_url"], "not_available")
+                    self.assertNotEqual(row["source_title"], "not_available")
+                    self.assertNotEqual(row["source_publisher"], "not_available")
+
+    def test_tier_rows_with_verified_data_have_required_paths(self) -> None:
+        with product_benchmark.REFERENCE_DATASET_PATH.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+
+        for row in rows:
+            if row["verification_status"] != "verified":
+                continue
+            with self.subTest(row=row):
+                if row["tier"] == "2":
+                    self.assertNotEqual(row["parent_supplier"], "not_available")
+                    self.assertNotEqual(row["relationship_path"], "not_available")
+                if row["tier"] == "3":
+                    self.assertNotEqual(row["parent_supplier"], "not_available")
+                    self.assertNotEqual(row["relationship_path"], "not_available")
+
     def test_run_analysis_populates_component_state(self) -> None:
         captured = {}
 
@@ -188,19 +218,208 @@ class ProductComponentBenchmarkTests(unittest.TestCase):
                 "Foxconn; Pegatron; Luxshare",
             )
 
+            for row in company_rows:
+                self.assertIn("tier2_discovered_suppliers", row)
+                self.assertIn("tier3_discovered_suppliers", row)
+                self.assertNotIn("tier2_precision", row)
+                self.assertNotIn("tier3_precision", row)
+                self.assertIn("tier2_verification_status", row)
+                self.assertIn("tier3_verification_status", row)
+
             csv_text = company_csv_paths[0].read_text(encoding="utf-8")
             self.assertIn("TSMC", csv_text)
             self.assertIn("Samsung Display; LG Display", csv_text)
             self.assertIn("Sony Semiconductor Solutions", csv_text)
             self.assertIn("Foxconn; Pegatron; Luxshare", csv_text)
+            self.assertIn("tier2_discovered_suppliers", csv_text)
+            self.assertIn("tier3_discovered_suppliers", csv_text)
 
             summary_text = (sample_dir / "sample_summary.md").read_text(encoding="utf-8")
+            self.assertIn("Quantitative evaluation was performed only for Tier 1 supplier relationships", summary_text)
+            self.assertIn("Tier 2 and Tier 3 supplier relationships were evaluated qualitatively", summary_text)
             self.assertNotIn(
                 "WARNING: Component outputs appear identical. Component context may not be influencing discovery.",
                 summary_text,
             )
             self.assertTrue(master_csv_path.exists())
             self.assertTrue(global_csv_path.exists())
+
+    def test_quota_exhausted_rows_are_marked(self) -> None:
+        with patch.object(
+            product_benchmark, "_run_analysis", side_effect=RuntimeError("429 RESOURCE_EXHAUSTED: quota exceeded")
+        ):
+            result = product_benchmark._run_single(
+                company="Apple",
+                product="iPhone 16 Pro",
+                component="Application Processor",
+                sample_id=99,
+                sample_label="component_debug",
+                mode="llm",
+                max_depth=3,
+                skip_news=True,
+                reference_suppliers=[],
+                fast_benchmark=True,
+            )
+
+        self.assertEqual(result["evaluation_status"], product_benchmark.EVALUATION_STATUS_QUOTA_EXHAUSTED)
+        self.assertEqual(result["evaluation_note"], "Quota exhausted during analysis; partial results captured.")
+
+    def test_placeholder_rows_are_excluded_from_metrics(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ref_path = Path(tmpdir) / "reference.csv"
+            with ref_path.open("w", encoding="utf-8", newline="") as handle:
+                writer = csv.DictWriter(
+                    handle,
+                    fieldnames=[
+                        "company",
+                        "product",
+                        "component",
+                        "tier",
+                        "reference_supplier",
+                        "canonical_supplier_name",
+                        "parent_supplier",
+                        "relationship_path",
+                        "relationship_type",
+                        "source_title",
+                        "source_url",
+                        "source_publisher",
+                        "source_date",
+                        "source_type",
+                        "evidence_summary",
+                        "confidence_level",
+                        "verification_status",
+                        "notes",
+                    ],
+                )
+                writer.writeheader()
+                writer.writerow(
+                    {
+                        "company": "Apple",
+                        "product": "iPhone 16 Pro",
+                        "component": "Application Processor",
+                        "tier": "1",
+                        "reference_supplier": "TSMC",
+                        "canonical_supplier_name": "Taiwan Semiconductor Manufacturing Company",
+                        "parent_supplier": "Apple",
+                        "relationship_path": "Apple -> Taiwan Semiconductor Manufacturing Company",
+                        "relationship_type": "supplier",
+                        "source_title": "Example source",
+                        "source_url": "https://example.com/source",
+                        "source_publisher": "Example",
+                        "source_date": "2024-09-10",
+                        "source_type": "reputable_news",
+                        "evidence_summary": "Verified row.",
+                        "confidence_level": "high",
+                        "verification_status": "verified",
+                        "notes": "Verified row.",
+                    }
+                )
+                writer.writerow(
+                    {
+                        "company": "Apple",
+                        "product": "iPhone 16 Pro",
+                        "component": "Application Processor",
+                        "tier": "1",
+                        "reference_supplier": "not_available",
+                        "canonical_supplier_name": "not_available",
+                        "parent_supplier": "not_available",
+                        "relationship_path": "not_available",
+                        "relationship_type": "not_available",
+                        "source_title": "not_available",
+                        "source_url": "not_available",
+                        "source_publisher": "not_available",
+                        "source_date": "not_available",
+                        "source_type": "not_available",
+                        "evidence_summary": "No sufficiently reliable public evidence found.",
+                        "confidence_level": "medium",
+                        "verification_status": "insufficient_public_evidence",
+                        "notes": "No sufficiently reliable public evidence found.",
+                    }
+                )
+
+            with patch.object(product_benchmark, "REFERENCE_DATASET_PATH", ref_path):
+                reference_rows = product_benchmark._load_reference_dataset()
+                tiered = product_benchmark._reference_suppliers_for_component(
+                    reference_rows, "Apple", "iPhone 16 Pro", "Application Processor"
+                )
+                self.assertEqual(tiered[1], ["Taiwan Semiconductor Manufacturing Company"])
+                self.assertEqual(tiered[2], [])
+                self.assertEqual(tiered[3], [])
+
+                state = _state_for_component("Application Processor", [_supplier("TSMC", 1)])
+                metrics = product_benchmark.calculate_component_metrics(
+                    company="Apple",
+                    product="iPhone 16 Pro",
+                    component="Application Processor",
+                    sample_id=99,
+                    sample_label="component_debug",
+                    timestamp="2026-07-09T00:00:00+00:00",
+                    mode="llm",
+                    max_depth=3,
+                    skip_news=True,
+                    state=state,
+                    runtime_seconds=1.23,
+                    error=None,
+                    reference_suppliers=tiered[1],
+                )
+                self.assertEqual(metrics["precision"], 100.0)
+                self.assertEqual(metrics["recall"], 100.0)
+                self.assertEqual(metrics["f1_score"], 100.0)
+                self.assertEqual(metrics["hallucination_rate"], 0.0)
+                self.assertEqual(metrics["coverage_score"], 100.0)
+                self.assertNotIn("tier2_precision", metrics)
+                self.assertEqual(metrics["tier2_discovered_suppliers"], "not_available")
+                self.assertEqual(metrics["tier3_discovered_suppliers"], "not_available")
+
+    def test_reference_metrics_compute_tp_fp_fn_and_scores(self) -> None:
+        metrics = product_benchmark._reference_metrics(
+            discovered=["TSMC", "ASML"],
+            reference=["Taiwan Semiconductor Manufacturing Company"],
+        )
+
+        self.assertEqual(metrics["true_positives"], 1)
+        self.assertEqual(metrics["false_positives"], 1)
+        self.assertEqual(metrics["false_negatives"], 0)
+        self.assertEqual(metrics["precision"], 50.0)
+        self.assertEqual(metrics["recall"], 100.0)
+        self.assertEqual(metrics["f1_score"], 66.67)
+        self.assertEqual(metrics["hallucination_rate"], 50.0)
+        self.assertEqual(metrics["coverage_score"], 100.0)
+
+    def test_metrics_return_not_available_when_reference_data_is_missing(self) -> None:
+        state = _state_for_component("Application Processor", [_supplier("TSMC", 1)])
+        metrics = product_benchmark.calculate_component_metrics(
+            company="Apple",
+            product="iPhone 16 Pro",
+            component="Application Processor",
+            sample_id=99,
+            sample_label="component_debug",
+            timestamp="2026-07-09T00:00:00+00:00",
+            mode="llm",
+            max_depth=3,
+            skip_news=True,
+            state=state,
+            runtime_seconds=1.23,
+            error=None,
+            reference_suppliers=[],
+        )
+
+        self.assertEqual(metrics["precision"], "not_available")
+        self.assertEqual(metrics["recall"], "not_available")
+        self.assertEqual(metrics["f1_score"], "not_available")
+        self.assertEqual(metrics["hallucination_rate"], "not_available")
+        self.assertEqual(metrics["coverage_score"], "not_available")
+        self.assertEqual(metrics["tier2_discovered_suppliers"], "not_available")
+        self.assertEqual(metrics["tier3_discovered_suppliers"], "not_available")
+
+    def test_component_rows_remain_distinct_across_components(self) -> None:
+        with product_benchmark.REFERENCE_DATASET_PATH.open("r", encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+
+        apple_rows = [row for row in rows if row["company"] == "Apple" and row["verification_status"] == "verified"]
+        self.assertEqual({row["component"] for row in apple_rows}, {"Application Processor", "Assembly"})
+        samsung_rows = [row for row in rows if row["company"] == "Samsung" and row["verification_status"] == "verified"]
+        self.assertEqual({row["component"] for row in samsung_rows}, {"Application Processor"})
 
 
 if __name__ == "__main__":

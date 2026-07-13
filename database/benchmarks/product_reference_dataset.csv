@@ -1,181 +1,52 @@
-company,product,component,tier,reference_suppliers,source_notes,confidence_level
-Apple,iPhone 16 Pro,Application Processor,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Application Processor,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Application Processor,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Display,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Display,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Display,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Camera Sensor,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Camera Sensor,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Camera Sensor,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Memory,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Memory,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Memory,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Storage,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Storage,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Storage,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Battery,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Battery,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Battery,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Wireless Chip,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Wireless Chip,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Wireless Chip,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,RF Front-End,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,RF Front-End,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,RF Front-End,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Glass,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Glass,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Glass,3,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Assembly,1,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Assembly,2,,Manual placeholder for later ground-truth entry.,unfilled
-Apple,iPhone 16 Pro,Assembly,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Application Processor,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Application Processor,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Application Processor,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Display,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Display,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Display,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Camera Sensor,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Camera Sensor,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Camera Sensor,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Memory,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Memory,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Memory,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Storage,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Storage,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Storage,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Battery,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Battery,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Battery,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Modem / Wireless Chip,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Modem / Wireless Chip,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Modem / Wireless Chip,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,RF Front-End,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,RF Front-End,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,RF Front-End,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Glass,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Glass,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Glass,3,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Assembly,1,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Assembly,2,,Manual placeholder for later ground-truth entry.,unfilled
-Samsung,Galaxy S25 Ultra,Assembly,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,GPU Die,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,GPU Die,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,GPU Die,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Memory,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Memory,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Memory,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,VRM / Power Delivery,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,VRM / Power Delivery,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,VRM / Power Delivery,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,PCB / Substrate,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,PCB / Substrate,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,PCB / Substrate,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Cooling Solution,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Cooling Solution,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Cooling Solution,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Capacitors and Passives,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Capacitors and Passives,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Capacitors and Passives,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Display Outputs,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Display Outputs,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Display Outputs,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Fan Assembly,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Fan Assembly,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Fan Assembly,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Thermal Interface Materials,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Thermal Interface Materials,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Thermal Interface Materials,3,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Board Assembly,1,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Board Assembly,2,,Manual placeholder for later ground-truth entry.,unfilled
-Nvidia,GeForce RTX 5090,Board Assembly,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,CPU Die,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,CPU Die,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,CPU Die,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,I/O Die,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,I/O Die,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,I/O Die,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Packaging,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Packaging,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Packaging,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Wafer Foundry,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Wafer Foundry,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Wafer Foundry,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Cache Memory,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Cache Memory,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Cache Memory,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Substrate,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Substrate,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Substrate,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Thermal Interface Material,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Thermal Interface Material,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Thermal Interface Material,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Power Delivery,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Power Delivery,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Power Delivery,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Heat Spreader,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Heat Spreader,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Heat Spreader,3,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Final Test and Assembly,1,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Final Test and Assembly,2,,Manual placeholder for later ground-truth entry.,unfilled
-AMD,Ryzen 9 9950X,Final Test and Assembly,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Compute Tile,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Compute Tile,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Compute Tile,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Graphics Tile,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Graphics Tile,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Graphics Tile,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,SoC Tile,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,SoC Tile,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,SoC Tile,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Package Substrate,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Package Substrate,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Package Substrate,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Advanced Packaging,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Advanced Packaging,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Advanced Packaging,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Memory Controller / I/O,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Memory Controller / I/O,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Memory Controller / I/O,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Thermal Interface Material,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Thermal Interface Material,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Thermal Interface Material,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Power Delivery,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Power Delivery,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Power Delivery,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Integrated Graphics Support,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Integrated Graphics Support,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Integrated Graphics Support,3,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Final Test and Assembly,1,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Final Test and Assembly,2,,Manual placeholder for later ground-truth entry.,unfilled
-Intel,Core Ultra 9 285K,Final Test and Assembly,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Battery Pack,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Battery Pack,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Battery Pack,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Electric Motor,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Electric Motor,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Electric Motor,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Power Electronics,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Power Electronics,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Power Electronics,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Autopilot/Compute Hardware,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Autopilot/Compute Hardware,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Autopilot/Compute Hardware,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Display System,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Display System,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Display System,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Body/Chassis,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Body/Chassis,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Body/Chassis,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Braking System,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Braking System,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Braking System,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Glass,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Glass,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Glass,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Tires,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Tires,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Tires,3,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Final Assembly,1,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Final Assembly,2,,Manual placeholder for later ground-truth entry.,unfilled
-Tesla,Model 3,Final Assembly,3,,Manual placeholder for later ground-truth entry.,unfilled
+company,product,component,tier,reference_supplier,canonical_supplier_name,parent_supplier,relationship_path,relationship_type,source_title,source_url,source_publisher,source_date,source_type,evidence_summary,confidence_level,verification_status,notes
+Apple,iPhone 16 Pro,Application Processor,1,TSMC,Taiwan Semiconductor Manufacturing Company,Apple,Apple -> Taiwan Semiconductor Manufacturing Company,supplier,These Tech Companies Could Benefit From Sales of Apple's AI-Powered iPhone 16,https://www.investopedia.com/tsmc-arm-holdings-apple-iphone-16-chips-stock-8709551,Investopedia,2024-09-10,reputable_news,Investopedia reports that TSMC is the primary manufacturer of the A18 processor used in the iPhone 16 family.,high,verified,Public reporting links the iPhone 16 family A18 processor to TSMC manufacturing.
+Apple,iPhone 16 Pro,Application Processor,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Application Processor,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Display,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Display,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Display,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Camera Sensor,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Camera Sensor,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Camera Sensor,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Assembly,1,Foxconn,"Hon Hai Precision Industry Co., Ltd.",Apple,"Apple -> Hon Hai Precision Industry Co., Ltd.",supplier,Des arrestations dans l'usine d'assemblage de l'iPhone 16 envoient un signal glaçant pour les Taïwanais en Chine,https://www.lemonde.fr/international/article/2024/10/14/des-arrestations-dans-l-usine-d-assemblage-de-l-iphone-16-envoient-un-signal-glacant-pour-les-taiwanais-en-chine_6351549_3210.html,Le Monde,2024-10-14,reputable_news,Le Monde identifies Foxconn as the assembly site involved in iPhone 16 production.,high,verified,Assembly relationship tied to the iPhone 16 production plant.
+Apple,iPhone 16 Pro,Assembly,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Apple,iPhone 16 Pro,Assembly,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Application Processor,1,Qualcomm,Qualcomm,Samsung,Samsung -> Qualcomm,supplier,Galaxy S25 Ultra | Features & Highlights | Samsung US,https://www.samsung.com/us/smartphones/galaxy-s25-ultra/,Samsung US,not_available,official_product_page,Samsung says the Galaxy S25 Ultra uses Snapdragon 8 Elite for Galaxy.,high,verified,The official product page names the chipset used in the Galaxy S25 Ultra.
+Samsung,Galaxy S25 Ultra,Application Processor,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Application Processor,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Display,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Display,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Display,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Camera Sensor,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Camera Sensor,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Camera Sensor,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Assembly,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Assembly,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Samsung,Galaxy S25 Ultra,Assembly,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+NVIDIA,GeForce RTX 5090,GPU Die,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+NVIDIA,GeForce RTX 5090,GPU Die,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+NVIDIA,GeForce RTX 5090,GPU Die,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+NVIDIA,GeForce RTX 5090,Memory (GDDR7),1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+NVIDIA,GeForce RTX 5090,Memory (GDDR7),2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+NVIDIA,GeForce RTX 5090,Memory (GDDR7),3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+AMD,Ryzen 9 9950X,CPU Die,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+AMD,Ryzen 9 9950X,CPU Die,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+AMD,Ryzen 9 9950X,CPU Die,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+AMD,Ryzen 9 9950X,Packaging / Test,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+AMD,Ryzen 9 9950X,Packaging / Test,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+AMD,Ryzen 9 9950X,Packaging / Test,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Intel,Core Ultra 9 285K,CPU Fabrication,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Intel,Core Ultra 9 285K,CPU Fabrication,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Intel,Core Ultra 9 285K,CPU Fabrication,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Intel,Core Ultra 9 285K,Packaging / Test,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Intel,Core Ultra 9 285K,Packaging / Test,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Intel,Core Ultra 9 285K,Packaging / Test,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Battery Cells,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Battery Cells,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Battery Cells,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Electric Motor,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Electric Motor,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Electric Motor,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Battery Pack Assembly,1,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Battery Pack Assembly,2,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.
+Tesla,Model 3,Battery Pack Assembly,3,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,not_available,No sufficiently reliable public evidence found.,medium,insufficient_public_evidence,No sufficiently reliable public evidence found.

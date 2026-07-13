@@ -7,9 +7,11 @@
 - Modes: llm
 - Max Depth: 3
 - Skip News: True
+- Fast Benchmark: True
 - Total rows: 4
 - Successful rows: 2
 - Failed rows: 0
+- Quota-exhausted rows: 0
 
 ## Per-Company Rows
 - Apple: 4 rows

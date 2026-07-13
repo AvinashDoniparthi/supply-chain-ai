@@ -75,6 +75,23 @@ class TestOpenWorldSupplierDiscovery(unittest.TestCase):
         self.assertIn("AMD supply chain", queries)
         self.assertIn("AMD contract manufacturers", queries)
 
+    def test_component_specific_queries_expand_with_aliases(self):
+        queries = discovery_queries(
+            "Apple",
+            product_name="iPhone 16 Pro",
+            component_name="Display",
+            benchmark_target_query="Apple iPhone 16 Pro Display",
+        )
+
+        self.assertIn("Apple iPhone 16 Pro Display supplier", queries)
+        self.assertIn("Apple iPhone OLED panel supplier", queries)
+        self.assertIn("iPhone Display manufacturer", queries)
+        self.assertIn("iPhone teardown Display", queries)
+        self.assertIn("iPhone bill of materials Display", queries)
+        self.assertIn("Apple OLED panel supplier", queries)
+        self.assertIn("iPhone component vendor", queries)
+        self.assertIn("Display supplier for iPhone", queries)
+
     def test_curated_expected_sets_are_not_discovery_results(self):
         suppliers, _queries = self.run_discovery("Apple")
 

@@ -995,6 +995,7 @@ def render_summary(rows: Sequence[Dict[str, Any]]) -> str:
         "# Thesis Benchmark Summary",
         "",
         "This benchmark runs the full supply-chain intelligence pipeline in both `llm` and `rag` modes with identical settings (`max_depth=3`, `skip_news=True`).",
+        "Quantitative evaluation was performed only for Tier 1 supplier relationships because reliable public ground-truth data is available primarily at Tier 1. Tier 2 and Tier 3 supplier relationships are reported qualitatively through discovery statistics and verification context.",
         "",
         "## Execution",
         "",

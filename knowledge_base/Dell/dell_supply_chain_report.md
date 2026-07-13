@@ -1,7 +1,7 @@
 # Dell
 
 ## Executive Summary
-Not available.
+- Not available.
 
 ## Supply Chain Health
 - Health Score: Not available
@@ -34,6 +34,6 @@ Not available.
 - None verified
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-05T12:04:48.619725+00:00
+- Generated Timestamp: 2026-07-09T16:16:49.893873+00:00
 - Mode: rag
 - Max Depth: 3

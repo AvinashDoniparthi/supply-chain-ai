@@ -1,153 +1,92 @@
 # Tesla
 
 ## Executive Summary
-- RAG EXECUTIVE SUMMARY
-- Tesla's retrieved supply-chain health is Moderate with a score of 68.7/100. Key retrieved suppliers include Panasonic, Contemporary Amperex Technology Co. Limited, LG Energy Solution. The main retrieved risk themes are Geopolitical risk for Contemporary Amperex Technology Co. Limited, Geopolitical risk for Ganfeng Lithium.
-- SUPPLY CHAIN HEALTH
-- - Score: 68.7
-- - Status: Moderate
-- - Interpretation: Tesla's supply chain appears moderate overall. No major operational disruptions were detected. Verification quality is medium (4/8 suppliers verified).
-- KEY SUPPLIERS
-- - Panasonic (Tier 1, Battery cells)
-- - Contemporary Amperex Technology Co. Limited (Tier 1, LFP battery cells)
-- - LG Energy Solution (Tier 1, Battery cells)
-- - Samsung SDI (Tier 1, Battery cells)
-- - Sumitomo Metal Mining (Tier 2, Battery cathode materials)
-- - Mitsubishi Materials (Tier 2, Battery materials)
-- - Ganfeng Lithium (Tier 2, Lithium materials)
-- - Tianqi Lithium (Tier 2, Lithium materials)
-- TIER DEPENDENCIES
-- - Tesla -> Panasonic
-- - Tesla -> Contemporary Amperex Technology Co. Limited
-- - Tesla -> LG Energy Solution
-- - Tesla -> Samsung SDI
-- - Tesla -> Panasonic -> Sumitomo Metal Mining
-- - Tesla -> Panasonic -> Mitsubishi Materials
-- - Tesla -> Contemporary Amperex Technology Co. Limited -> Ganfeng Lithium
-- - Tesla -> Contemporary Amperex Technology Co. Limited -> Tianqi Lithium
-- MAJOR RISKS
-- - Risk: Geopolitical
-- Affected supplier/path: Tesla -> Contemporary Amperex Technology Co. Limited
-- Severity: Medium
-- Reason: Geographic tension exposure through Contemporary Amperex Technology Co. Limited. Affected path: Tesla -> Contemporary Amperex Technology Co. Limited. Reason: Contemporary Amperex Technology Co. Limited is located in China, creating trade or political exposure for this supply path.
-- - Risk: Geopolitical
-- Affected supplier/path: Tesla -> Contemporary Amperex Technology Co. Limited -> Ganfeng Lithium
-- Severity: Medium
-- Reason: Geographic tension exposure through Ganfeng Lithium. Affected path: Tesla -> Contemporary Amperex Technology Co. Limited -> Ganfeng Lithium. Reason: Ganfeng Lithium is located in China, creating trade or political exposure for this supply path.
-- - Risk: Geopolitical
-- Affected supplier/path: Tesla -> Contemporary Amperex Technology Co. Limited -> Tianqi Lithium
-- Severity: Medium
-- Reason: Geographic tension exposure through Tianqi Lithium. Affected path: Tesla -> Contemporary Amperex Technology Co. Limited -> Tianqi Lithium. Reason: Tianqi Lithium is located in China, creating trade or political exposure for this supply path.
-- RECOMMENDATIONS
-- - Monitor trade policy changes and explore friend-shoring options.
-- DATA LIMITATIONS
-- - No missing retrieved sections identified.
+- Company: Tesla
+- Mode: LLM-only
+- Max Depth: 3
+- Generated At: 2026-07-12 21:25:52 IST
+- 1. EXECUTIVE SUMMARY
+- Tesla has a moderately healthy supply chain with strong dependence on Gigafactory Shanghai. The main concern is limited verification depth or supplier concentration.
+- 2. DISCOVERY QUALITY
+- Coverage: High - 1 discovered Tier-1 suppliers identified.
+- 3. SUPPLY CHAIN HEALTH
+- Status: Good - 81.1/100.
+- Supplier Count: 1
+- Critical Suppliers: 0
+- High-Risk Suppliers: 0
+- Summary: Tesla's supply chain appears good overall. No major operational disruptions were detected.
+- 4. SUPPLIER NETWORK
+- 4.1 Tier 1 Suppliers
+- TIER 1 SUPPLIERS
+- Direct suppliers to Tesla
+- 1. Gigafactory Shanghai
+- Relationship : Supplier
+- Confidence   : 0.80
+- Verification : Verified (0.71)
+- 4.2 Tier 2 Suppliers
+- TIER 2 SUPPLIERS
+- Upstream suppliers connected through Tier 1 suppliers
+- None identified
+- 4.3 Tier 3 Suppliers
+- TIER 3 SUPPLIERS
+- Upstream suppliers connected through Tier 2 suppliers
+- None identified
+- 5. TOP RISKS
+- High
+- None identified
+- Medium
+- None identified
+- Low
+- None identified
+- No supplier-specific risks detected
+- 6. DATA QUALITY WARNINGS
+- Low Verification Confidence
+- 1. Gigafactory Shanghai
+- Confidence: 0.71
+- Reason: [CuratedKnowledgeBase]: Failed - Entity not present in curated supply-chain knowledge base. | [Wikipedia]: Wikipedia page found using 'Gigafactory Shanghai'. Industry: Automotive. HQ: Unknown. | [Website]: Failed - No official website found in initial discovery evidence. | [RelationshipVerification]: company_exists=True; relationship_verified=True; relationship_confidence=0.85; evidence_quality=0.52; source_quality=0.55.
+- Failed Verification
+- None identified
+- Missing Verification Result
+- None identified
+- 7. CRITICAL SUPPLIERS
+- None identified
 
 ## Supply Chain Health
-- Health Score: 68.70
-- Status: Moderate
-- Supplier Count: 8
-- Verified Supplier Count: 4
+- Health Score: 81.10
+- Status: Good
+- Supplier Count: 1
+- Verified Supplier Count: 1
 
 ## Tier 1 Suppliers
-- Supplier: Contemporary Amperex Technology Co. Limited
+- Supplier: Gigafactory Shanghai
   - Parent: Tesla
-  - Relationship Path: Tesla -> Contemporary Amperex Technology Co. Limited
+  - Relationship Path: Tesla -> Gigafactory Shanghai
   - Relationship: supplier
-  - Confidence: 0.78
-  - Verification: Verified (0.90)
-- Supplier: LG Energy Solution
-  - Parent: Tesla
-  - Relationship Path: Tesla -> LG Energy Solution
-  - Relationship: supplier
-  - Confidence: 0.78
-  - Verification: Verified (0.86)
-- Supplier: Panasonic
-  - Parent: Tesla
-  - Relationship Path: Tesla -> Panasonic
-  - Relationship: supplier
-  - Confidence: 0.78
-  - Verification: Verified (0.90)
-- Supplier: Samsung SDI
-  - Parent: Tesla
-  - Relationship Path: Tesla -> Samsung SDI
-  - Relationship: supplier
-  - Confidence: 0.78
-  - Verification: Verified (0.91)
+  - Confidence: 0.80
+  - Verification: Verified (0.71)
 
 ## Tier 2 Suppliers
-- Supplier: Ganfeng Lithium
-  - Parent: Contemporary Amperex Technology Co. Limited
-  - Relationship Path: Tesla -> Contemporary Amperex Technology Co. Limited -> Ganfeng Lithium
-  - Relationship: upstream_supplier
-  - Confidence: 0.61
-  - Verification: Not verified (0.35)
-- Supplier: Mitsubishi Materials
-  - Parent: Panasonic
-  - Relationship Path: Tesla -> Panasonic -> Mitsubishi Materials
-  - Relationship: upstream_supplier
-  - Confidence: 0.63
-  - Verification: Not verified (0.35)
-- Supplier: Sumitomo Metal Mining
-  - Parent: Panasonic
-  - Relationship Path: Tesla -> Panasonic -> Sumitomo Metal Mining
-  - Relationship: upstream_supplier
-  - Confidence: 0.63
-  - Verification: Not verified (0.35)
-- Supplier: Tianqi Lithium
-  - Parent: Contemporary Amperex Technology Co. Limited
-  - Relationship Path: Tesla -> Contemporary Amperex Technology Co. Limited -> Tianqi Lithium
-  - Relationship: upstream_supplier
-  - Confidence: 0.60
-  - Verification: Not verified (0.35)
+- None verified
 
 ## Tier 3 Suppliers
 - None verified
 
 ## Major Risks
-- Risk Type: Geopolitical
-  - Affected Supplier: Contemporary Amperex Technology Co. Limited
-  - Severity: Medium
-  - Reason: Geographic tension exposure through Contemporary Amperex Technology Co. Limited. Affected path: Tesla -> Contemporary Amperex Technology Co. Limited. Reason: Contemporary Amperex Technology Co. Limited is located in China, creating trade or political exposure for this supply path.
-  - Mitigation: Monitor trade policy changes and explore friend-shoring options.
-- Risk Type: Geopolitical
-  - Affected Supplier: Ganfeng Lithium
-  - Severity: Medium
-  - Reason: Geographic tension exposure through Ganfeng Lithium. Affected path: Tesla -> Contemporary Amperex Technology Co. Limited -> Ganfeng Lithium. Reason: Ganfeng Lithium is located in China, creating trade or political exposure for this supply path.
-  - Mitigation: Monitor trade policy changes and explore friend-shoring options.
-- Risk Type: Geopolitical
-  - Affected Supplier: Tianqi Lithium
-  - Severity: Medium
-  - Reason: Geographic tension exposure through Tianqi Lithium. Affected path: Tesla -> Contemporary Amperex Technology Co. Limited -> Tianqi Lithium. Reason: Tianqi Lithium is located in China, creating trade or political exposure for this supply path.
-  - Mitigation: Monitor trade policy changes and explore friend-shoring options.
+- None verified
 
 ## Critical Suppliers
-- Contemporary Amperex Technology Co. Limited (High, 0.81)
-- Samsung SDI (High, 0.81)
-- Panasonic (Medium, 0.63)
-- LG Energy Solution (Medium, 0.61)
-- Mitsubishi Materials (Low, 0.28)
-- Sumitomo Metal Mining (Low, 0.28)
-- Ganfeng Lithium (Low, 0.12)
-- Tianqi Lithium (Low, 0.12)
+- Gigafactory Shanghai (Medium, 0.57)
 
 ## Verification Summary
-- Total Verifications: 8
-- Verified Supplier Count: 4
-- Not Verified Count: 4
-- Verified Suppliers: Panasonic, Contemporary Amperex Technology Co. Limited, LG Energy Solution, Samsung SDI
+- Total Verifications: 1
+- Verified Supplier Count: 1
+- Not Verified Count: 0
+- Verified Suppliers: Gigafactory Shanghai
 
 ## Confidence Summary
-- Contemporary Amperex Technology Co. Limited: 0.78
-- Ganfeng Lithium: 0.61
-- LG Energy Solution: 0.78
-- Mitsubishi Materials: 0.63
-- Panasonic: 0.78
-- Samsung SDI: 0.78
-- Sumitomo Metal Mining: 0.63
-- Tianqi Lithium: 0.60
+- Gigafactory Shanghai: 0.80
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-09T14:00:57.471124+00:00
-- Mode: rag
+- Generated Timestamp: 2026-07-12T15:55:52.542014+00:00
+- Mode: llm
 - Max Depth: 3

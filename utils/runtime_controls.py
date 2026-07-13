@@ -45,6 +45,48 @@ def _timeout_value(state: Any) -> int:
     return max(1, int(getattr(state, "timeout_seconds", 180) or 180))
 
 
+def is_fast_benchmark(state: Any) -> bool:
+    if state is None:
+        return False
+    if getattr(state, "benchmark_fast_mode", False):
+        return True
+    run_metadata = getattr(state, "run_metadata", {}) or {}
+    return bool(run_metadata.get("fast_benchmark"))
+
+
+def _quota_error_text(message: str) -> bool:
+    text = (message or "").lower()
+    return "429" in text or "quota" in text or "resourceexhausted" in text or "too many requests" in text
+
+
+def is_quota_error(exc: BaseException | str) -> bool:
+    if isinstance(exc, BaseException):
+        parts = [str(exc), exc.__class__.__name__]
+        cause = getattr(exc, "__cause__", None)
+        if cause is not None:
+            parts.extend([str(cause), cause.__class__.__name__])
+        context = getattr(exc, "__context__", None)
+        if context is not None:
+            parts.extend([str(context), context.__class__.__name__])
+        return any(_quota_error_text(part) for part in parts if part)
+    return _quota_error_text(exc)
+
+
+def mark_quota_exhausted(state: Any, message: str) -> None:
+    if state is None:
+        return
+    state.quota_exhausted = True
+    if message and message not in getattr(state, "errors", []):
+        state.errors.append(message)
+    run_metadata = getattr(state, "run_metadata", None)
+    if isinstance(run_metadata, dict):
+        run_metadata["quota_exhausted"] = True
+        if message:
+            run_metadata.setdefault("quota_errors", [])
+            if message not in run_metadata["quota_errors"]:
+                run_metadata["quota_errors"].append(message)
+
+
 def start_stage(state: Any, stage_key: str) -> None:
     if state is None:
         return

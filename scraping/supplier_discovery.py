@@ -626,6 +626,8 @@ CURATED_SUPPLIER_ALIASES = {
     "samsung electronics co ltd": "Samsung Electronics",
     "sony semiconductor": "Sony Semiconductor Solutions",
     "sony semiconductor solutions": "Sony Semiconductor Solutions",
+    "sony semiconductor solutions corp": "Sony Semiconductor Solutions",
+    "sony semiconductor solutions corporation": "Sony Semiconductor Solutions",
     "tsmc": "Taiwan Semiconductor Manufacturing Company",
     "taiwan semiconductor": "Taiwan Semiconductor Manufacturing Company",
     "taiwan semiconductor manufacturing co": "Taiwan Semiconductor Manufacturing Company",
@@ -640,6 +642,12 @@ CURATED_SUPPLIER_ALIASES = {
     "foxconn technology group": "Hon Hai Precision Industry Co., Ltd.",
     "pegatron": "Pegatron Corporation",
     "pegatron corporation": "Pegatron Corporation",
+    "samsung display": "Samsung Display Co., Ltd.",
+    "samsung display co ltd": "Samsung Display Co., Ltd.",
+    "samsung display co., ltd": "Samsung Display Co., Ltd.",
+    "lg display": "LG Display Co., Ltd.",
+    "lg display co ltd": "LG Display Co., Ltd.",
+    "lg display co., ltd": "LG Display Co., Ltd.",
     "sk hynix": "SK hynix",
     "hynix": "SK hynix",
     "broadcom": "Broadcom Inc.",
@@ -944,6 +952,77 @@ COMPONENT_CONTEXT_QUERY_TEMPLATES = [
     "{product} bill of materials {component}",
 ]
 
+COMPONENT_ALIASES = {
+    "application processor": [
+        "SoC",
+        "chipset",
+        "processor",
+        "application chip",
+    ],
+    "display": [
+        "OLED panel",
+        "screen",
+        "display panel",
+        "LTPO OLED",
+    ],
+    "camera sensor": [
+        "image sensor",
+        "CMOS sensor",
+        "camera module",
+        "camera component",
+    ],
+    "memory": [
+        "DRAM",
+        "RAM",
+        "LPDDR memory",
+    ],
+    "storage": [
+        "NAND",
+        "flash storage",
+        "storage chip",
+    ],
+    "wireless chip": [
+        "Wi-Fi chip",
+        "Bluetooth chip",
+        "connectivity chip",
+    ],
+    "rf front-end": [
+        "RF module",
+        "power amplifier",
+        "antenna module",
+    ],
+    "assembly": [
+        "contract manufacturer",
+        "assembler",
+        "EMS provider",
+    ],
+}
+
+SOURCE_QUALITY_WEIGHTS = [
+    (r"reuters|bloomberg|wsj|financial times|ft\.com|cnbc|marketwatch|apnews|ap\.org", 1.0),
+    (r"teardown|bill of materials|ifixit|chipworks|counterpoint|techinsights", 1.5),
+    (r"official|press release|newsroom|investor relations|supplier list|product page", 2.0),
+    (r"wikipedia\.org", 0.25),
+]
+
+COMPONENT_PRODUCT_RELEVANCE_WEIGHTS = {
+    "exact_product": 1.6,
+    "product_family": 1.0,
+    "component": 1.6,
+    "component_alias": 1.2,
+    "supplier_relation": 1.4,
+}
+
+PRODUCT_FAMILY_PATTERNS = [
+    r"^(iphone)(?:\s+\d+.*)?$",
+    r"^(ipad)(?:\s+\d+.*)?$",
+    r"^(macbook)(?:\s+\w+.*)?$",
+    r"^(galaxy)(?:\s+\w+.*)?$",
+    r"^(pixel)(?:\s+\w+.*)?$",
+    r"^(thinkpad)(?:\s+\w+.*)?$",
+    r"^(dell\s+(?:xps|inspiron))\b",
+]
+
 COMPONENT_CONTEXT_KEYWORDS = {
     "application processor": [
         "application processor",
@@ -1218,9 +1297,132 @@ def _component_context_terms(component_name: Optional[str]) -> List[str]:
         return []
     clean = _compact_key(component_name)
     terms = set(COMPONENT_CONTEXT_KEYWORDS.get(clean, []))
+    terms.update(_compact_key(alias) for alias in COMPONENT_ALIASES.get(clean, []))
     if clean:
         terms.add(clean)
     return [term for term in terms if term]
+
+
+def _component_alias_terms(component_name: Optional[str]) -> List[str]:
+    if not component_name:
+        return []
+    clean = _compact_key(component_name)
+    aliases = COMPONENT_ALIASES.get(clean, [])
+    return [alias for alias in aliases if alias]
+
+
+def _product_family_terms(product_name: Optional[str]) -> List[str]:
+    if not product_name:
+        return []
+
+    clean = _clean_candidate_text(product_name)
+    if not clean:
+        return []
+
+    family_terms = {clean}
+    compact = _compact_key(clean)
+    family_terms.add(compact)
+
+    first_token = clean.split()[0] if clean.split() else ""
+    if first_token:
+        family_terms.add(first_token)
+
+    lower_clean = clean.lower()
+    for pattern in PRODUCT_FAMILY_PATTERNS:
+        match = re.search(pattern, lower_clean, flags=re.IGNORECASE)
+        if match:
+            family = match.group(1)
+            family_terms.add(
+                {
+                    "iphone": "iPhone",
+                    "ipad": "iPad",
+                    "macbook": "MacBook",
+                    "galaxy": "Galaxy",
+                    "pixel": "Pixel",
+                    "thinkpad": "ThinkPad",
+                }.get(family, family)
+            )
+
+    if re.match(r"^iphone\s+\d+", lower_clean):
+        family_terms.add("iPhone")
+    elif re.match(r"^ipad\s+\d+", lower_clean):
+        family_terms.add("iPad")
+
+    return [term for term in family_terms if term]
+
+
+def _source_quality_weight(item: Dict[str, str]) -> float:
+    title = (item.get("title") or "").lower()
+    link = (item.get("link") or "").lower()
+    snippet = (item.get("snippet") or "").lower()
+    source_text = " ".join(part for part in [title, link, snippet] if part)
+
+    for pattern, weight in SOURCE_QUALITY_WEIGHTS:
+        if re.search(pattern, source_text, flags=re.IGNORECASE):
+            return weight
+
+    return 0.0
+
+
+def _product_component_relevance_score(
+    evidence: List[Dict[str, str]],
+    *,
+    product_name: Optional[str] = None,
+    component_name: Optional[str] = None,
+) -> float:
+    if not evidence:
+        return 0.0
+
+    evidence_text = " ".join(
+        f"{item.get('title', '')} {item.get('snippet', '')}" for item in evidence
+    )
+    if not evidence_text:
+        return 0.0
+
+    lower_text = re.sub(r"<[^>]+>", " ", unescape(evidence_text)).lower()
+    lower_text = re.sub(r"\s+", " ", lower_text)
+    score = 0.0
+
+    if product_name and _text_mentions_entity(lower_text, product_name):
+        score += COMPONENT_PRODUCT_RELEVANCE_WEIGHTS["exact_product"]
+
+    for family_term in _product_family_terms(product_name):
+        if re.search(
+            rf"(?<![a-z0-9]){re.escape(family_term.lower())}(?![a-z0-9])",
+            lower_text,
+            flags=re.IGNORECASE,
+        ):
+            score += COMPONENT_PRODUCT_RELEVANCE_WEIGHTS["product_family"]
+            break
+
+    if component_name and _text_mentions_entity(lower_text, component_name):
+        score += COMPONENT_PRODUCT_RELEVANCE_WEIGHTS["component"]
+
+    for alias in _component_alias_terms(component_name):
+        if re.search(
+            rf"(?<![a-z0-9]){re.escape(alias.lower())}(?![a-z0-9])",
+            lower_text,
+            flags=re.IGNORECASE,
+        ):
+            score += COMPONENT_PRODUCT_RELEVANCE_WEIGHTS["component_alias"]
+            break
+
+    supplier_relation_patterns = [
+        r"\bsupplier\b",
+        r"\bsupplies\b",
+        r"\bmanufactures?\b",
+        r"\bfabricates?\b",
+        r"\bassembles?\b",
+        r"\bpackag(?:e|es|ed|ing)\b",
+        r"\bcontract\s+manufacturer\b",
+        r"\bfoundry\b",
+        r"\bteardown\b",
+        r"\bbill\s+of\s+materials\b",
+    ]
+    if any(re.search(pattern, lower_text, flags=re.IGNORECASE) for pattern in supplier_relation_patterns):
+        score += COMPONENT_PRODUCT_RELEVANCE_WEIGHTS["supplier_relation"]
+
+    return score
 
 
 def component_tier1_supplier_hints(component_name: Optional[str]) -> set[str]:
@@ -1250,6 +1452,23 @@ def supplier_evidence_mentions_component(
 
     lower_text = re.sub(r"<[^>]+>", " ", unescape(evidence_text or "")).lower()
     lower_text = re.sub(r"\s+", " ", lower_text)
+    family_match = any(
+        re.search(
+            rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])",
+            lower_text,
+            flags=re.IGNORECASE,
+        )
+        for term in _product_family_terms(product_name)
+    )
+    if family_match and any(
+        re.search(
+            rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])",
+            lower_text,
+            flags=re.IGNORECASE,
+        )
+        for term in _component_context_terms(component_name)
+    ):
+        return True
     for term in _component_context_terms(component_name):
         if re.search(rf"(?<![a-z0-9]){re.escape(term)}(?![a-z0-9])", lower_text):
             return True
@@ -1304,9 +1523,7 @@ def discovery_queries(
     canonical_name = canonical_curated_company_name(company_name) or resolver.resolve(
         company_name
     )
-    query_company = benchmark_target_query or DISCOVERY_QUERY_DISPLAY_NAMES.get(
-        canonical_name, company_name
-    )
+    query_company = DISCOVERY_QUERY_DISPLAY_NAMES.get(canonical_name, company_name)
     company_specific_templates = COMPANY_SPECIFIC_QUERY_TEMPLATES.get(
         _compact_key(canonical_name), []
     )
@@ -1320,16 +1537,37 @@ def discovery_queries(
         queries.append(query)
 
     if product_name and component_name:
-        component_templates = []
+        product_terms = [product_name] + _product_family_terms(product_name)
+        component_terms = [component_name] + _component_alias_terms(component_name)
+        search_templates = [
+            "{company} {product} {component} supplier",
+            "{product} {component} manufacturer",
+            "{product} teardown {component}",
+            "{product} bill of materials {component}",
+            "{company} {component} supplier",
+            "{product} component vendor",
+            "{component} supplier for {product}",
+        ]
+        for product_term in product_terms:
+            for component_term in component_terms:
+                for template in search_templates:
+                    query = template.format(
+                        company=query_company,
+                        product=product_term,
+                        component=component_term,
+                    )
+                    key = query.lower()
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    queries.append(query)
+
         for template in COMPONENT_CONTEXT_QUERY_TEMPLATES:
-            component_templates.append(
-                template.format(
-                    company=query_company,
-                    product=product_name,
-                    component=component_name,
-                )
+            query = template.format(
+                company=query_company,
+                product=product_name,
+                component=component_name,
             )
-        for query in component_templates:
             key = query.lower()
             if key in seen:
                 continue
@@ -1919,6 +2157,9 @@ def normalize_supplier_candidate_name(
 
 def analyze_supplier_evidence(
     evidence: List[Dict[str, str]],
+    *,
+    product_name: Optional[str] = None,
+    component_name: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Scores discovery snippets for weighted supplier evidence.
@@ -1935,6 +2176,7 @@ def analyze_supplier_evidence(
     matching_snippets = []
     signals = []
     score = 0
+    source_quality_score = 0.0
 
     for item in evidence or []:
         snippet = f"{item.get('title', '')} {item.get('snippet', '')}".strip()
@@ -1967,6 +2209,8 @@ def analyze_supplier_evidence(
             else:
                 weak_hits += hit_count
 
+        source_quality_score += _source_quality_weight(item)
+
         snippet_negative = any(
             re.search(pattern, text, flags=re.IGNORECASE)
             for pattern in SUPPLIER_NEGATIVE_PATTERNS
@@ -1986,7 +2230,8 @@ def analyze_supplier_evidence(
         "supporting_snippets": supporting_snippets,
         "matching_snippets": matching_snippets,
         "signals": signals,
-        "score": score,
+        "score": score + source_quality_score,
+        "source_quality_score": round(source_quality_score, 2),
         "has_positive_signal": (strong_hits + medium_hits + weak_hits) > 0,
     }
 
@@ -1997,8 +2242,14 @@ def supplier_evidence_is_strong(
     confidence: float,
     candidate_name: Optional[str] = None,
     source_company: Optional[str] = None,
+    product_name: Optional[str] = None,
+    component_name: Optional[str] = None,
 ) -> tuple[bool, str]:
-    analysis = analyze_supplier_evidence(evidence)
+    analysis = analyze_supplier_evidence(
+        evidence,
+        product_name=product_name,
+        component_name=component_name,
+    )
     threshold = TIER_EVIDENCE_THRESHOLDS.get(tier, 0)
     evidence_text = " ".join(
         f"{item.get('title', '')} {item.get('snippet', '')}" for item in evidence or []
@@ -2025,7 +2276,12 @@ def supplier_evidence_is_strong(
             return False, "Evidence does not explicitly establish supplier direction"
         if analysis["negative_hits"] > 0 and analysis["score"] < 5:
             return False, "Negative relationship signals outweigh supplier evidence"
-        accepted = confidence >= 0.75
+        relevance_bonus = _product_component_relevance_score(
+            evidence,
+            product_name=product_name,
+            component_name=component_name,
+        )
+        accepted = (confidence + min(relevance_bonus, 2.0) * 0.04) >= 0.75
         return accepted, "Accepted tier-1 supplier evidence" if accepted else "Low discovery confidence"
 
     if not evidence:
@@ -2053,7 +2309,12 @@ def supplier_evidence_is_strong(
                     False,
                     f"Tier-{tier} evidence does not explicitly show {candidate_name} supplies, manufactures for, or provides components/materials/equipment/services to {source_company}",
                 )
-        accepted = analysis["score"] >= threshold
+        relevance_bonus = _product_component_relevance_score(
+            evidence,
+            product_name=product_name,
+            component_name=component_name,
+        )
+        accepted = (analysis["score"] + min(relevance_bonus, 3.0)) >= threshold
         signal_summary = ", ".join(
             f"{signal['category']}:{signal['pattern']}"
             for signal in analysis["signals"][:6]
@@ -2376,6 +2637,7 @@ class SupplierDiscoveryScraper:
                             "odm",
                         ]
                         score += sum(2 for k in rel_keywords if k in snippet_low)
+                        score += int(_source_quality_weight(res) * 2)
                         add_result(
                             {
                                 "title": res["title"],
@@ -2394,7 +2656,10 @@ class SupplierDiscoveryScraper:
         # Sort by quality score before extracting suppliers
         discovered_data.sort(key=lambda x: x["quality_score"], reverse=True)
         formatted_suppliers = self._extract_suppliers_from_results(
-            discovered_data, company_name
+            discovered_data,
+            company_name,
+            product_name=getattr(self.runtime_state, "product_name", None),
+            component_name=getattr(self.runtime_state, "component_name", None),
         )
 
         # Save to cache if successful
@@ -2485,7 +2750,11 @@ class SupplierDiscoveryScraper:
             return []
 
     def _extract_suppliers_from_results(
-        self, results: List[Dict[str, str]], target_company: str
+        self,
+        results: List[Dict[str, str]],
+        target_company: str,
+        product_name: Optional[str] = None,
+        component_name: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
         """
         Uses heuristics and text analysis to identify potential supplier names.
@@ -2700,6 +2969,15 @@ class SupplierDiscoveryScraper:
             ):
                 return
 
+            if component_name:
+                if not supplier_evidence_mentions_component(
+                    evidence,
+                    product_name=product_name,
+                    component_name=component_name,
+                    target_query=target_company,
+                ):
+                    return
+
             page_title = res["title"].lower()
             low_text = f"{res['title']} {clean_snippet}".lower()
             detected_rel = detect_relationship(name, low_text, page_title)
@@ -2766,7 +3044,11 @@ class SupplierDiscoveryScraper:
             if data["relationship"] in {"COMPETITOR", "CUSTOMER", "LAWSUIT", "ACQUISITION"}:
                 continue
 
-            evidence_analysis = analyze_supplier_evidence(data["evidence"])
+            evidence_analysis = analyze_supplier_evidence(
+                data["evidence"],
+                product_name=product_name,
+                component_name=component_name,
+            )
             confidence = 0.35 + min(data["count"] * 0.07, 0.21)
             if re.search(
                 r"(Inc|Ltd|Corp|Group|Co|PLC|Corporation|Limited)$", name, re.IGNORECASE
@@ -2774,6 +3056,18 @@ class SupplierDiscoveryScraper:
                 confidence += 0.07
             if is_known_organization(name):
                 confidence += 0.08
+            confidence += min(
+                _product_component_relevance_score(
+                    data["evidence"],
+                    product_name=product_name,
+                    component_name=component_name,
+                ),
+                3.0,
+            ) * 0.04
+            confidence += min(
+                sum(_source_quality_weight(item) for item in data["evidence"]),
+                4.0,
+            ) * 0.03
 
             rel_weights = {
                 "SUPPLIER": 0.25,

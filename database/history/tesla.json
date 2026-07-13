@@ -870,6 +870,83 @@
         "Ganfeng Lithium",
         "Tianqi Lithium"
       ]
+    },
+    {
+      "timestamp": "2026-07-12T14:22:43.575213",
+      "mode": "llm",
+      "health_score": 66.7,
+      "health_status": "Moderate",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Gigafactory Shanghai"
+      ]
+    },
+    {
+      "timestamp": "2026-07-12T15:34:01.314261",
+      "mode": "rag",
+      "health_score": 86.8,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Gigafactory Shanghai"
+      ]
+    },
+    {
+      "timestamp": "2026-07-12T17:36:35.769593",
+      "mode": "llm",
+      "health_score": 81.1,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Gigafactory Shanghai"
+      ]
+    },
+    {
+      "timestamp": "2026-07-12T18:49:05.880066",
+      "mode": "rag",
+      "health_score": 86.8,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Gigafactory Shanghai"
+      ]
+    },
+    {
+      "timestamp": "2026-07-12T18:55:41.675954",
+      "mode": "llm",
+      "health_score": 81.1,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Gigafactory Shanghai"
+      ]
+    },
+    {
+      "timestamp": "2026-07-12T18:57:10.303721",
+      "mode": "rag",
+      "health_score": 86.8,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Gigafactory Shanghai"
+      ]
+    },
+    {
+      "timestamp": "2026-07-12T21:25:52.503919",
+      "mode": "llm",
+      "health_score": 81.1,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Gigafactory Shanghai"
+      ]
     }
   ]
 }

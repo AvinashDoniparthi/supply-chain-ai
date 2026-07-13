@@ -223,6 +223,8 @@ def supplier_agent(state: AgentState) -> AgentState:
                 data.get("confidence", 0.0),
                 raw_candidate_name,
                 current_company,
+                product_name=state.product_name if is_root_target else None,
+                component_name=state.component_name if is_root_target else None,
             )
             logger.info(evidence_reason)
             if not evidence_ok:

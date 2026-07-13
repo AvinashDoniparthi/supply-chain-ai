@@ -1,6 +1,7 @@
 import unittest
 
 from scraping.supplier_discovery import normalize_supplier_candidate_name
+from utils.identity_resolution import resolver
 
 
 class TestSupplierCandidateNormalization(unittest.TestCase):
@@ -53,6 +54,10 @@ class TestSupplierCandidateNormalization(unittest.TestCase):
         for raw_name in ["Company Company Limited", "Corporation Corporation", "Inc Inc"]:
             with self.subTest(raw_name=raw_name):
                 self.assertIsNone(normalize_supplier_candidate_name(raw_name))
+
+    def test_curated_aliases_resolve_to_canonical_names(self):
+        self.assertEqual(resolver.resolve("Samsung Display"), "Samsung Display Co., Ltd.")
+        self.assertEqual(resolver.resolve("LG Display"), "LG Display Co., Ltd.")
 
 
 if __name__ == "__main__":

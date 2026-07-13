@@ -10,11 +10,14 @@ from pathlib import Path
 from statistics import mean
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from utils.identity_resolution import resolver as identity_resolver
+
 EVALUATION_STATUS_SUCCESS = "success"
 EVALUATION_STATUS_FAILURE = "system_failure"
 EVALUATION_STATUS_INSUFFICIENT_COMPONENT_SUPPLIER_EVIDENCE = (
     "insufficient_component_supplier_evidence"
 )
+EVALUATION_STATUS_QUOTA_EXHAUSTED = "quota_exhausted"
 
 FAST_FAIL_ENV = {
     "LLM_MAX_RETRIES": "0",
@@ -22,12 +25,14 @@ FAST_FAIL_ENV = {
 }
 
 REFERENCE_DATASET_PATH = Path("database/benchmarks/product_reference_dataset.csv")
+REFERENCE_DATASET_AUDIT_PATH = Path("database/benchmarks/product_reference_dataset_audit.md")
 OUTPUT_DIR = Path("database/benchmarks/product_level")
 GLOBAL_MASTER_CSV_PATH = OUTPUT_DIR / "all_samples_master_results.csv"
 
 COMPANY_FILE_MAP = {
     "Apple": "apple_product_benchmark.csv",
     "Samsung": "samsung_product_benchmark.csv",
+    "NVIDIA": "nvidia_product_benchmark.csv",
     "Nvidia": "nvidia_product_benchmark.csv",
     "AMD": "amd_product_benchmark.csv",
     "Intel": "intel_product_benchmark.csv",
@@ -38,92 +43,53 @@ COMPANY_FILE_MAP = {
 def get_product_component_map() -> Dict[str, Dict[str, Any]]:
     return {
         "Apple": {
-            "product": "iPhone 16 Pro",
-            "components": [
-                "Application Processor",
-                "Display",
-                "Camera Sensor",
-                "Memory",
-                "Storage",
-                "Battery",
-                "Wireless Chip",
-                "RF Front-End",
-                "Glass",
-                "Assembly",
-            ],
-        },
+        "product": "iPhone 16 Pro",
+        "components": [
+            "Application Processor",
+            "Display",
+            "Camera Sensor",
+            "Assembly",
+        ],
+    },
         "Samsung": {
-            "product": "Galaxy S25 Ultra",
-            "components": [
-                "Application Processor",
-                "Display",
-                "Camera System",
-                "Memory",
-                "Storage",
-                "Battery",
-                "Wireless/RF",
-                "Glass",
-                "PCB/Mainboard",
-                "Assembly",
-            ],
-        },
-        "Nvidia": {
-            "product": "GeForce RTX 5090",
-            "components": [
-                "GPU Die",
-                "Memory",
-                "PCB",
-                "Power Delivery",
-                "Cooling System",
-                "Display Interface",
-                "Semiconductor Manufacturing",
-                "Packaging",
-                "Assembly",
-            ],
-        },
-        "AMD": {
-            "product": "Ryzen 9 9950X",
-            "components": [
-                "CPU Die",
-                "I/O Die",
-                "Packaging",
-                "Wafer Fabrication",
-                "Lithography Equipment",
-                "Substrate",
-                "Testing",
-                "Assembly",
-            ],
-        },
-        "Intel": {
-            "product": "Core Ultra 9 285K",
-            "components": [
-                "CPU Tile",
-                "GPU Tile",
-                "SoC Tile",
-                "Packaging",
-                "Wafer Fabrication",
-                "Lithography Equipment",
-                "Substrate",
-                "Testing",
-                "Assembly",
-            ],
-        },
-        "Tesla": {
-            "product": "Model 3",
-            "components": [
-                "Battery Pack",
-                "Battery Cells",
-                "Electric Motor",
-                "Power Electronics",
-                "Autopilot/Compute Hardware",
-                "Display System",
-                "Body/Chassis",
-                "Glass",
-                "Tires",
-                "Final Assembly",
-            ],
-        },
-    }
+        "product": "Galaxy S25 Ultra",
+        "components": [
+            "Application Processor",
+            "Display",
+            "Camera Sensor",
+            "Assembly",
+        ],
+    },
+    "NVIDIA": {
+        "product": "GeForce RTX 5090",
+        "components": [
+            "GPU Die",
+            "Memory (GDDR7)",
+        ],
+    },
+    "AMD": {
+        "product": "Ryzen 9 9950X",
+        "components": [
+            "CPU Die",
+            "Packaging / Test",
+        ],
+    },
+    "Intel": {
+        "product": "Core Ultra 9 285K",
+        "components": [
+            "CPU Fabrication",
+            "Packaging / Test",
+        ],
+    },
+    "Tesla": {
+        "product": "Model 3",
+        "components": [
+            "Battery Cells",
+            "Electric Motor",
+            "Battery Pack Assembly",
+        ],
+    },
+}
 
 
 PRODUCT_COMPONENT_MAP = get_product_component_map()
@@ -160,6 +126,17 @@ CSV_FIELDNAMES = [
     "recall",
     "f1_score",
     "hallucination_rate",
+    "coverage_score",
+    "tier2_discovered_suppliers",
+    "tier2_verified_suppliers",
+    "tier2_verification_status",
+    "tier2_confidence",
+    "tier2_paths",
+    "tier3_discovered_suppliers",
+    "tier3_verified_suppliers",
+    "tier3_verification_status",
+    "tier3_confidence",
+    "tier3_paths",
     "retrieval_grounding_score",
     "verification_success_rate",
     "average_confidence_score",
@@ -173,6 +150,14 @@ CSV_FIELDNAMES = [
 
 def _canonical(value: str) -> str:
     return value.strip().lower()
+
+
+def _canonical_supplier_name(value: str) -> str:
+    return identity_resolver.resolve((value or "").strip())
+
+
+def _reference_key(value: str) -> str:
+    return _canonical_supplier_name(value).strip().lower()
 
 
 def _slugify(value: str) -> str:
@@ -211,6 +196,16 @@ def _estimated_energy_consumption(runtime_seconds: float, token_usage: Optional[
     return round((runtime_seconds * 0.000015) + (token_usage * 0.000000004), 6)
 
 
+def _is_quota_error_text(value: str) -> bool:
+    text = (value or "").lower()
+    return (
+        "429" in text
+        or "quota" in text
+        or "resourceexhausted" in text
+        or "too many requests" in text
+    )
+
+
 def _retrieval_grounding_score(state: Any) -> float:
     from benchmark import _retrieval_grounding_score as benchmark_retrieval_grounding_score
 
@@ -239,40 +234,58 @@ def _benchmark_target_query(company: str, product: str, component: str) -> str:
     return " ".join(part for part in [company, product, component] if part).strip()
 
 
-def _load_reference_dataset() -> Dict[Tuple[str, str, str, int], Dict[str, Any]]:
+def _load_reference_dataset() -> List[Dict[str, Any]]:
     if not REFERENCE_DATASET_PATH.exists():
-        return {}
+        return []
 
-    rows: Dict[Tuple[str, str, str, int], Dict[str, Any]] = {}
+    rows: List[Dict[str, Any]] = []
     with REFERENCE_DATASET_PATH.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
         for row in reader:
-            company = (row.get("company") or "").strip()
-            product = (row.get("product") or "").strip()
-            component = (row.get("component") or "").strip()
-            tier_raw = (row.get("tier") or "").strip()
+            normalized = {
+                key: (row.get(key) or "").strip()
+                for key in row.keys()
+            }
+            company = normalized.get("company", "")
+            product = normalized.get("product", "")
+            component = normalized.get("component", "")
+            tier_raw = normalized.get("tier", "")
             if not company or not product or not component:
                 continue
             try:
                 tier = int(tier_raw)
             except ValueError:
                 continue
-            rows[(company, product, component, tier)] = row
+            normalized["tier"] = str(tier)
+            rows.append(normalized)
     return rows
 
 
 def _reference_suppliers_for_component(
-    reference_rows: Dict[Tuple[str, str, str, int], Dict[str, Any]],
+    reference_rows: Sequence[Dict[str, Any]],
     company: str,
     product: str,
     component: str,
 ) -> Dict[int, List[str]]:
     tiered: Dict[int, List[str]] = {1: [], 2: [], 3: []}
-    for tier in (1, 2, 3):
-        row = reference_rows.get((company, product, component, tier))
-        if not row:
+    for row in reference_rows:
+        if (
+            row.get("company") != company
+            or row.get("product") != product
+            or row.get("component") != component
+        ):
             continue
-        tiered[tier] = _split_suppliers(row.get("reference_suppliers", "") or "")
+        if row.get("verification_status") != "verified":
+            continue
+        try:
+            tier = int(row.get("tier") or 0)
+        except ValueError:
+            continue
+        if tier not in tiered:
+            continue
+        supplier_name = row.get("canonical_supplier_name") or row.get("reference_supplier") or ""
+        if supplier_name:
+            tiered[tier].append(supplier_name)
     return tiered
 
 
@@ -289,6 +302,21 @@ def _reference_supplier_union(tiered_reference: Dict[int, List[str]]) -> List[st
     return discovered
 
 
+def _reference_suppliers_by_tier(tiered_reference: Dict[int, List[str]]) -> Dict[int, List[str]]:
+    by_tier: Dict[int, List[str]] = {1: [], 2: [], 3: []}
+    for tier in (1, 2, 3):
+        suppliers = []
+        seen = set()
+        for supplier in tiered_reference.get(tier, []):
+            key = _reference_key(supplier)
+            if key in seen:
+                continue
+            seen.add(key)
+            suppliers.append(supplier)
+        by_tier[tier] = suppliers
+    return by_tier
+
+
 def _unique_supplier_names(suppliers: Sequence[Any]) -> List[str]:
     names: List[str] = []
     seen = set()
@@ -298,6 +326,22 @@ def _unique_supplier_names(suppliers: Sequence[Any]) -> List[str]:
         if not name:
             continue
         key = _canonical(name)
+        if key in seen:
+            continue
+        seen.add(key)
+        names.append(name)
+    return names
+
+
+def _unique_canonical_supplier_names(suppliers: Sequence[Any]) -> List[str]:
+    names: List[str] = []
+    seen = set()
+    for supplier in suppliers:
+        name = getattr(supplier, "canonical_name", None) or getattr(supplier, "name", "")
+        name = _canonical_supplier_name(str(name).strip())
+        if not name:
+            continue
+        key = _reference_key(name)
         if key in seen:
             continue
         seen.add(key)
@@ -352,23 +396,103 @@ def _discovered_supplier_set(state: Any) -> List[str]:
     return _unique_supplier_names(getattr(state, "suppliers", []) or [])
 
 
+def _discovered_supplier_set_by_tier(state: Any) -> Dict[int, List[str]]:
+    suppliers = list(getattr(state, "suppliers", []) or [])
+    return {
+        1: _unique_canonical_supplier_names(
+            [supplier for supplier in suppliers if int(getattr(supplier, "tier", 0) or 0) == 1]
+        ),
+        2: _unique_canonical_supplier_names(
+            [supplier for supplier in suppliers if int(getattr(supplier, "tier", 0) or 0) == 2]
+        ),
+        3: _unique_canonical_supplier_names(
+            [supplier for supplier in suppliers if int(getattr(supplier, "tier", 0) or 0) >= 3]
+        ),
+    }
+
+
+def _tier_qualitative_details(state: Any, tier: int) -> Dict[str, Any]:
+    suppliers = [
+        supplier
+        for supplier in getattr(state, "suppliers", []) or []
+        if int(getattr(supplier, "tier", 0) or 0) == tier
+    ]
+    verification_map = {
+        _reference_key(getattr(result, "supplier_name", "")): result
+        for result in getattr(state, "verification_results", []) or []
+    }
+    confidence_map = {
+        _reference_key(getattr(score, "supplier_name", "")): score
+        for score in getattr(state, "supplier_confidence_scores", []) or []
+    }
+
+    discovered: List[str] = []
+    verified: List[str] = []
+    confidence_values: List[float] = []
+    paths: List[str] = []
+
+    for supplier in suppliers:
+        canonical_name = _canonical_supplier_name(
+            str(getattr(supplier, "canonical_name", None) or getattr(supplier, "name", ""))
+        )
+        discovered.append(canonical_name)
+        key = _reference_key(canonical_name)
+        verification = verification_map.get(key)
+        if verification and getattr(verification, "verified", False):
+            verified.append(canonical_name)
+        confidence = confidence_map.get(key)
+        if confidence is not None:
+            confidence_values.append(float(getattr(confidence, "final_confidence", 0.0) or 0.0))
+        else:
+            confidence_values.append(float(getattr(supplier, "discovery_confidence", 0.0) or 0.0))
+        relationship_path = getattr(supplier, "relationship_path", []) or []
+        if relationship_path:
+            paths.append(" -> ".join(str(part) for part in relationship_path if part))
+
+    verification_status = "not_available"
+    if discovered:
+        verification_status = "verified" if verified else "unverified"
+        if verified and len(verified) < len(discovered):
+            verification_status = "partially_verified"
+
+    confidence = (
+        round(mean(confidence_values) * 100.0, 2)
+        if confidence_values
+        else "not_available"
+    )
+
+    prefix = f"tier{tier}"
+    return {
+        f"{prefix}_discovered_suppliers": "; ".join(discovered) if discovered else "not_available",
+        f"{prefix}_verified_suppliers": "; ".join(verified) if verified else "not_available",
+        f"{prefix}_verification_status": verification_status,
+        f"{prefix}_confidence": confidence,
+        f"{prefix}_paths": "; ".join(paths) if paths else "not_available",
+    }
+
+
 def _reference_metrics(
     discovered: Sequence[str],
     reference: Sequence[str],
 ) -> Dict[str, Any]:
-    discovered_set = {_canonical(name) for name in discovered if name}
-    reference_set = {_canonical(name) for name in reference if name}
+    discovered_set = {_reference_key(name) for name in discovered if name}
+    reference_set = {_reference_key(name) for name in reference if name}
 
     if not reference_set:
         return {
+            "true_positives": 0,
+            "false_positives": 0,
+            "false_negatives": 0,
             "precision": "not_available",
             "recall": "not_available",
             "f1_score": "not_available",
             "hallucination_rate": "not_available",
+            "coverage_score": "not_available",
         }
 
     true_positives = discovered_set & reference_set
     false_positives = discovered_set - reference_set
+    false_negatives = reference_set - discovered_set
 
     precision = len(true_positives) / len(discovered_set) if discovered_set else 0.0
     recall = len(true_positives) / len(reference_set) if reference_set else 0.0
@@ -376,11 +500,22 @@ def _reference_metrics(
     hallucination_rate = len(false_positives) / len(discovered_set) if discovered_set else 0.0
 
     return {
+        "true_positives": len(true_positives),
+        "false_positives": len(false_positives),
+        "false_negatives": len(false_negatives),
         "precision": round(precision * 100.0, 2),
         "recall": round(recall * 100.0, 2),
         "f1_score": round(f1_score * 100.0, 2),
         "hallucination_rate": round(hallucination_rate * 100.0, 2),
+        "coverage_score": round(recall * 100.0, 2),
     }
+
+
+def _tier1_reference_metrics(
+    discovered: Sequence[str],
+    reference: Sequence[str],
+) -> Dict[str, Any]:
+    return _reference_metrics(discovered, reference)
 
 
 def _evaluation_note(
@@ -388,7 +523,10 @@ def _evaluation_note(
     state: Any | None,
     error: Optional[str],
     reference_suppliers: Sequence[str],
+    quota_exhausted: bool = False,
 ) -> str:
+    if quota_exhausted:
+        return "Quota exhausted during analysis; partial results captured."
     if error:
         return f"Pipeline failed due to: {error}"
     if not reference_suppliers:
@@ -413,6 +551,7 @@ def calculate_component_metrics(
     runtime_seconds: float,
     error: Optional[str],
     reference_suppliers: Sequence[str],
+    quota_exhausted: bool = False,
 ) -> Dict[str, Any]:
     supplier_data = extract_suppliers_by_tier(state) if state is not None else {
         "tier1_suppliers": "",
@@ -431,18 +570,20 @@ def calculate_component_metrics(
     }
 
     discovered_suppliers = _discovered_supplier_set(state) if state is not None else []
-    reference_metrics = _reference_metrics(discovered_suppliers, reference_suppliers)
+    reference_metrics = _tier1_reference_metrics(discovered_suppliers, reference_suppliers)
     component_evidence_missing = bool(
         component
         and state is not None
         and not getattr(state, "suppliers", [])
         and not error
     )
-    evaluation_status = (
-        EVALUATION_STATUS_INSUFFICIENT_COMPONENT_SUPPLIER_EVIDENCE
-        if component_evidence_missing
-        else (EVALUATION_STATUS_FAILURE if error else EVALUATION_STATUS_SUCCESS)
-    )
+    evaluation_status = EVALUATION_STATUS_SUCCESS
+    if quota_exhausted:
+        evaluation_status = EVALUATION_STATUS_QUOTA_EXHAUSTED
+    elif component_evidence_missing:
+        evaluation_status = EVALUATION_STATUS_INSUFFICIENT_COMPONENT_SUPPLIER_EVIDENCE
+    elif error:
+        evaluation_status = EVALUATION_STATUS_FAILURE
 
     token_usage = _estimated_token_usage(state) if state is not None else None
     retrieval_grounding_score = _retrieval_grounding_score(state) if state is not None else None
@@ -453,9 +594,12 @@ def calculate_component_metrics(
     )
 
     evaluation_note = _evaluation_note(
-        state=state, error=error, reference_suppliers=reference_suppliers
+        state=state,
+        error=error,
+        reference_suppliers=reference_suppliers,
+        quota_exhausted=quota_exhausted,
     )
-    if component_evidence_missing:
+    if component_evidence_missing and not quota_exhausted:
         evaluation_note = "No component-specific supplier evidence found."
         supplier_data = {
             **supplier_data,
@@ -466,6 +610,21 @@ def calculate_component_metrics(
             "tier2_count": 0,
             "tier3_count": 0,
         }
+
+    tier2_details = _tier_qualitative_details(state, 2) if state is not None else {
+        "tier2_discovered_suppliers": "not_available",
+        "tier2_verified_suppliers": "not_available",
+        "tier2_verification_status": "not_available",
+        "tier2_confidence": "not_available",
+        "tier2_paths": "not_available",
+    }
+    tier3_details = _tier_qualitative_details(state, 3) if state is not None else {
+        "tier3_discovered_suppliers": "not_available",
+        "tier3_verified_suppliers": "not_available",
+        "tier3_verification_status": "not_available",
+        "tier3_confidence": "not_available",
+        "tier3_paths": "not_available",
+    }
 
     return {
         "company": company,
@@ -495,6 +654,9 @@ def calculate_component_metrics(
         "recall": reference_metrics["recall"],
         "f1_score": reference_metrics["f1_score"],
         "hallucination_rate": reference_metrics["hallucination_rate"],
+        "coverage_score": reference_metrics["coverage_score"],
+        **tier2_details,
+        **tier3_details,
         "retrieval_grounding_score": retrieval_grounding_score,
         "verification_success_rate": verification_success_rate,
         "average_confidence_score": supplier_data["average_confidence_score"],
@@ -523,10 +685,12 @@ def _run_single(
     max_depth: int,
     skip_news: bool,
     reference_suppliers: Sequence[str],
+    fast_benchmark: bool = False,
 ) -> Dict[str, Any]:
     started = time.perf_counter()
     state = None
     error_message = ""
+    quota_exhausted = False
     timestamp = datetime.now(timezone.utc).isoformat()
     try:
         state = _run_analysis(
@@ -536,11 +700,16 @@ def _run_single(
             benchmark_target_query=_benchmark_target_query(company, product, component),
             max_depth=max_depth,
             skip_news=skip_news,
+            fast_benchmark=fast_benchmark,
             execution_mode=mode,
         )
     except Exception as exc:
         error_message = f"{type(exc).__name__}: {exc}"
+        quota_exhausted = _is_quota_error_text(error_message)
+        state = None
     runtime_seconds = time.perf_counter() - started
+    if state is not None:
+        quota_exhausted = quota_exhausted or bool(getattr(state, "quota_exhausted", False))
     return calculate_component_metrics(
         company=company,
         product=product,
@@ -555,6 +724,7 @@ def _run_single(
         runtime_seconds=runtime_seconds,
         error=error_message or None,
         reference_suppliers=reference_suppliers,
+        quota_exhausted=quota_exhausted,
     )
 
 
@@ -670,9 +840,13 @@ def write_sample_summary(
     modes: Sequence[str],
     max_depth: int,
     skip_news: bool,
+    fast_benchmark: bool,
 ) -> Path:
     successful_rows = [row for row in rows if row.get("evaluation_status") == EVALUATION_STATUS_SUCCESS]
     failed_rows = [row for row in rows if row.get("evaluation_status") == EVALUATION_STATUS_FAILURE]
+    quota_rows = [row for row in rows if row.get("evaluation_status") == EVALUATION_STATUS_QUOTA_EXHAUSTED]
+    tier2_rows = [row for row in rows if row.get("tier2_discovered_suppliers") not in ("", "not_available")]
+    tier3_rows = [row for row in rows if row.get("tier3_discovered_suppliers") not in ("", "not_available")]
     lines = [
         "# Product Benchmark Sample Summary",
         "",
@@ -683,9 +857,13 @@ def write_sample_summary(
         f"- Modes: {', '.join(modes)}",
         f"- Max Depth: {max_depth}",
         f"- Skip News: {skip_news}",
+        f"- Fast Benchmark: {fast_benchmark}",
         f"- Total rows: {len(rows)}",
         f"- Successful rows: {len(successful_rows)}",
         f"- Failed rows: {len(failed_rows)}",
+        f"- Quota-exhausted rows: {len(quota_rows)}",
+        "",
+        "Quantitative evaluation was performed only for Tier 1 supplier relationships because reliable public ground-truth data is available primarily at Tier 1. Tier 2 and Tier 3 supplier relationships were evaluated qualitatively through discovered supply-chain paths, verification status, and confidence scores.",
         "",
         "## Per-Company Rows",
     ]
@@ -699,6 +877,21 @@ def write_sample_summary(
             lines.append(
                 f"- {row['company']} / {row['component']} / {row['mode']}: {row.get('errors', '') or 'Unknown error'}"
             )
+
+    if quota_rows:
+        lines.extend(["", "## Quota Exhausted"])
+        for row in quota_rows:
+            lines.append(
+                f"- {row['company']} / {row['component']} / {row['mode']}: {row.get('errors', '') or 'Quota exhausted'}"
+            )
+
+    lines.extend(["", "## Tier 2 and Tier 3 Discovery Statistics"])
+    lines.append(f"- Tier 2 rows with discovery output: {len(tier2_rows)}")
+    lines.append(f"- Tier 3 rows with discovery output: {len(tier3_rows)}")
+    if tier2_rows:
+        lines.append("- Tier 2 output includes discovered suppliers, verified suppliers, confidence, and paths.")
+    if tier3_rows:
+        lines.append("- Tier 3 output includes discovered suppliers, verified suppliers, confidence, and paths.")
 
     warnings = [
         _component_supplier_uniformity_warning(_rows_by_company(rows, company))
@@ -775,6 +968,7 @@ def _run_sample_benchmark(
     max_depth: int,
     skip_news: bool,
     overwrite: bool,
+    fast_benchmark: bool = False,
 ) -> Tuple[List[Dict[str, Any]], Path]:
     sample_dir = get_sample_output_dir(sample_id, sample_label)
     if sample_dir.exists() and not overwrite:
@@ -793,7 +987,7 @@ def _run_sample_benchmark(
                 tiered_reference = _reference_suppliers_for_component(
                     reference_rows, company, product, component
                 )
-                reference_suppliers = _reference_supplier_union(tiered_reference)
+                reference_suppliers = list(tiered_reference.get(1, []))
                 for mode in modes:
                     rows.append(
                         _run_single(
@@ -805,6 +999,7 @@ def _run_sample_benchmark(
                             mode=mode,
                             max_depth=max_depth,
                             skip_news=skip_news,
+                            fast_benchmark=fast_benchmark,
                             reference_suppliers=reference_suppliers,
                         )
                     )
@@ -818,6 +1013,140 @@ def _run_sample_benchmark(
     return rows, sample_dir
 
 
+def generate_reference_dataset_audit(
+    reference_rows: Sequence[Dict[str, Any]] | None = None,
+) -> str:
+    rows = list(reference_rows if reference_rows is not None else _load_reference_dataset())
+    total_rows = len(rows)
+    verified_rows = [row for row in rows if row.get("verification_status") == "verified"]
+    partially_verified_rows = [row for row in rows if row.get("verification_status") == "partially_verified"]
+    insufficient_rows = [
+        row for row in rows if row.get("verification_status") == "insufficient_public_evidence"
+    ]
+
+    def _count_by(field: str) -> Dict[str, int]:
+        counts: Dict[str, int] = {}
+        for row in rows:
+            key = row.get(field) or "not_available"
+            counts[key] = counts.get(key, 0) + 1
+        return dict(sorted(counts.items(), key=lambda item: item[0]))
+
+    duplicate_keys: Dict[Tuple[str, str, str, str], int] = {}
+    for row in rows:
+        key = (
+            row.get("company", ""),
+            row.get("product", ""),
+            row.get("component", ""),
+            row.get("tier", ""),
+        )
+        duplicate_keys[key] = duplicate_keys.get(key, 0) + 1
+
+    duplicate_relationships = [
+        f"{company} | {product} | {component} | tier {tier} ({count} rows)"
+        for (company, product, component, tier), count in sorted(duplicate_keys.items())
+        if count > 1
+    ]
+
+    missing_source_urls = [
+        row
+        for row in verified_rows
+        if not row.get("source_url") or row.get("source_url") == "not_available"
+    ]
+    missing_parent_rows = [
+        row
+        for row in rows
+        if row.get("tier") in {"2", "3"}
+        and (not row.get("parent_supplier") or row.get("parent_supplier") == "not_available")
+    ]
+    incomplete_paths = [
+        row
+        for row in rows
+        if row.get("tier") in {"2", "3"}
+        and (not row.get("relationship_path") or row.get("relationship_path") == "not_available")
+    ]
+    warnings = [
+        row
+        for row in verified_rows
+        if row.get("verification_status") == "verified"
+        and row.get("relationship_type") == "supplier"
+        and row.get("source_type") != "official_product_page"
+    ]
+
+    lines = [
+        "# Product Reference Dataset Audit",
+        "",
+        f"- Total reference rows: {total_rows}",
+        f"- Verified rows: {len(verified_rows)}",
+        f"- Partially verified rows: {len(partially_verified_rows)}",
+        f"- Insufficient-evidence rows: {len(insufficient_rows)}",
+        "",
+        "## Rows Per Company",
+    ]
+    for company, count in _count_by("company").items():
+        lines.append(f"- {company}: {count}")
+    lines.extend(["", "## Rows Per Product"])
+    for product, count in _count_by("product").items():
+        lines.append(f"- {product}: {count}")
+    lines.extend(["", "## Rows Per Component"])
+    for component, count in _count_by("component").items():
+        lines.append(f"- {component}: {count}")
+    lines.extend(["", "## Rows Per Tier"])
+    for tier, count in _count_by("tier").items():
+        lines.append(f"- Tier {tier}: {count}")
+
+    source_summary: Dict[Tuple[str, str], int] = {}
+    source_details: List[str] = []
+    for row in verified_rows:
+        key = (row.get("source_title", "not_available"), row.get("source_url", "not_available"))
+        source_summary[key] = source_summary.get(key, 0) + 1
+    lines.extend(["", "## Sources Used"])
+    for (title, url), count in sorted(source_summary.items(), key=lambda item: (item[0][0], item[0][1])):
+        lines.append(f"- {title} | {url} | {count} rows")
+        source_details.append(url)
+
+    lines.extend(["", "## Data Quality"])
+    lines.append(f"- Duplicate relationships: {len(duplicate_relationships)}")
+    lines.append(f"- Missing source URLs: {len(missing_source_urls)}")
+    lines.append(f"- Missing parent relationships: {len(missing_parent_rows)}")
+    lines.append(f"- Tier 2/3 rows with incomplete paths: {len(incomplete_paths)}")
+
+    if duplicate_relationships:
+        lines.extend(["", "## Duplicate Relationships"])
+        lines.extend(f"- {item}" for item in duplicate_relationships)
+
+    if missing_source_urls:
+        lines.extend(["", "## Missing Source URLs"])
+        for row in missing_source_urls:
+            lines.append(
+                f"- {row.get('company')} / {row.get('product')} / {row.get('component')} / tier {row.get('tier')}"
+            )
+
+    if missing_parent_rows:
+        lines.extend(["", "## Missing Parent Relationships"])
+        for row in missing_parent_rows:
+            lines.append(
+                f"- {row.get('company')} / {row.get('product')} / {row.get('component')} / tier {row.get('tier')}"
+            )
+
+    if incomplete_paths:
+        lines.extend(["", "## Incomplete Tier Paths"])
+        for row in incomplete_paths:
+            lines.append(
+                f"- {row.get('company')} / {row.get('product')} / {row.get('component')} / tier {row.get('tier')}"
+            )
+
+    lines.extend(["", "## Warning"])
+    if warnings:
+        for row in warnings:
+            lines.append(
+                f"- Manual review: {row.get('company')} / {row.get('product')} / {row.get('component')} relies on {row.get('source_type')} evidence from {row.get('source_title')}."
+            )
+    else:
+        lines.append("- No specific rows flagged for manual review.")
+
+    return "\n".join(lines)
+
+
 def run_product_benchmark(
     *,
     sample_id: int,
@@ -828,6 +1157,7 @@ def run_product_benchmark(
     max_depth: int,
     skip_news: bool,
     overwrite: bool,
+    fast_benchmark: bool = False,
 ) -> Tuple[List[Dict[str, Any]], Path, Path, Path, List[Path]]:
     rows, sample_dir = _run_sample_benchmark(
         sample_id=sample_id,
@@ -837,6 +1167,7 @@ def run_product_benchmark(
         modes=modes,
         max_depth=max_depth,
         skip_news=skip_news,
+        fast_benchmark=fast_benchmark,
         overwrite=overwrite,
     )
 
@@ -855,6 +1186,7 @@ def run_product_benchmark(
         modes=modes,
         max_depth=max_depth,
         skip_news=skip_news,
+        fast_benchmark=fast_benchmark,
     )
     global_master_csv_path = rebuild_all_samples_master()
 
@@ -908,6 +1240,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Overwrite an existing sample folder for the same sample ID and label.",
     )
+    parser.add_argument(
+        "--fast-benchmark",
+        action="store_true",
+        help="Prefer cache and heuristic paths, and stop on quota errors without retry loops.",
+    )
     parser.set_defaults(skip_news=DEFAULT_SKIP_NEWS)
     return parser
 
@@ -930,6 +1267,7 @@ def main() -> int:
             modes=args.modes,
             max_depth=args.max_depth,
             skip_news=args.skip_news,
+            fast_benchmark=args.fast_benchmark,
             overwrite=args.overwrite,
         )
     except FileExistsError as exc:

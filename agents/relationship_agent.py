@@ -18,6 +18,9 @@ from utils.runtime_controls import (
     can_consume_llm_call,
     emit_skip_once,
     finish_stage,
+    is_fast_benchmark,
+    is_quota_error,
+    mark_quota_exhausted,
     set_stage_status,
     start_stage,
     stop_if_timed_out,
@@ -281,7 +284,8 @@ def relationship_agent(state: AgentState) -> AgentState:
         return state
 
     fast_mode = state.skip_risk and state.max_depth <= 1
-    if fast_mode:
+    benchmark_fast_mode = is_fast_benchmark(state)
+    if fast_mode or benchmark_fast_mode:
         emit_skip_once(
             state,
             "relationship_llm",
@@ -360,6 +364,11 @@ def relationship_agent(state: AgentState) -> AgentState:
                 candidate_name,
                 exc,
             )
+            if is_quota_error(exc):
+                mark_quota_exhausted(
+                    state,
+                    f"Relationship classification quota exhausted for {candidate_name}: {exc}",
+                )
             result = HeuristicRelationshipClassifier().classify(
                 target_company=relationship_source,
                 candidate_entity=candidate_name,

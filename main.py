@@ -12,7 +12,7 @@ from utils.output import (
     mode_from_args,
     render_final_report,
 )
-from utils.runtime_controls import finish_all_stages
+from utils.runtime_controls import finish_all_stages, is_quota_error, mark_quota_exhausted
 from workflows.supply_chain_workflow import supply_chain_app
 
 logger = logging.getLogger(__name__)
@@ -32,6 +32,9 @@ def run_analysis(
     supplier_cache_enabled: bool = True,
     refresh_supplier_cache: bool = False,
     supplier_cache_only: bool = False,
+    max_retries: int = 2,
+    max_llm_calls: int = 30,
+    fast_benchmark: bool = False,
     execution_mode: str = "llm",
 ):
     """
@@ -54,17 +57,22 @@ def run_analysis(
         max_depth=max_depth,
         max_candidates_per_company=max_candidates_per_company,
         timeout_seconds=timeout_seconds,
+        max_retries=0 if fast_benchmark else max_retries,
+        max_llm_calls=0 if fast_benchmark else max_llm_calls,
         skip_risk=skip_risk,
         skip_news=skip_news,
         supplier_cache_enabled=supplier_cache_enabled,
         refresh_supplier_cache=refresh_supplier_cache,
         supplier_cache_only=supplier_cache_only,
+        benchmark_fast_mode=fast_benchmark,
+        quota_exhausted=False,
         execution_mode=execution_mode,
         run_metadata={
             "mode": execution_mode,
             "product_name": product,
             "component_name": component,
             "benchmark_target_query": benchmark_query,
+            "fast_benchmark": fast_benchmark,
         },
     )
 
@@ -100,6 +108,9 @@ def run_analysis(
         logger.exception("Error during graph execution")
         emit(f"Analysis failed: {str(e)}")
         finish_all_stages(initial_state)
+        if fast_benchmark and is_quota_error(e):
+            mark_quota_exhausted(initial_state, str(e))
+            return initial_state
         raise
 
 

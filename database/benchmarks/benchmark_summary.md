@@ -1,6 +1,7 @@
 # Thesis Benchmark Summary
 
 This benchmark runs the full supply-chain intelligence pipeline in both `llm` and `rag` modes with identical settings (`max_depth=3`, `skip_news=True`).
+Quantitative evaluation was performed only for Tier 1 supplier relationships because reliable public ground-truth data is available primarily at Tier 1. Tier 2 and Tier 3 supplier relationships are reported qualitatively through discovery statistics and verification context.
 
 ## Execution
 
@@ -64,6 +65,7 @@ This benchmark runs the full supply-chain intelligence pipeline in both `llm` an
 | Estimated API Cost | `token_usage / 1000 * cost_per_1k_tokens` | Uses the fixed benchmark cost proxy. |
 | Estimated Energy Consumption | `runtime_seconds * 0.000015 + token_usage * 0.000000004` | Hybrid runtime-plus-token proxy; higher token usage increases energy. |
 | Coverage Score | `recall * 100` | Tier-1 coverage against the benchmark reference set. |
+| Tier 2 / Tier 3 Statistics | `tier2_count`, `tier3_count` | Qualitative discovery statistics, not used for TP/FP/FN scoring. |
 | Tier Discovery Effectiveness | `100 * (0.7 * weighted_depth_ratio + 0.3 * precision)` | Weighted depth ratio uses `tier1 + 0.5*tier2 + 0.25*tier3`. |
 
 Reference policy: benchmark ground truth comes from repository graphs/history where available, plus static/manual benchmark priors for missing companies. All 15 requested companies are included in the run matrix.

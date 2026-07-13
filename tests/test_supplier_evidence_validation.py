@@ -67,6 +67,44 @@ class TestSupplierEvidenceValidation(unittest.TestCase):
         )
         self.assertTrue(accepted, reason)
 
+    def test_component_specific_display_evidence_is_accepted(self):
+        evidence = [
+            {
+                "title": "Apple iPhone 16 Pro teardown",
+                "snippet": "Apple's iPhone 16 Pro uses an OLED panel supplied by Samsung Display.",
+            }
+        ]
+
+        accepted, reason = supplier_evidence_is_strong(
+            evidence,
+            tier=1,
+            confidence=0.74,
+            candidate_name="Samsung Display Co., Ltd.",
+            source_company="Apple",
+            product_name="iPhone 16 Pro",
+            component_name="Display",
+        )
+        self.assertTrue(accepted, reason)
+
+    def test_component_specific_camera_sensor_evidence_is_accepted(self):
+        evidence = [
+            {
+                "title": "Apple iPhone bill of materials",
+                "snippet": "Apple iPhone image sensor components are supplied by Sony Semiconductor Solutions.",
+            }
+        ]
+
+        accepted, reason = supplier_evidence_is_strong(
+            evidence,
+            tier=1,
+            confidence=0.73,
+            candidate_name="Sony Semiconductor Solutions",
+            source_company="Apple",
+            product_name="iPhone 16 Pro",
+            component_name="Camera Sensor",
+        )
+        self.assertTrue(accepted, reason)
+
 
 if __name__ == "__main__":
     unittest.main()

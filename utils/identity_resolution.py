@@ -101,6 +101,14 @@ IDENTITY_MAP = {
     "Sony Semiconductor": "Sony Semiconductor Solutions",
     "Sony Semiconductor Solutions": "Sony Semiconductor Solutions",
     "Sony Semiconductor Solutions Corporation": "Sony Semiconductor Solutions",
+    "Samsung Display": "Samsung Display Co., Ltd.",
+    "Samsung Display Co": "Samsung Display Co., Ltd.",
+    "Samsung Display Co Ltd": "Samsung Display Co., Ltd.",
+    "Samsung Display Co., Ltd.": "Samsung Display Co., Ltd.",
+    "LG Display": "LG Display Co., Ltd.",
+    "LG Display Co": "LG Display Co., Ltd.",
+    "LG Display Co Ltd": "LG Display Co., Ltd.",
+    "LG Display Co., Ltd.": "LG Display Co., Ltd.",
     "Taiwan Semiconductor Manufacturing Company": "Taiwan Semiconductor Manufacturing Company",
     "Taiwan Semiconductor Manufacturing Company Limited": "Taiwan Semiconductor Manufacturing Company",
     "Dell": "Dell Technologies",
@@ -120,6 +128,8 @@ DISPLAY_NAMES = {
     "Corning Inc.": "Corning",
     "Murata Manufacturing": "Murata Manufacturing",
     "Sony Semiconductor Solutions": "Sony Semiconductor Solutions",
+    "Samsung Display Co., Ltd.": "Samsung Display",
+    "LG Display Co., Ltd.": "LG Display",
 }
 
 # Common corporate suffixes for normalization

@@ -217,6 +217,14 @@ class AgentState(BaseModel):
     supplier_cache_only: bool = Field(
         default=False, description="Only use supplier discovery cache; do not run live discovery"
     )
+    benchmark_fast_mode: bool = Field(
+        default=False,
+        description="Enable low-API benchmark behavior that prefers cache and heuristic paths",
+    )
+    quota_exhausted: bool = Field(
+        default=False,
+        description="Marks that a quota or rate-limit error was encountered during the run",
+    )
     execution_mode: str = Field(
         default="llm", description="Execution mode: llm or rag"
     )
