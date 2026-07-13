@@ -117,6 +117,10 @@ def _company_key(company: str) -> str:
     return re.sub(r"\s+", " ", (company or "").strip()).lower()
 
 
+def _context_key(value: Optional[str]) -> str:
+    return re.sub(r"\s+", " ", (value or "").strip()).lower()
+
+
 def _clean_metadata(metadata: Dict[str, Any]) -> Dict[str, Any]:
     return {key: value for key, value in metadata.items() if value is not None}
 
@@ -138,10 +142,18 @@ def _document(
     metadata: Dict[str, Any] = {
         "company": company,
         "company_key": _company_key(company),
+        "product": "not_available",
+        "product_key": "not_available",
+        "component": "not_available",
+        "component_key": "not_available",
         "doc_type": doc_type,
         "source_type": source_type,
-        "supplier": supplier,
-        "tier": tier,
+        "source": source_type,
+        "publisher": "analysis_pipeline" if source_type == SOURCE_ANALYSIS_STATE else "knowledge_base",
+        "confidence": 0.0,
+        "date": "not_available",
+        "supplier": supplier or "not_available",
+        "tier": int(tier or 0),
     }
     if extra_metadata:
         metadata.update(extra_metadata)
@@ -166,6 +178,14 @@ def _evidence_text(evidence: Iterable[Dict[str, Any]]) -> str:
 
 def _build_documents(state: Any) -> List[Document]:
     company = _company_name(state)
+    product = getattr(state, "product_name", None)
+    component = getattr(state, "component_name", None)
+    context_metadata = {
+        "product": product or "not_available",
+        "product_key": _context_key(product) or "not_available",
+        "component": component or "not_available",
+        "component_key": _context_key(component) or "not_available",
+    }
     documents: List[Document] = []
 
     company_info = getattr(state, "company", None)
@@ -184,6 +204,7 @@ def _build_documents(state: Any) -> List[Document]:
                     ]
                 ),
                 source_type=SOURCE_ANALYSIS_STATE,
+                extra_metadata=context_metadata,
             )
         )
 
@@ -211,6 +232,10 @@ def _build_documents(state: Any) -> List[Document]:
                 supplier=supplier.name,
                 tier=supplier.tier,
                 source_type=SOURCE_ANALYSIS_STATE,
+                extra_metadata={
+                    **context_metadata,
+                    "confidence": float(getattr(supplier, "discovery_confidence", 0.0) or 0.0),
+                },
             )
         )
 
@@ -232,6 +257,7 @@ def _build_documents(state: Any) -> List[Document]:
                 ),
                 supplier=relationship.candidate_company,
                 source_type=SOURCE_ANALYSIS_STATE,
+                extra_metadata=context_metadata,
             )
         )
 
@@ -258,6 +284,7 @@ def _build_documents(state: Any) -> List[Document]:
                 ),
                 supplier=verification.supplier_name,
                 source_type=SOURCE_ANALYSIS_STATE,
+                extra_metadata=context_metadata,
             )
         )
 
@@ -384,7 +411,11 @@ def _build_documents(state: Any) -> List[Document]:
             )
         )
 
-    return [document for document in documents if document is not None]
+    valid_documents = [document for document in documents if document is not None]
+    for document in valid_documents:
+        if document.metadata.get("source_type") == SOURCE_ANALYSIS_STATE:
+            document.metadata.update(context_metadata)
+    return valid_documents
 
 
 def _document_id(company: str, document: Document, index: int) -> str:
@@ -395,6 +426,8 @@ def _document_id(company: str, document: Document, index: int) -> str:
             str(document.metadata.get("doc_type", "")),
             str(document.metadata.get("supplier", "")),
             str(document.metadata.get("tier", "")),
+            str(document.metadata.get("product_key", "")),
+            str(document.metadata.get("component_key", "")),
             str(document.metadata.get("path", "")),
             str(document.metadata.get("file_name", "")),
             document.page_content,
@@ -410,19 +443,23 @@ def _search_documents(
     k: int,
     company_key: Optional[str] = None,
     source_type: Optional[str] = None,
+    product_key: Optional[str] = None,
+    component_key: Optional[str] = None,
 ) -> List[Document]:
+    clauses: List[Dict[str, Any]] = []
+    if company_key:
+        clauses.append({"company_key": company_key})
+    if source_type:
+        clauses.append({"source_type": source_type})
+    if product_key:
+        clauses.append({"product_key": product_key})
+    if component_key:
+        clauses.append({"component_key": component_key})
     search_filter: Dict[str, Any] = {}
-    if company_key and source_type:
-        search_filter = {
-            "$and": [
-                {"company_key": company_key},
-                {"source_type": source_type},
-            ]
-        }
-    elif company_key:
-        search_filter["company_key"] = company_key
-    elif source_type:
-        search_filter["source_type"] = source_type
+    if len(clauses) == 1:
+        search_filter = clauses[0]
+    elif clauses:
+        search_filter = {"$and": clauses}
 
     kwargs: Dict[str, Any] = {"k": k}
     if search_filter:
@@ -430,13 +467,13 @@ def _search_documents(
     try:
         documents = vector_store.similarity_search(query, **kwargs)
     except Exception as exc:
-        logger.debug(
-            "Filtered retrieval failed for company_key=%s source_type=%s: %s",
-            company_key,
-            source_type,
-            exc,
-        )
-        return []
+        raise RuntimeError(
+            "Filtered retrieval failed for "
+            f"company={company_key or 'not_available'}, "
+            f"product={product_key or 'not_available'}, "
+            f"component={component_key or 'not_available'}, "
+            f"source={source_type or 'not_available'}: {exc}"
+        ) from exc
 
     if not company_key:
         return documents
@@ -451,6 +488,20 @@ def _search_documents(
                 metadata.get("company_key") or metadata.get("company"),
             )
             continue
+        if product_key and _context_key(str(metadata.get("product_key") or metadata.get("product") or "")) != product_key:
+            logger.warning(
+                "Rejected cross-product RAG chunk: requested=%s returned=%s",
+                product_key,
+                metadata.get("product_key") or metadata.get("product"),
+            )
+            continue
+        if component_key and _context_key(str(metadata.get("component_key") or metadata.get("component") or "")) != component_key:
+            logger.warning(
+                "Rejected cross-component RAG chunk: requested=%s returned=%s",
+                component_key,
+                metadata.get("component_key") or metadata.get("component"),
+            )
+            continue
         validated.append(document)
     return validated
 
@@ -462,6 +513,8 @@ def _retrieve_documents(
     k: int = 8,
     source_priority: Optional[Sequence[str]] = None,
     provider: Optional[str] = None,
+    product: Optional[str] = None,
+    component: Optional[str] = None,
 ) -> List[Document]:
     vector_store = _vector_store(provider=provider)
     collection = getattr(vector_store, "_collection", None)
@@ -473,6 +526,8 @@ def _retrieve_documents(
             logger.debug("Unable to count Chroma collection before search.", exc_info=True)
 
     company_key = _company_key(company)
+    product_key = _context_key(product) or None
+    component_key = _context_key(component) or None
     logger.debug("RAG retrieval query: %s", query)
     logger.debug("RAG retrieval requested company filter: %s", company_key)
     logger.debug("RAG Chroma collection count before search: %s", collection_count)
@@ -503,6 +558,8 @@ def _retrieve_documents(
             k=remaining,
             company_key=company_key or None,
             source_type=source_type,
+            product_key=product_key,
+            component_key=component_key,
         )
         for document in source_documents:
             content = (document.page_content or "").strip()
@@ -564,6 +621,8 @@ def retrieve_context(
     k: int = 8,
     source_priority: Optional[Sequence[str]] = None,
     provider: Optional[str] = None,
+    product: Optional[str] = None,
+    component: Optional[str] = None,
 ) -> List[str]:
     """Return top-k relevant text chunks for a company, or [] if retrieval is unavailable."""
     try:
@@ -573,6 +632,8 @@ def retrieve_context(
             k=k,
             source_priority=source_priority,
             provider=provider,
+            product=product,
+            component=component,
         )
         logger.debug("RAG retrieval results: %s", len(documents))
     except Exception as exc:
@@ -588,6 +649,9 @@ def retrieve_context_documents(
     k: int = 8,
     source_priority: Optional[Sequence[str]] = None,
     provider: Optional[str] = None,
+    product: Optional[str] = None,
+    component: Optional[str] = None,
+    raise_on_error: bool = False,
 ) -> List[Document]:
     try:
         return _retrieve_documents(
@@ -596,9 +660,13 @@ def retrieve_context_documents(
             k=k,
             source_priority=source_priority,
             provider=provider,
+            product=product,
+            component=component,
         )
     except Exception as exc:
         logger.warning("RAG retrieval unavailable: %s", exc)
+        if raise_on_error:
+            raise
         return []
 
 
@@ -608,13 +676,28 @@ def index_analysis(state: Any, provider: Optional[str] = None):
 
 
 def search_analysis(
-    query: str, provider: Optional[str] = None, company: Optional[str] = None
+    query: str,
+    provider: Optional[str] = None,
+    company: Optional[str] = None,
+    product: Optional[str] = None,
+    component: Optional[str] = None,
+    raise_on_error: bool = False,
 ):
     """Backward-compatible search wrapper returning Document objects."""
     try:
         if company:
-            return retrieve_context_documents(query, company, k=6, provider=provider)
+            return retrieve_context_documents(
+                query,
+                company,
+                k=6,
+                provider=provider,
+                product=product,
+                component=component,
+                raise_on_error=raise_on_error,
+            )
         return retrieve_context_documents(query, "", k=6, provider=provider)
     except Exception as exc:
         logger.warning("RAG search unavailable: %s", exc)
+        if raise_on_error:
+            raise
         return []

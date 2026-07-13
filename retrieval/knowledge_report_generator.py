@@ -427,6 +427,10 @@ def generate_knowledge_report(state: AgentState) -> Path:
         f"- Generated Timestamp: {timestamp}",
         f"- Mode: {mode}",
         f"- Max Depth: {max_depth}",
+        f"- Product: {getattr(state, 'product_name', None) or 'not_available'}",
+        f"- Component: {getattr(state, 'component_name', None) or 'not_available'}",
+        f"- Publisher: {_company_name(state)} analysis pipeline",
+        "- Confidence: 0.0",
     ]
 
     output_dir = KNOWLEDGE_BASE_DIR / company

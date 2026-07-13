@@ -92,6 +92,22 @@ class ProductComponentBenchmarkTests(unittest.TestCase):
         )
         self.assertEqual(state.component_name, "Application Processor")
 
+    def test_fast_benchmark_forces_cache_only_discovery(self) -> None:
+        captured = {}
+
+        def fake_invoke(state: AgentState) -> AgentState:
+            captured["state"] = state
+            return state
+
+        with patch("main.supply_chain_app.invoke", side_effect=fake_invoke), patch(
+            "main.generate_knowledge_report", return_value=Path("/tmp/report.md")
+        ), patch("main.index_knowledge_base"), patch("main.render_final_report"):
+            main.run_analysis("Apple", fast_benchmark=True)
+
+        self.assertTrue(captured["state"].supplier_cache_only)
+        self.assertEqual(captured["state"].max_llm_calls, 0)
+        self.assertEqual(captured["state"].max_retries, 0)
+
     def test_run_single_uses_component_context_in_target_query(self) -> None:
         captured = {}
 

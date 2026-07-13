@@ -5,7 +5,32 @@
       "label": "AMD",
       "node_type": "company",
       "tier": 0
+    },
+    {
+      "id": "ASE Technology",
+      "label": "ASE Technology",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "AMD"
+    },
+    {
+      "id": "Amkor Technology",
+      "label": "Amkor Technology",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "AMD"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "AMD",
+      "target": "ASE Technology",
+      "relationship": "supplier"
+    },
+    {
+      "source": "AMD",
+      "target": "Amkor Technology",
+      "relationship": "supplier"
+    }
+  ]
 }

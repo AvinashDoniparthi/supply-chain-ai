@@ -8,6 +8,7 @@ import logging
 import re
 import time
 from html import unescape
+from pathlib import Path
 from models.state import SupplierInfo
 from utils.identity_resolution import resolver
 from utils.runtime_controls import (
@@ -185,6 +186,22 @@ LOCATION_ECOSYSTEM_PATTERNS = [
     r"^(?:region|cluster|technology\s+hub|industrial\s+park|economic\s+zone|innovation\s+district)$",
 ]
 
+DISCOVERY_SOURCE_PRIORITY = {
+    "curated_knowledge_base": 1,
+    "official_supplier_report": 2,
+    "annual_report": 3,
+    "sec_filing": 4,
+    "sustainability_report": 5,
+    "official_company_website": 6,
+    "reuters": 7,
+    "wikipedia": 8,
+    "industry_report": 9,
+    "teardown_report": 10,
+    "cached_benchmark_report": 11,
+    "cached_chromadb": 12,
+    "llm": 13,
+}
+
 
 def is_location_or_ecosystem_entity(name: str) -> bool:
     clean_name = _clean_candidate_text(name)
@@ -207,6 +224,10 @@ def _seed_evidence(source: str, supplier: str, snippet: str) -> List[Dict[str, s
             "title": f"{source} supplier benchmark evidence",
             "link": f"curated://supplier-benchmark/{safe_source}/{safe_supplier}",
             "snippet": snippet,
+            "source": "curated_knowledge_base",
+            "publisher": "Project curated knowledge base",
+            "confidence": "high",
+            "date": "not_available",
         }
     ]
 
@@ -956,8 +977,44 @@ COMPONENT_ALIASES = {
     "application processor": [
         "SoC",
         "chipset",
+        "chipsets",
         "processor",
         "application chip",
+    ],
+    "gpu die": [
+        "GPU",
+        "GPU fabrication",
+        "graphics processor",
+        "semiconductor foundry",
+    ],
+    "cpu die": [
+        "CPU",
+        "processor",
+        "wafer fabrication",
+        "semiconductor foundry",
+    ],
+    "cpu fabrication": [
+        "CPU manufacturing",
+        "semiconductor fabrication",
+        "fab equipment",
+        "wafer fabrication",
+    ],
+    "memory gddr7": [
+        "GDDR7",
+        "graphics memory",
+        "DRAM",
+        "memory",
+    ],
+    "packaging test": [
+        "packaging",
+        "assembly and test",
+        "OSAT",
+        "chip testing",
+    ],
+    "battery pack assembly": [
+        "battery pack",
+        "battery cells",
+        "pack assembly",
     ],
     "display": [
         "OLED panel",
@@ -1037,6 +1094,12 @@ COMPONENT_CONTEXT_KEYWORDS = {
         "substrate",
         "testing",
     ],
+    "gpu die": ["gpu", "graphics processor", "foundry", "fabrication", "semiconductor"],
+    "cpu die": ["cpu", "processor", "foundry", "wafer", "fabrication", "semiconductor"],
+    "cpu fabrication": ["cpu", "fab", "fabrication", "lithography", "semiconductor", "equipment"],
+    "memory gddr7": ["gddr7", "graphics memory", "memory", "dram", "semiconductor"],
+    "packaging test": ["packaging", "assembly", "test", "testing", "osat", "semiconductor"],
+    "battery pack assembly": ["battery", "cell", "pack", "assembly", "lithium"],
     "display": [
         "display",
         "panel",
@@ -1205,6 +1268,18 @@ COMPONENT_TIER1_SUPPLIER_HINTS = {
         "Samsung Electronics",
         "Intel",
         "GlobalFoundries",
+        "Qualcomm",
+    },
+    "gpu die": {"TSMC", "Samsung Electronics"},
+    "cpu die": {"TSMC", "Samsung Electronics", "GlobalFoundries", "Intel"},
+    "cpu fabrication": {"ASML", "Applied Materials", "Lam Research", "Tokyo Electron", "KLA"},
+    "memory gddr7": {"SK hynix", "Samsung Electronics", "Micron Technology"},
+    "packaging test": {"ASE Technology", "Amkor Technology"},
+    "battery pack assembly": {
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
     },
     "display": {
         "Samsung Display",
@@ -2366,6 +2441,219 @@ class SupplierDiscoveryScraper:
         }
         self.cache_version = 7
 
+    def _record_failure(self, message: str) -> None:
+        logger.error(message)
+        errors = getattr(self.runtime_state, "errors", None)
+        if isinstance(errors, list) and message not in errors:
+            errors.append(message)
+
+    @staticmethod
+    def _supplier_key(supplier: Dict[str, Any]) -> str:
+        return resolver.resolve(str(supplier.get("name") or "")).lower()
+
+    @staticmethod
+    def _record_source_rank(supplier: Dict[str, Any]) -> int:
+        ranks = []
+        for evidence in supplier.get("source_evidence", []) or []:
+            if isinstance(evidence, dict):
+                ranks.append(
+                    DISCOVERY_SOURCE_PRIORITY.get(evidence.get("source", ""), 99)
+                )
+        return min(ranks, default=99)
+
+    def _merge_supplier_records(
+        self, *groups: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Merge corroborating deterministic sources without duplicating suppliers."""
+        merged: Dict[str, Dict[str, Any]] = {}
+        for group in groups:
+            for raw in group or []:
+                if not isinstance(raw, dict) or not raw.get("name"):
+                    continue
+                item = copy.deepcopy(raw)
+                key = self._supplier_key(item)
+                if not key:
+                    continue
+                if key not in merged:
+                    merged[key] = item
+                    continue
+                current = merged[key]
+                evidence = current.setdefault("source_evidence", [])
+                seen = {
+                    (entry.get("link", ""), entry.get("snippet", ""))
+                    for entry in evidence
+                    if isinstance(entry, dict)
+                }
+                for entry in item.get("source_evidence", []) or []:
+                    if not isinstance(entry, dict):
+                        continue
+                    evidence_key = (entry.get("link", ""), entry.get("snippet", ""))
+                    if evidence_key not in seen:
+                        evidence.append(entry)
+                        seen.add(evidence_key)
+                current_confidence = float(current.get("confidence", 0.0) or 0.0)
+                new_confidence = float(item.get("confidence", 0.0) or 0.0)
+                corroboration_bonus = 0.02 if evidence and item.get("source_evidence") else 0.0
+                current["confidence"] = round(
+                    min(0.99, max(current_confidence, new_confidence) + corroboration_bonus),
+                    2,
+                )
+                current["products"] = list(
+                    dict.fromkeys(
+                        list(current.get("products", []) or [])
+                        + list(item.get("products", []) or [])
+                    )
+                )
+        return sorted(
+            merged.values(),
+            key=lambda item: (
+                self._record_source_rank(item),
+                -float(item.get("confidence", 0.0) or 0.0),
+                self._supplier_key(item),
+            ),
+        )
+
+    def _load_curated_report_suppliers(
+        self, company_name: str
+    ) -> List[Dict[str, Any]]:
+        """Parse checked-in supplier-note tables without using an LLM."""
+        canonical = canonical_curated_company_name(company_name) or company_name
+        base = Path("knowledge_base")
+        if not base.exists():
+            return []
+        company_dir = next(
+            (
+                path
+                for path in sorted(base.iterdir())
+                if path.is_dir()
+                and _compact_key(path.name) == _compact_key(canonical)
+            ),
+            None,
+        )
+        if company_dir is None:
+            return []
+
+        suppliers: List[Dict[str, Any]] = []
+        for path in sorted(company_dir.glob("*supplier_notes.md")):
+            try:
+                lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+            except Exception as exc:
+                self._record_failure(
+                    f"Cached supplier report read failed for {company_name} ({path}): {exc}"
+                )
+                continue
+            for line in lines:
+                if not line.strip().startswith("|"):
+                    continue
+                cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+                if len(cells) < 7 or cells[0].lower() in {"supplier", "---"}:
+                    continue
+                if all(set(cell) <= {"-", ":"} for cell in cells):
+                    continue
+                name, product_component, tier_raw, summary, title, url, confidence_raw = cells[:7]
+                try:
+                    tier = int(tier_raw)
+                except ValueError:
+                    continue
+                valid, _ = validate_supplier_candidate_name(name, company_name)
+                if not valid or tier != 1:
+                    continue
+                confidence = {"high": 0.9, "medium": 0.75, "low": 0.6}.get(
+                    confidence_raw.lower(), 0.75
+                )
+                suppliers.append(
+                    {
+                        "name": name,
+                        "location": "Not available",
+                        "products": [product_component] if product_component else [],
+                        "tier": 1,
+                        "criticality": "High" if confidence >= 0.9 else "Medium",
+                        "confidence": confidence,
+                        "justification": f"Deterministically parsed from {path}",
+                        "source_evidence": [
+                            {
+                                "title": title or path.name,
+                                "link": url or str(path),
+                                "snippet": summary,
+                                "source": "curated_knowledge_base",
+                                "publisher": canonical,
+                                "confidence": confidence_raw.lower() or "medium",
+                                "date": "not_available",
+                            }
+                        ],
+                    }
+                )
+        return suppliers
+
+    def _load_chroma_suppliers(self, company_name: str) -> List[Dict[str, Any]]:
+        """Use strictly filtered cached Chroma evidence before live web discovery."""
+        try:
+            from retrieval.vector_store import retrieve_context_documents
+
+            documents = retrieve_context_documents(
+                "supplier relationship evidence",
+                company_name,
+                k=20,
+                product=getattr(self.runtime_state, "product_name", None),
+                component=getattr(self.runtime_state, "component_name", None),
+                raise_on_error=True,
+            )
+        except Exception as exc:
+            self._record_failure(
+                f"Cached Chroma supplier retrieval failed for {company_name}: {exc}"
+            )
+            return []
+
+        suppliers: List[Dict[str, Any]] = []
+        for document in documents:
+            metadata = getattr(document, "metadata", {}) or {}
+            content = getattr(document, "page_content", "") or ""
+            name = str(metadata.get("supplier") or "").strip()
+            if name in {"", "not_available"}:
+                match = re.search(r"(?mi)^Supplier:\s*(.+?)\s*$", content)
+                name = match.group(1).strip() if match else ""
+            valid, _ = validate_supplier_candidate_name(name, company_name)
+            if not valid:
+                continue
+            confidence = float(metadata.get("confidence", 0.0) or 0.0)
+            if confidence < 0.75:
+                continue
+            suppliers.append(
+                {
+                    "name": name,
+                    "location": "Not available",
+                    "products": [str(metadata.get("component") or "Not available")],
+                    "tier": 1,
+                    "criticality": "Medium",
+                    "confidence": min(confidence, 0.9),
+                    "justification": "Strictly filtered cached Chroma evidence",
+                    "source_evidence": [
+                        {
+                            "title": f"Cached RAG evidence for {name}",
+                            "link": f"rag://chroma/{_compact_key(company_name)}/{_compact_key(name)}",
+                            "snippet": content[:1000],
+                            "source": "cached_chromadb",
+                            "publisher": str(metadata.get("publisher") or "knowledge_base"),
+                            "confidence": str(confidence),
+                            "date": str(metadata.get("date") or "not_available"),
+                        }
+                    ],
+                }
+            )
+        return self._merge_supplier_records(suppliers)
+
+    def _read_cached_suppliers(
+        self, cache_path: str, company_name: str
+    ) -> List[Dict[str, Any]]:
+        try:
+            with open(cache_path, "r", encoding="utf-8") as handle:
+                return self._sanitize_cached_suppliers(json.load(handle), company_name)
+        except Exception as exc:
+            self._record_failure(
+                f"Supplier cache read failed for {company_name} ({cache_path}): {exc}"
+            )
+            return []
+
     def _get_cache_path(self, company_name: str) -> str:
         safe_name = company_name.lower().replace(" ", "_").replace(".", "")
         return os.path.join(self.cache_dir, f"{safe_name}_v{self.cache_version}.json")
@@ -2437,12 +2725,45 @@ class SupplierDiscoveryScraper:
 
         if self.prefer_curated and cache_enabled and not refresh_requested:
             curated_suppliers = get_curated_suppliers(company_name)
-            if curated_suppliers:
+            report_suppliers = self._load_curated_report_suppliers(company_name)
+            if curated_suppliers or report_suppliers:
                 logger.debug("CURATED SUPPLIER GRAPH HIT: %s", company_name)
+                cached_suppliers: List[Dict[str, Any]] = []
+                cache_path = self._get_cache_path(company_name)
+                if os.path.exists(cache_path):
+                    cached_suppliers = self._read_cached_suppliers(
+                        cache_path, company_name
+                    )
                 set_stage_status(self.runtime_state, self.stage_key, "curated_hit")
-                return curated_suppliers
+                return self._merge_supplier_records(
+                    curated_suppliers, report_suppliers, cached_suppliers
+                )
+            logger.debug("CURATED SUPPLIER GRAPH MISS: %s", company_name)
+
+        if self.prefer_curated and cache_enabled and not refresh_requested:
+            # Checked-in curated data was unavailable. Prefer serialized report
+            # caches next, then same-company/product/component Chroma evidence.
+            candidate_cache_paths = [self._get_cache_path(company_name)]
+            candidate_cache_paths.extend(self._get_legacy_cache_paths(company_name))
+            for candidate_cache_path in candidate_cache_paths:
+                if not os.path.exists(candidate_cache_path):
+                    continue
+                cached_suppliers = self._read_cached_suppliers(
+                    candidate_cache_path, company_name
+                )
+                if cached_suppliers:
+                    self.stats["Cache Used"] += 1
+                    set_stage_status(self.runtime_state, self.stage_key, "cache_hit")
+                    return cached_suppliers
+            chroma_suppliers = self._load_chroma_suppliers(company_name)
+            if chroma_suppliers:
+                set_stage_status(self.runtime_state, self.stage_key, "chroma_cache_hit")
+                return chroma_suppliers
             if cache_only_requested:
-                logger.debug("CURATED SUPPLIER GRAPH MISS IN CACHE-ONLY MODE: %s", company_name)
+                logger.info(
+                    "No deterministic supplier cache found for %s; cache-only mode prevents live discovery.",
+                    company_name,
+                )
                 return []
 
         if self.runtime_state and stop_if_timed_out(self.runtime_state, self.stage_key):
@@ -2451,10 +2772,7 @@ class SupplierDiscoveryScraper:
         cache_path = self._get_cache_path(company_name)
         if cache_enabled and not refresh_requested and os.path.exists(cache_path):
             logger.debug("CACHE HIT: %s", company_name)
-            with open(cache_path, "r") as f:
-                cached_suppliers = self._sanitize_cached_suppliers(
-                    json.load(f), company_name
-                )
+            cached_suppliers = self._read_cached_suppliers(cache_path, company_name)
             if cached_suppliers:
                 self.stats["Cache Used"] += 1
                 set_stage_status(self.runtime_state, self.stage_key, "cache_hit")
@@ -2472,10 +2790,9 @@ class SupplierDiscoveryScraper:
         elif cache_enabled and not refresh_requested:
             for legacy_cache_path in self._get_legacy_cache_paths(company_name):
                 logger.debug("LEGACY CACHE HIT: %s", legacy_cache_path)
-                with open(legacy_cache_path, "r") as f:
-                    cached_suppliers = self._sanitize_cached_suppliers(
-                        json.load(f), company_name
-                    )
+                cached_suppliers = self._read_cached_suppliers(
+                    legacy_cache_path, company_name
+                )
                 if cached_suppliers:
                     self.stats["Cache Used"] += 1
                     set_stage_status(self.runtime_state, self.stage_key, "cache_hit")
@@ -2581,11 +2898,9 @@ class SupplierDiscoveryScraper:
                         else:
                             wait_time = min(2**retry_count, 20)
 
-                        jitter = min(5, max(0, (wait_time * 0.2)))
-                        wait_time = wait_time + (
-                            jitter * (0.5 - os.urandom(1)[0] / 255.0)
-                        )
-                        wait_time = max(1.0, wait_time)
+                        # Deterministic bounded backoff keeps benchmark acquisition
+                        # reproducible and avoids random retry timing.
+                        wait_time = max(1.0, float(wait_time))
 
                         logger.warning(
                             f"[429 RETRY] Attempt: {retry_count} Wait: {wait_time:.1f}s"
@@ -2650,7 +2965,9 @@ class SupplierDiscoveryScraper:
                     time.sleep(0.2)
                     break
                 except Exception as e:
-                    logger.error(f"Wikipedia search failed for '{query}': {e}")
+                    self._record_failure(
+                        f"Wikipedia search failed for '{query}': {e}"
+                    )
                     break
 
         # Sort by quality score before extracting suppliers
@@ -2664,8 +2981,15 @@ class SupplierDiscoveryScraper:
 
         # Save to cache if successful
         if cache_enabled and formatted_suppliers:
-            with open(cache_path, "w") as f:
-                json.dump(formatted_suppliers, f)
+            temp_cache_path = f"{cache_path}.tmp"
+            try:
+                with open(temp_cache_path, "w", encoding="utf-8") as handle:
+                    json.dump(formatted_suppliers, handle, sort_keys=True)
+                os.replace(temp_cache_path, cache_path)
+            except Exception as exc:
+                self._record_failure(
+                    f"Supplier cache write failed for {company_name} ({cache_path}): {exc}"
+                )
 
         return formatted_suppliers
 
@@ -2746,7 +3070,9 @@ class SupplierDiscoveryScraper:
                     break
             return snippets
         except Exception as e:
-            logger.error(f"Wikipedia page context failed for '{company_name}': {e}")
+            self._record_failure(
+                f"Wikipedia page context failed for '{company_name}': {e}"
+            )
             return []
 
     def _extract_suppliers_from_results(

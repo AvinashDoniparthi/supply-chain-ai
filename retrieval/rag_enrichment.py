@@ -57,7 +57,9 @@ def enrich_supplier_evidence_with_rag(
     try:
         index_analysis(state)
     except Exception as exc:
-        logger.warning("RAG indexing skipped during %s: %s", stage, exc)
+        error = f"RAG indexing failed during {stage}: {exc}"
+        logger.warning(error)
+        state.errors.append(error)
         state.history.append(
             {
                 "agent": "rag_enrichment",
@@ -91,9 +93,14 @@ def enrich_supplier_evidence_with_rag(
             documents = search_analysis(
                 query,
                 company=company_name,
+                product=state.product_name,
+                component=state.component_name,
+                raise_on_error=True,
             )[:max_chunks_per_supplier]
         except Exception as exc:
-            logger.warning("RAG retrieval skipped for %s during %s: %s", supplier.name, stage, exc)
+            error = f"RAG retrieval failed for {supplier.name} during {stage}: {exc}"
+            logger.warning(error)
+            state.errors.append(error)
             continue
 
         evidence = [_document_to_evidence(document, supplier.name) for document in documents]

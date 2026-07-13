@@ -7,18 +7,102 @@
       "tier": 0
     },
     {
-      "id": "Gigafactory Shanghai",
-      "label": "Gigafactory Shanghai",
+      "id": "Panasonic",
+      "label": "Panasonic",
       "node_type": "supplier",
       "tier": 1,
       "parent_company": "Tesla"
+    },
+    {
+      "id": "Contemporary Amperex Technology Co. Limited",
+      "label": "Contemporary Amperex Technology Co. Limited",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Tesla"
+    },
+    {
+      "id": "LG Energy Solution",
+      "label": "LG Energy Solution",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Tesla"
+    },
+    {
+      "id": "Samsung SDI",
+      "label": "Samsung SDI",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Tesla"
+    },
+    {
+      "id": "Sumitomo Metal Mining",
+      "label": "Sumitomo Metal Mining",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Panasonic"
+    },
+    {
+      "id": "Mitsubishi Materials",
+      "label": "Mitsubishi Materials",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Panasonic"
+    },
+    {
+      "id": "Ganfeng Lithium",
+      "label": "Ganfeng Lithium",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Contemporary Amperex Technology Co. Limited"
+    },
+    {
+      "id": "Tianqi Lithium",
+      "label": "Tianqi Lithium",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Contemporary Amperex Technology Co. Limited"
     }
   ],
   "edges": [
     {
       "source": "Tesla",
-      "target": "Gigafactory Shanghai",
+      "target": "Panasonic",
       "relationship": "supplier"
+    },
+    {
+      "source": "Tesla",
+      "target": "Contemporary Amperex Technology Co. Limited",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Tesla",
+      "target": "LG Energy Solution",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Tesla",
+      "target": "Samsung SDI",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Panasonic",
+      "target": "Sumitomo Metal Mining",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Panasonic",
+      "target": "Mitsubishi Materials",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Contemporary Amperex Technology Co. Limited",
+      "target": "Ganfeng Lithium",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Contemporary Amperex Technology Co. Limited",
+      "target": "Tianqi Lithium",
+      "relationship": "upstream_supplier"
     }
   ]
 }

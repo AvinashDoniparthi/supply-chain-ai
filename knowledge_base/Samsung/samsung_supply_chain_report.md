@@ -34,6 +34,10 @@
 - None verified
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-12T15:34:14.893232+00:00
+- Generated Timestamp: 2026-07-13T14:21:41.534640+00:00
 - Mode: rag
 - Max Depth: 3
+- Product: Galaxy S25 Ultra
+- Component: Assembly
+- Publisher: Samsung analysis pipeline
+- Confidence: 0.0

@@ -87,16 +87,20 @@ def test_load_knowledge_base_documents_reads_supported_files(tmp_path):
 
     documents = load_knowledge_base_documents(base_dir=str(base_dir))
 
-    assert len(documents) == 1
+    assert len(documents) == 2
     assert all(doc.metadata["source_type"] == SOURCE_KNOWLEDGE_REPORT for doc in documents)
     assert all(doc.metadata["company"] == "Apple" for doc in documents)
     assert all(doc.metadata["company_key"] == "apple" for doc in documents)
     assert {doc.metadata["file_name"] for doc in documents} == {
         "apple_supply_chain_report.md",
+        "apple_supplier_notes.md",
     }
-    assert documents[0].metadata["generated_timestamp"] == "2026-07-05T00:00:00+00:00"
-    assert documents[0].metadata["mode"] == "llm"
-    assert documents[0].metadata["max_depth"] == "3"
+    report = next(doc for doc in documents if doc.metadata["doc_type"] == "knowledge_report")
+    assert report.metadata["generated_timestamp"] == "2026-07-05T00:00:00+00:00"
+    assert report.metadata["mode"] == "llm"
+    assert report.metadata["max_depth"] == "3"
+    required = {"company", "product", "component", "tier", "supplier", "source", "publisher", "confidence", "date"}
+    assert all(required <= set(doc.metadata) for doc in documents)
 
 
 def test_indexing_and_retrieval_prefers_knowledge_report(tmp_path, monkeypatch):
@@ -212,3 +216,45 @@ def test_same_company_fallback_supplements_across_source_types(tmp_path, monkeyp
     assert SOURCE_KNOWLEDGE_REPORT in sources
     assert vector_store.SOURCE_ANALYSIS_STATE in sources
     assert all(doc.metadata["company_key"] == "apple" for doc in docs)
+
+
+def test_product_and_component_filters_are_strict(tmp_path, monkeypatch):
+    _configure_vector_store(monkeypatch, tmp_path)
+    processor_state = _create_sample_state()
+    processor_state.product_name = "iPhone 16 Pro"
+    processor_state.component_name = "Application Processor"
+    processor_state.supply_chain_health.summary = "PROCESSOR_CONTEXT_ONLY"
+    display_state = _create_sample_state()
+    display_state.product_name = "iPhone 16 Pro"
+    display_state.component_name = "Display"
+    display_state.supply_chain_health.summary = "DISPLAY_CONTEXT_ONLY"
+    other_product_state = _create_sample_state()
+    other_product_state.product_name = "iPhone 15 Pro"
+    other_product_state.component_name = "Display"
+    other_product_state.supply_chain_health.summary = "OTHER_PRODUCT_CONTEXT_ONLY"
+
+    for state in (processor_state, display_state, other_product_state):
+        index_analysis_state(state)
+
+    docs = retrieve_context_documents(
+        "Apple supply chain health",
+        "Apple",
+        k=20,
+        product="iPhone 16 Pro",
+        component="Display",
+    )
+    assert docs
+    assert all(doc.metadata["company_key"] == "apple" for doc in docs)
+    assert all(doc.metadata["product_key"] == "iphone 16 pro" for doc in docs)
+    assert all(doc.metadata["component_key"] == "display" for doc in docs)
+    text = "\n".join(doc.page_content for doc in docs)
+    assert "DISPLAY_CONTEXT_ONLY" in text
+    assert "PROCESSOR_CONTEXT_ONLY" not in text
+    assert "OTHER_PRODUCT_CONTEXT_ONLY" not in text
+
+    assert retrieve_context_documents(
+        "supplier",
+        "Apple",
+        product="Missing Product",
+        component="Display",
+    ) == []

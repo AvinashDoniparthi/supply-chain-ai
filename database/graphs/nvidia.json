@@ -5,7 +5,116 @@
       "label": "NVIDIA",
       "node_type": "company",
       "tier": 0
+    },
+    {
+      "id": "SK hynix",
+      "label": "SK hynix",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Nvidia"
+    },
+    {
+      "id": "Samsung Electronics",
+      "label": "Samsung Electronics",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Nvidia"
+    },
+    {
+      "id": "ASML",
+      "label": "ASML",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "SK hynix"
+    },
+    {
+      "id": "Tokyo Electron",
+      "label": "Tokyo Electron",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "SK hynix"
+    },
+    {
+      "id": "Murata Manufacturing",
+      "label": "Murata Manufacturing",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Samsung Electronics"
+    },
+    {
+      "id": "Sony Semiconductor Solutions",
+      "label": "Sony Semiconductor Solutions",
+      "node_type": "supplier",
+      "tier": 2,
+      "parent_company": "Samsung Electronics"
+    },
+    {
+      "id": "Carl Zeiss SMT",
+      "label": "Carl Zeiss SMT",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "ASML"
+    },
+    {
+      "id": "Trumpf",
+      "label": "Trumpf",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "ASML"
+    },
+    {
+      "id": "VDL ETG",
+      "label": "VDL ETG",
+      "node_type": "supplier",
+      "tier": 3,
+      "parent_company": "ASML"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "NVIDIA",
+      "target": "SK hynix",
+      "relationship": "supplier"
+    },
+    {
+      "source": "NVIDIA",
+      "target": "Samsung Electronics",
+      "relationship": "supplier"
+    },
+    {
+      "source": "SK hynix",
+      "target": "ASML",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "SK hynix",
+      "target": "Tokyo Electron",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Samsung Electronics",
+      "target": "Murata Manufacturing",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "Samsung Electronics",
+      "target": "Sony Semiconductor Solutions",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "ASML",
+      "target": "Carl Zeiss SMT",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "ASML",
+      "target": "Trumpf",
+      "relationship": "upstream_supplier"
+    },
+    {
+      "source": "ASML",
+      "target": "VDL ETG",
+      "relationship": "upstream_supplier"
+    }
+  ]
 }

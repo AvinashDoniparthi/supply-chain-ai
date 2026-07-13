@@ -32,7 +32,20 @@ class HistoryAgent:
         history_file = os.path.join(self.history_dir, f"{safe_name}.json")
 
         # 1. Load existing company history file
-        history_data = self._load_history(history_file, company_name)
+        try:
+            history_data = self._load_history(history_file, company_name)
+        except Exception as exc:
+            error = f"History load failed for {history_file}: {exc}"
+            logger.error(error)
+            state.errors.append(error)
+            state.stage_statuses["history_persistence"] = "failed"
+            state.history.append({
+                "agent": "history_agent",
+                "action": "history_load_failed",
+                "status": "failed",
+                "error": error,
+            })
+            return state
         previous_run = history_data["runs"][-1] if history_data["runs"] else None
 
         # 2. Create current run snapshot
@@ -94,11 +107,11 @@ class HistoryAgent:
 
     def _load_history(self, file_path: str, company_name: str) -> Dict[str, Any]:
         if os.path.exists(file_path):
-            try:
-                with open(file_path, "r") as f:
-                    return json.load(f)
-            except Exception as e:
-                logger.error(f"Failed to load history from {file_path}: {e}")
+            with open(file_path, "r") as f:
+                data = json.load(f)
+            if not isinstance(data, dict) or not isinstance(data.get("runs"), list):
+                raise ValueError("history file must contain an object with a runs list")
+            return data
         
         return {
             "company": company_name,

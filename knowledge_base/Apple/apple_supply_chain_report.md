@@ -80,6 +80,10 @@
 - Pegatron Corporation: 0.84
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-12T15:32:43.071220+00:00
+- Generated Timestamp: 2026-07-13T14:21:37.490081+00:00
 - Mode: rag
 - Max Depth: 3
+- Product: iPhone 16 Pro
+- Component: Assembly
+- Publisher: Apple analysis pipeline
+- Confidence: 0.0

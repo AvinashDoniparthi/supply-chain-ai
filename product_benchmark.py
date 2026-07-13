@@ -264,6 +264,8 @@ def _load_reference_dataset() -> List[Dict[str, Any]]:
                 tier = int(tier_raw)
             except ValueError:
                 continue
+            if tier != 1:
+                continue
             normalized["tier"] = str(tier)
             rows.append(normalized)
     return rows
@@ -275,6 +277,8 @@ def _reference_suppliers_for_component(
     product: str,
     component: str,
 ) -> Dict[int, List[str]]:
+    # Preserve the historical return shape for callers while accepting ground
+    # truth only for Tier 1.
     tiered: Dict[int, List[str]] = {1: [], 2: [], 3: []}
     for row in reference_rows:
         if (
@@ -289,7 +293,7 @@ def _reference_suppliers_for_component(
             tier = int(row.get("tier") or 0)
         except ValueError:
             continue
-        if tier not in tiered:
+        if tier != 1:
             continue
         supplier_name = row.get("canonical_supplier_name") or row.get("reference_supplier") or ""
         if supplier_name:
@@ -300,7 +304,7 @@ def _reference_suppliers_for_component(
 def _reference_supplier_union(tiered_reference: Dict[int, List[str]]) -> List[str]:
     discovered: List[str] = []
     seen = set()
-    for tier in (1, 2, 3):
+    for tier in (1,):
         for supplier in tiered_reference.get(tier, []):
             key = _canonical(supplier)
             if key in seen:
@@ -312,7 +316,7 @@ def _reference_supplier_union(tiered_reference: Dict[int, List[str]]) -> List[st
 
 def _reference_suppliers_by_tier(tiered_reference: Dict[int, List[str]]) -> Dict[int, List[str]]:
     by_tier: Dict[int, List[str]] = {1: [], 2: [], 3: []}
-    for tier in (1, 2, 3):
+    for tier in (1,):
         suppliers = []
         seen = set()
         for supplier in tiered_reference.get(tier, []):
@@ -866,7 +870,16 @@ def write_sample_summary(
     skip_news: bool,
     fast_benchmark: bool,
 ) -> Path:
-    successful_rows = [row for row in rows if row.get("evaluation_status") == EVALUATION_STATUS_SUCCESS]
+    successful_rows = [
+        row
+        for row in rows
+        if row.get("evaluation_status")
+        in {
+            EVALUATION_STATUS_SUCCESS,
+            EVALUATION_STATUS_QUANTITATIVELY_EVALUATED,
+            EVALUATION_STATUS_NOT_EVALUABLE_MISSING_REFERENCE,
+        }
+    ]
     quantitative_rows = [
         row
         for row in rows
@@ -1157,15 +1170,19 @@ def _run_sample_benchmark(
     previous_env = {key: os.environ.get(key) for key in FAST_FAIL_ENV}
     os.environ.update(FAST_FAIL_ENV)
     try:
+        quota_stop = False
         for company, product, components in _selected_products(companies, components):
+            if quota_stop:
+                break
             for component in components:
+                if quota_stop:
+                    break
                 tiered_reference = _reference_suppliers_for_component(
                     reference_rows, company, product, component
                 )
                 reference_suppliers = list(tiered_reference.get(1, []))
                 for mode in modes:
-                    rows.append(
-                        _run_single(
+                    row = _run_single(
                             company=company,
                             product=product,
                             component=component,
@@ -1177,7 +1194,10 @@ def _run_sample_benchmark(
                             fast_benchmark=fast_benchmark,
                             reference_suppliers=reference_suppliers,
                         )
-                    )
+                    rows.append(row)
+                    if row.get("evaluation_status") == EVALUATION_STATUS_QUOTA_EXHAUSTED:
+                        quota_stop = True
+                        break
     finally:
         for key, value in previous_env.items():
             if value is None:

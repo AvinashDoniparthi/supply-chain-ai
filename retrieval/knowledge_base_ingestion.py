@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 import re
 from typing import Any, Dict, List, Optional
+from urllib.parse import urlparse
 
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -11,6 +12,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from retrieval.vector_store import (
     SOURCE_KNOWLEDGE_REPORT,
     _company_key,
+    _context_key,
     _vector_store,
 )
 
@@ -40,8 +42,10 @@ def _company_from_path(base_dir: Path, path: Path) -> Optional[str]:
     return relative.parts[0]
 
 
-def _is_knowledge_report(path: Path) -> bool:
-    return path.name.endswith("_supply_chain_report.md")
+def _document_type(path: Path) -> str:
+    if path.name.endswith("_supply_chain_report.md"):
+        return "knowledge_report"
+    return "knowledge_note"
 
 
 def _extract_report_metadata(content: str) -> Dict[str, str]:
@@ -66,6 +70,67 @@ def _extract_report_metadata(content: str) -> Dict[str, str]:
     return metadata
 
 
+def _confidence_value(value: Optional[str]) -> float:
+    try:
+        return max(0.0, min(1.0, float(value or 0.0)))
+    except (TypeError, ValueError):
+        return {"high": 0.9, "medium": 0.7, "low": 0.4}.get(
+            str(value or "").strip().lower(), 0.0
+        )
+
+
+def _supplier_note_rows(
+    content: str, *, company: str, path: Path
+) -> List[Document]:
+    documents: List[Document] = []
+    for record_index, line in enumerate(content.splitlines(), start=1):
+        if not line.strip().startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) < 7 or cells[0].lower() == "supplier":
+            continue
+        if all(set(cell) <= {"-", ":"} for cell in cells):
+            continue
+        supplier, component, tier_raw, summary, title, source_url, confidence = cells[:7]
+        try:
+            tier = int(tier_raw)
+        except ValueError:
+            continue
+        publisher = urlparse(source_url).netloc or company
+        documents.append(
+            Document(
+                page_content=(
+                    f"Company: {company}\nSupplier: {supplier}\nTier: {tier}\n"
+                    f"Product/component: {component}\nRelationship: {summary}\n"
+                    f"Public reference: {title} | {source_url}"
+                ),
+                metadata={
+                    "source_type": SOURCE_KNOWLEDGE_REPORT,
+                    "company": company,
+                    "company_key": _company_key(company),
+                    "file_name": path.name,
+                    "path": str(path),
+                    "record_index": record_index,
+                    "generated_timestamp": "not_available",
+                    "mode": "not_available",
+                    "max_depth": "not_available",
+                    "doc_type": "supplier_evidence",
+                    "product": "not_available",
+                    "product_key": "not_available",
+                    "component": component or "not_available",
+                    "component_key": _context_key(component) or "not_available",
+                    "tier": tier,
+                    "supplier": supplier,
+                    "source": source_url or str(path),
+                    "publisher": publisher,
+                    "confidence": _confidence_value(confidence),
+                    "date": "not_available",
+                },
+            )
+        )
+    return documents
+
+
 def load_knowledge_base_documents(base_dir: str = "knowledge_base") -> List[Document]:
     base_path = Path(base_dir)
     if not base_path.exists():
@@ -82,14 +147,15 @@ def load_knowledge_base_documents(base_dir: str = "knowledge_base") -> List[Docu
         if not company:
             continue
 
-        if not _is_knowledge_report(path):
-            continue
-
         content = _read_file(path).strip()
         if not content:
             continue
 
         report_metadata = _extract_report_metadata(content)
+        product = report_metadata.get("product") or "not_available"
+        component = report_metadata.get("component") or "not_available"
+        generated_timestamp = report_metadata.get("generated_timestamp") or "not_available"
+        source_date = generated_timestamp.split("T", 1)[0] if generated_timestamp != "not_available" else "not_available"
 
         documents.append(
             Document(
@@ -100,13 +166,27 @@ def load_knowledge_base_documents(base_dir: str = "knowledge_base") -> List[Docu
                     "company_key": _company_key(company),
                     "file_name": path.name,
                     "path": str(path),
-                    "generated_timestamp": report_metadata.get("generated_timestamp"),
-                    "mode": report_metadata.get("mode"),
-                    "max_depth": report_metadata.get("max_depth"),
-                    "doc_type": "knowledge_report",
+                    "generated_timestamp": generated_timestamp,
+                    "mode": report_metadata.get("mode") or "not_available",
+                    "max_depth": report_metadata.get("max_depth") or "not_available",
+                    "doc_type": _document_type(path),
+                    "product": product,
+                    "product_key": _context_key(product) or "not_available",
+                    "component": component,
+                    "component_key": _context_key(component) or "not_available",
+                    "tier": 0,
+                    "supplier": "not_available",
+                    "source": str(path),
+                    "publisher": report_metadata.get("publisher") or company,
+                    "confidence": _confidence_value(report_metadata.get("confidence")),
+                    "date": source_date,
                 },
             )
         )
+        if _document_type(path) == "knowledge_note":
+            documents.extend(
+                _supplier_note_rows(content, company=company, path=path)
+            )
 
     return documents
 
@@ -129,8 +209,17 @@ def index_knowledge_base(base_dir: str = "knowledge_base", provider: Optional[st
             )
 
     if chunked_documents:
+        collection = getattr(vector_store, "_collection", None)
+        if collection is not None:
+            # A full KB index is a deterministic replacement of prior KB chunks;
+            # removing the old source type prevents stale chunks surviving when a
+            # report becomes shorter or is deleted.
+            try:
+                collection.delete(where={"source_type": SOURCE_KNOWLEDGE_REPORT})
+            except Exception:
+                logger.warning("Unable to remove stale knowledge-base chunks before indexing.", exc_info=True)
         ids = [
-            f"kb-{chunk.metadata.get('company_key', '')}-{chunk.metadata.get('file_name', '')}-{chunk.metadata.get('chunk_index', 0)}"
+            f"kb-{chunk.metadata.get('company_key', '')}-{chunk.metadata.get('file_name', '')}-{chunk.metadata.get('record_index', 'document')}-{chunk.metadata.get('chunk_index', 0)}"
             for chunk in chunked_documents
         ]
         vector_store.add_documents(chunked_documents, ids=ids)

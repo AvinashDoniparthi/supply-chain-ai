@@ -34,6 +34,10 @@
 - None verified
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-12T15:54:04.657755+00:00
+- Generated Timestamp: 2026-07-13T14:22:01.254535+00:00
 - Mode: rag
 - Max Depth: 3
+- Product: Core Ultra 9 285K
+- Component: Packaging / Test
+- Publisher: Intel analysis pipeline
+- Confidence: 0.0

@@ -11,6 +11,7 @@ from models.state import AgentState, CompanyInfo, SupplierInfo, SupplyChainHealt
 from retrieval.rag_enrichment import enrich_supplier_evidence_with_rag
 from utils.output import render_final_report
 from langchain_core.messages import AIMessage
+from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
 
 
@@ -56,15 +57,15 @@ class TestExecutionModes(unittest.TestCase):
         self.assertIn("Mode: RAG", output.getvalue())
 
     @patch("chains.rag_report_chain.get_llm")
-    @patch("chains.rag_report_chain.retrieve_context")
+    @patch("chains.rag_report_chain.retrieve_context_documents")
     def test_rag_report_chain_generates_from_retrieved_context(
-        self, mock_retrieve_context, mock_get_llm
+        self, mock_retrieve_documents, mock_get_llm
     ):
-        mock_retrieve_context.side_effect = [
-            ["Supply chain health for Dell\nOverall score: 80.0\nStatus: Good"],
-            ["Supplier: Broadcom\nTier: 1\nProducts: networking chips"],
-            ["Risk for Broadcom\nRisk type: Operational\nSeverity: High"],
-            ["Mitigation: Diversify supplier base."],
+        mock_retrieve_documents.side_effect = [
+            [Document(page_content="Supply chain health for Dell\nOverall score: 80.0\nStatus: Good", metadata={"source_type": "analysis_state"})],
+            [Document(page_content="Supplier: Broadcom\nTier: 1\nProducts: networking chips", metadata={"source_type": "analysis_state"})],
+            [Document(page_content="Risk for Broadcom\nRisk type: Operational\nSeverity: High", metadata={"source_type": "analysis_state"})],
+            [Document(page_content="Mitigation: Diversify supplier base.", metadata={"source_type": "analysis_state"})],
         ]
         mock_get_llm.return_value = RunnableLambda(
             lambda _: AIMessage(content="Grounded RAG report for Broadcom.")
@@ -74,7 +75,7 @@ class TestExecutionModes(unittest.TestCase):
 
         self.assertEqual(report, "Grounded RAG report for Broadcom.")
         self.assertEqual(len(context), 4)
-        self.assertEqual(mock_retrieve_context.call_count, 4)
+        self.assertEqual(mock_retrieve_documents.call_count, 4)
         self.assertTrue(
             any(
                 "Overall score: 80.0" in chunk
@@ -82,12 +83,12 @@ class TestExecutionModes(unittest.TestCase):
             )
         )
         self.assertTrue(
-            all(call.kwargs["company"] == "Dell" for call in mock_retrieve_context.call_args_list)
+            all(call.kwargs["company"] == "Dell" for call in mock_retrieve_documents.call_args_list)
         )
         self.assertTrue(
             any(
                 "health overall score status supplier count" in call.kwargs["query"]
-                for call in mock_retrieve_context.call_args_list
+                for call in mock_retrieve_documents.call_args_list
             )
         )
 
@@ -131,15 +132,15 @@ class TestExecutionModes(unittest.TestCase):
         self.assertNotIn("2. DISCOVERY QUALITY", rendered_report)
 
     @patch("chains.rag_report_chain.get_llm")
-    @patch("chains.rag_report_chain.retrieve_context")
+    @patch("chains.rag_report_chain.retrieve_context_documents")
     def test_rag_report_chain_injects_health_from_state_when_missing_from_retrieval(
-        self, mock_retrieve_context, mock_get_llm
+        self, mock_retrieve_documents, mock_get_llm
     ):
-        mock_retrieve_context.side_effect = [
+        mock_retrieve_documents.side_effect = [
             [],
-            ["Supplier: TSMC\nTier: 1\nProducts: semiconductor manufacturing"],
-            ["Risk for TSMC\nRisk type: Geopolitical\nSeverity: High"],
-            ["Mitigation: Diversify manufacturing footprint."],
+            [Document(page_content="Supplier: TSMC\nTier: 1\nProducts: semiconductor manufacturing", metadata={"source_type": "analysis_state"})],
+            [Document(page_content="Risk for TSMC\nRisk type: Geopolitical\nSeverity: High", metadata={"source_type": "analysis_state"})],
+            [Document(page_content="Mitigation: Diversify manufacturing footprint.", metadata={"source_type": "analysis_state"})],
         ]
         mock_get_llm.return_value = RunnableLambda(
             lambda _: AIMessage(content="Grounded RAG report with health score.")
@@ -159,18 +160,18 @@ class TestExecutionModes(unittest.TestCase):
 
         self.assertEqual(report, "Grounded RAG report with health score.")
         self.assertTrue(any("Overall score: 72.0" in chunk for chunk in context))
-        self.assertEqual(mock_retrieve_context.call_count, 4)
+        self.assertEqual(mock_retrieve_documents.call_count, 4)
 
     @patch("chains.rag_report_chain.get_llm")
-    @patch("chains.rag_report_chain.retrieve_context")
+    @patch("chains.rag_report_chain.retrieve_context_documents")
     def test_fast_benchmark_skips_rag_llm_generation_when_context_exists(
-        self, mock_retrieve_context, mock_get_llm
+        self, mock_retrieve_documents, mock_get_llm
     ):
-        mock_retrieve_context.side_effect = [
-            ["Supply chain health for Dell\nOverall score: 80.0\nStatus: Good"],
-            ["Supplier: Broadcom\nTier: 1\nProducts: networking chips"],
-            ["Risk for Broadcom\nRisk type: Operational\nSeverity: High"],
-            ["Mitigation: Diversify supplier base."],
+        mock_retrieve_documents.side_effect = [
+            [Document(page_content="Supply chain health for Dell\nOverall score: 80.0\nStatus: Good", metadata={"source_type": "analysis_state"})],
+            [Document(page_content="Supplier: Broadcom\nTier: 1\nProducts: networking chips", metadata={"source_type": "analysis_state"})],
+            [Document(page_content="Risk for Broadcom\nRisk type: Operational\nSeverity: High", metadata={"source_type": "analysis_state"})],
+            [Document(page_content="Mitigation: Diversify supplier base.", metadata={"source_type": "analysis_state"})],
         ]
 
         state = AgentState(target_company="Dell", benchmark_fast_mode=True)

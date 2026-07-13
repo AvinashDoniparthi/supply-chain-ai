@@ -182,14 +182,12 @@ def supplier_agent(state: AgentState) -> AgentState:
         # processed so their downstream suppliers are discovered.
 
         is_root_target = canonical_current == resolver.resolve(target_name)
-        discovery_target = (
-            state.benchmark_target_query
-            if is_root_target and state.benchmark_target_query
-            else current_company
-        )
-
         discovery = SupplierDiscoveryScraper(runtime_state=state, prefer_curated=True)
-        discovered_data = discovery.find_suppliers(discovery_target)
+        # Company identity and benchmark context are deliberately separate.  The
+        # scraper reads product/component context from ``runtime_state``; passing
+        # the combined benchmark query here prevents deterministic company-keyed
+        # curated and cache lookups from matching.
+        discovered_data = discovery.find_suppliers(current_company)
 
         # If the discovery returned nothing, attempt common aliases from the
         # identity resolver mapping (e.g. 'TSMC' -> 'Taiwan Semiconductor...')

@@ -102,5 +102,15 @@ class TestHistoryAgent(unittest.TestCase):
         self.assertEqual(updated_state.history[-1]["status"], "failed")
         self.assertFalse(any(item.get("status") == "success" for item in updated_state.history))
 
+    def test_malformed_history_read_is_visible_and_not_overwritten(self):
+        history_file = os.path.join(self.test_history_dir, f"{self.company_name.lower()}.json")
+        with open(history_file, "w") as handle:
+            handle.write("not-json")
+        updated_state = self.agent.process_history(self.state)
+        self.assertEqual(updated_state.stage_statuses["history_persistence"], "failed")
+        self.assertTrue(any("History load failed" in error for error in updated_state.errors))
+        with open(history_file) as handle:
+            self.assertEqual(handle.read(), "not-json")
+
 if __name__ == '__main__':
     unittest.main()

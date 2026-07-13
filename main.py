@@ -63,7 +63,9 @@ def run_analysis(
         skip_news=skip_news,
         supplier_cache_enabled=supplier_cache_enabled,
         refresh_supplier_cache=refresh_supplier_cache,
-        supplier_cache_only=supplier_cache_only,
+        # Fast benchmark acquisition is deterministic and offline: curated data,
+        # serialized reports, and strictly filtered Chroma caches only.
+        supplier_cache_only=supplier_cache_only or fast_benchmark,
         benchmark_fast_mode=fast_benchmark,
         quota_exhausted=False,
         execution_mode=execution_mode,
@@ -100,7 +102,18 @@ def run_analysis(
             )
             index_knowledge_base()
         except Exception as exc:
-            logger.warning("Knowledge report generation or indexing failed: %s", exc)
+            error = f"Knowledge report generation or indexing failed: {exc}"
+            logger.warning(error)
+            final_state.errors.append(error)
+            final_state.stage_statuses["knowledge_indexing"] = "failed"
+            final_state.history.append(
+                {
+                    "agent": "knowledge_base",
+                    "action": "report_or_index_failed",
+                    "status": "failed",
+                    "error": error,
+                }
+            )
 
         return final_state
 

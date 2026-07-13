@@ -762,22 +762,33 @@ def generate_rag_report(
     section_k = min(max(k, 3), 5)
     raw_section_chunks: Dict[str, List[str]] = {}
     retrieved_documents: List[Any] = []
+    product = getattr(state, "product_name", None) if state is not None else None
+    component = getattr(state, "component_name", None) if state is not None else None
     for section, query in _section_queries(company).items():
-        raw_section_chunks[section] = retrieve_context(
-            query=query,
-            company=company,
-            k=section_k,
-            source_priority=[SOURCE_KNOWLEDGE_REPORT, SOURCE_ANALYSIS_STATE],
-            provider=provider,
-        )
-        documents = retrieve_context_documents(
-            query=query,
-            company=company,
-            k=section_k,
-            source_priority=[SOURCE_KNOWLEDGE_REPORT, SOURCE_ANALYSIS_STATE],
-            provider=provider,
-        )
+        try:
+            documents = retrieve_context_documents(
+                query=query,
+                company=company,
+                k=section_k,
+                source_priority=[SOURCE_KNOWLEDGE_REPORT, SOURCE_ANALYSIS_STATE],
+                provider=provider,
+                product=product,
+                component=component,
+                raise_on_error=True,
+            )
+        except Exception as exc:
+            error = f"RAG retrieval failed for {company} section {section}: {exc}"
+            logger.warning(error)
+            documents = []
+            if state is not None:
+                state.errors.append(error)
+                state.run_metadata["retrieval_status"] = "failed"
         retrieved_documents.extend(documents)
+        raw_section_chunks[section] = [
+            (getattr(document, "page_content", "") or "").strip()
+            for document in documents
+            if (getattr(document, "page_content", "") or "").strip()
+        ]
 
     raw_section_chunks["health"] = _ensure_health_context(
         company, state, raw_section_chunks.get("health", [])
@@ -804,9 +815,10 @@ def generate_rag_report(
         state.run_metadata["analysis_state_chunks"] = source_mix[SOURCE_ANALYSIS_STATE]
         state.run_metadata["retrieval_chunks_attached"] = len(context_chunks)
         state.run_metadata["retrieval_source_mix"] = source_mix
-        state.run_metadata["retrieval_status"] = (
-            "success" if retrieved_documents else "insufficient_company_context"
-        )
+        if state.run_metadata.get("retrieval_status") != "failed":
+            state.run_metadata["retrieval_status"] = (
+                "success" if retrieved_documents else "insufficient_company_context"
+            )
         logger.debug(
             "Knowledge Report Chunks Retrieved: %s",
             source_mix[SOURCE_KNOWLEDGE_REPORT],
