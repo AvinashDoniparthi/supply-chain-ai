@@ -1,7 +1,11 @@
 import unittest
 from unittest.mock import patch
 
-from providers.llm_provider import resolve_provider, get_llm
+from providers.llm_provider import (
+    get_llm,
+    provider_model_for_execution_mode,
+    resolve_provider,
+)
 
 
 class TestProviderResolution(unittest.TestCase):
@@ -42,6 +46,23 @@ class TestProviderResolution(unittest.TestCase):
         with patch.dict("os.environ", {}, clear=True):
             with self.assertRaisesRegex(ValueError, "No valid LLM API key configured"):
                 resolve_provider()
+
+    def test_llm_execution_mode_does_not_route_to_ollama(self):
+        self.assertEqual(provider_model_for_execution_mode("llm"), (None, None))
+
+    def test_rag_execution_mode_does_not_route_to_ollama(self):
+        self.assertEqual(provider_model_for_execution_mode("rag"), (None, None))
+
+    def test_slm_execution_mode_routes_to_ollama(self):
+        self.assertEqual(
+            provider_model_for_execution_mode("slm"),
+            ("ollama", "gemma3:4b"),
+        )
+
+    def test_slm_provider_alias_resolves_to_ollama_gemma(self):
+        config = resolve_provider(provider="slm")
+        self.assertEqual(config.provider, "ollama")
+        self.assertEqual(config.model, "gemma3:4b")
 
     @patch("providers.llm_provider.ChatGoogleGenerativeAI")
     def test_gemini_timeout_defaults_and_clamps_to_minimum(

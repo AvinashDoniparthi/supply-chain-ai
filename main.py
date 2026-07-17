@@ -4,6 +4,7 @@ import logging
 from models.state import AgentState
 from retrieval.knowledge_report_generator import generate_knowledge_report
 from retrieval.knowledge_base_ingestion import index_knowledge_base
+from providers.llm_provider import provider_model_for_execution_mode
 from utils.output import (
     OutputMode,
     add_output_args,
@@ -47,6 +48,8 @@ def run_analysis(
             part for part in [company_name, product, component] if part
         ).strip() or None
 
+    provider, model = provider_model_for_execution_mode(execution_mode)
+
     # 1. Initialize the shared state
     initial_state = AgentState(
         target_company=company_name,
@@ -67,8 +70,12 @@ def run_analysis(
         benchmark_fast_mode=fast_benchmark,
         quota_exhausted=False,
         execution_mode=execution_mode,
+        provider=provider,
+        model=model,
         run_metadata={
             "mode": execution_mode,
+            "provider": provider,
+            "model": model,
             "product_name": product,
             "component_name": component,
             "benchmark_target_query": benchmark_query,
@@ -158,9 +165,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--mode",
-        choices=["llm", "rag"],
+        choices=["llm", "rag", "slm"],
         default="llm",
-        help="Execution mode: llm uses the current pipeline; rag augments evidence with vector retrieval.",
+        help="Execution mode: llm uses the current pipeline; rag augments evidence with vector retrieval; slm routes LLM calls to Ollama.",
     )
     cache_group = parser.add_mutually_exclusive_group()
     cache_group.add_argument(

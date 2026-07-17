@@ -34,6 +34,6 @@
 - None verified
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-09T16:16:49.893873+00:00
-- Mode: rag
+- Generated Timestamp: 2026-07-17T17:03:27.020727+00:00
+- Mode: slm
 - Max Depth: 3

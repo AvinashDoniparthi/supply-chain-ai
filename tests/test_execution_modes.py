@@ -25,6 +25,11 @@ class TestExecutionModes(unittest.TestCase):
 
         self.assertEqual(args.mode, "rag")
 
+    def test_main_accepts_slm_mode(self):
+        args = build_parser().parse_args(["--company", "Dell", "--mode", "slm"])
+
+        self.assertEqual(args.mode, "slm")
+
     @patch("main.supply_chain_app.invoke")
     def test_mode_is_propagated_into_workflow_state(self, mock_invoke):
         mock_invoke.side_effect = lambda state: state
@@ -36,6 +41,38 @@ class TestExecutionModes(unittest.TestCase):
         self.assertEqual(state.run_metadata["mode"], "rag")
         invoked_state = mock_invoke.call_args.args[0]
         self.assertEqual(invoked_state.execution_mode, "rag")
+        self.assertIsNone(invoked_state.provider)
+        self.assertIsNone(invoked_state.model)
+
+    @patch("main.supply_chain_app.invoke")
+    def test_llm_mode_keeps_cloud_provider_selection(self, mock_invoke):
+        mock_invoke.side_effect = lambda state: state
+
+        with redirect_stdout(io.StringIO()):
+            state = run_analysis("Dell", execution_mode="llm")
+
+        self.assertEqual(state.execution_mode, "llm")
+        self.assertIsNone(state.provider)
+        self.assertIsNone(state.model)
+        invoked_state = mock_invoke.call_args.args[0]
+        self.assertIsNone(invoked_state.provider)
+        self.assertIsNone(invoked_state.model)
+
+    @patch("main.supply_chain_app.invoke")
+    def test_slm_mode_routes_ollama_into_workflow_state(self, mock_invoke):
+        mock_invoke.side_effect = lambda state: state
+
+        with redirect_stdout(io.StringIO()):
+            state = run_analysis("Dell", execution_mode="slm")
+
+        self.assertEqual(state.execution_mode, "slm")
+        self.assertEqual(state.provider, "ollama")
+        self.assertEqual(state.model, "gemma3:4b")
+        self.assertEqual(state.run_metadata["provider"], "ollama")
+        self.assertEqual(state.run_metadata["model"], "gemma3:4b")
+        invoked_state = mock_invoke.call_args.args[0]
+        self.assertEqual(invoked_state.provider, "ollama")
+        self.assertEqual(invoked_state.model, "gemma3:4b")
 
     def test_final_report_includes_selected_mode(self):
         state = AgentState(target_company="Dell", execution_mode="rag")

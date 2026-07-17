@@ -754,6 +754,10 @@ def generate_rag_report(
     missing-context message.
     """
     if state is not None:
+        provider = provider or getattr(state, "provider", None)
+        model = model or getattr(state, "model", None)
+
+    if state is not None:
         try:
             index_analysis_state(state, provider=provider)
         except Exception as exc:

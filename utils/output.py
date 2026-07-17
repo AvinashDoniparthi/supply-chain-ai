@@ -109,7 +109,12 @@ def mode_from_args(args: argparse.Namespace) -> OutputMode:
 
 
 def execution_mode_label(state: AgentState) -> str:
-    return "RAG" if getattr(state, "execution_mode", "llm") == "rag" else "LLM-only"
+    mode = getattr(state, "execution_mode", "llm")
+    if mode == "rag":
+        return "RAG"
+    if mode == "slm":
+        return "SLM"
+    return "LLM-only"
 
 
 def risk_level_from_health(score: Optional[float]) -> str:

@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Literal
 from pydantic import BaseModel, Field
 from models.relationship import RelationshipResult
 from models.verification import VerificationResult
@@ -151,6 +151,9 @@ class SupplyChainGraph(BaseModel):
     edges: List[GraphEdge]
 
 
+ModelMode = Literal["llm", "rag", "slm"]
+
+
 class AgentState(BaseModel):
     """
     The global state object shared between all agents in the supply chain intelligence system.
@@ -165,7 +168,8 @@ class AgentState(BaseModel):
         default=None, description="Product name when benchmarking a specific product"
     )
     component_name: Optional[str] = Field(
-        default=None, description="Component name when benchmarking a specific component"
+        default=None,
+        description="Component name when benchmarking a specific component",
     )
     benchmark_target_query: Optional[str] = Field(
         default=None,
@@ -212,10 +216,12 @@ class AgentState(BaseModel):
         default=True, description="Use cached supplier discovery results when available"
     )
     refresh_supplier_cache: bool = Field(
-        default=False, description="Ignore existing supplier discovery cache and refresh it"
+        default=False,
+        description="Ignore existing supplier discovery cache and refresh it",
     )
     supplier_cache_only: bool = Field(
-        default=False, description="Only use supplier discovery cache; do not run live discovery"
+        default=False,
+        description="Only use supplier discovery cache; do not run live discovery",
     )
     benchmark_fast_mode: bool = Field(
         default=False,
@@ -226,7 +232,15 @@ class AgentState(BaseModel):
         description="Marks that a quota or rate-limit error was encountered during the run",
     )
     execution_mode: str = Field(
-        default="llm", description="Execution mode: llm or rag"
+        default="llm", description="Execution mode: llm, rag, or slm"
+    )
+    provider: Optional[str] = Field(
+        default=None,
+        description="Explicit LLM provider override selected from the execution mode",
+    )
+    model: Optional[str] = Field(
+        default=None,
+        description="Explicit LLM model override selected from the execution mode",
     )
     run_metadata: Dict[str, Any] = Field(default_factory=dict)
     mapping_queue: List[str] = Field(

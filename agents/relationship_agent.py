@@ -249,13 +249,17 @@ def _enforce_relationship_thresholds(result: RelationshipResult) -> Relationship
     return result
 
 
-classifier: Optional[LLMRelationshipClassifier] = None
+classifier_cache: Dict[tuple[Optional[str], Optional[str]], LLMRelationshipClassifier] = {}
 
 
-def get_classifier() -> LLMRelationshipClassifier:
-    global classifier
+def get_classifier(
+    provider: Optional[str] = None, model: Optional[str] = None
+) -> LLMRelationshipClassifier:
+    cache_key = (provider, model)
+    classifier = classifier_cache.get(cache_key)
     if classifier is None:
-        classifier = LLMRelationshipClassifier()
+        classifier = LLMRelationshipClassifier(provider=provider, model=model)
+        classifier_cache[cache_key] = classifier
     return classifier
 
 
@@ -295,7 +299,10 @@ def relationship_agent(state: AgentState) -> AgentState:
         active_classifier = HeuristicRelationshipClassifier()
     else:
         try:
-            active_classifier: RelationshipClassifier = get_classifier()
+            active_classifier: RelationshipClassifier = get_classifier(
+                provider=state.provider,
+                model=state.model,
+            )
             if isinstance(active_classifier, LLMRelationshipClassifier):
                 set_stage_status(state, "relationship_classification", "llm")
                 print_llm_config_once(active_classifier.config)
