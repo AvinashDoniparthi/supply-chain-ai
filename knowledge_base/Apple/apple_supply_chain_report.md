@@ -4,7 +4,7 @@
 - Company: Apple
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 21:35:19 IST
+- Generated At: 2026-07-27 21:30:48 IST
 - 1. EXECUTIVE SUMMARY
 - Apple has a moderately healthy supply chain with strong dependence on TSMC, Broadcom, and Murata Manufacturing. The main concern is geographic disruption exposure among key suppliers.
 - Recommendations
@@ -13,7 +13,7 @@
 - Suppliers discovered: 11
 - Suppliers retained after verification: 10
 - Suppliers discarded: 1
-- - VDL ETG: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: High - 5 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: High (91%; 10/11 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -252,6 +252,6 @@
 - Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T16:05:19.926195+00:00
+- Generated Timestamp: 2026-07-27T16:00:48.988622+00:00
 - Mode: slm
 - Max Depth: 3

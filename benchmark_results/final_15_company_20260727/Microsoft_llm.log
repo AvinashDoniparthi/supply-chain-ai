@@ -1,0 +1,87 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Microsoft
+Mode: LLM-only
+Max Depth: 3
+Generated At: 2026-07-27 21:28:06 IST
+
+1. EXECUTIVE SUMMARY
+None identified
+
+2. DISCOVERY QUALITY
+Suppliers discovered: 0
+Suppliers retained after verification: 0
+Suppliers discarded: 0
+Coverage: Insufficient Data - 0 discovered Tier-1 suppliers identified.
+
+3. SUPPLY CHAIN HEALTH
+None identified
+
+4. SUPPLIER NETWORK
+4.1 Tier 1 Suppliers
+TIER 1 SUPPLIERS
+Direct suppliers to Microsoft
+
+None identified
+
+4.2 Tier 2 Suppliers
+TIER 2 SUPPLIERS
+Upstream suppliers connected through Tier 1 suppliers
+
+None identified
+
+4.3 Tier 3 Suppliers
+TIER 3 SUPPLIERS
+Upstream suppliers connected through Tier 2 suppliers
+
+None identified
+
+5. TOP RISKS
+High
+None identified
+
+Medium
+None identified
+
+Low
+None identified
+
+No supplier-specific risks detected
+
+6. DATA QUALITY WARNINGS
+Low Verification Confidence
+None identified
+
+Failed Verification
+None identified
+
+Missing Verification Result
+None identified
+
+7. CRITICAL SUPPLIERS
+None identified
+
+8. PERFORMANCE TIMINGS
+Company Research             : <0.1s (cache)
+Supplier Discovery           : 0.2s
+Relationship Classification  : <0.1s (llm)
+Verification                 : <0.1s
+Risk Analysis                : <0.1s
+Confidence Scoring           : <0.1s
+Criticality Scoring          : <0.1s
+Health Scoring               : <0.1s
+Report Generation            : <0.1s
+History Persistence          : <0.1s
+Graph Export                 : <0.1s
+
+Total Runtime                : 0.2s
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"Microsoft","discard_reasons":[],"discarded_supplier_names":[],"discovered_supplier_names":[],"errors":[],"execution_mode":"llm","fallback_stages":[],"fallback_used":false,"insufficient_public_data":true,"model":"gemini-2.5-flash","primary_model_success":null,"provider":"google","retained_supplier_names":[],"retrieved_chunk_count":0,"risk_input_count":0,"risks_identified":0,"stage_runtimes":{"company_research":0.0010713499998473708,"executive_report":1.8420000060359598e-05,"retrieval":null,"risk_analysis":6.483999982265232e-05,"supplier_discovery":0.15460249000011572,"verification":7.357699996646261e-05},"suppliers_discarded":0,"suppliers_discovered":0,"suppliers_retained":0,"system_failure":false,"total_runtime_seconds":0.16801312799998414,"verification_confidence":null,"warnings":[],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 88
+Chroma collection count after indexing: 3790

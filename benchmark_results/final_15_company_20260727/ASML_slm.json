@@ -1,0 +1,60 @@
+{
+  "analysis_complete": true,
+  "company": "ASML",
+  "discard_reasons": [
+    {
+      "reason": "company_exists=False",
+      "supplier": "VDL ETG"
+    }
+  ],
+  "discarded_absent_from_retained": true,
+  "discarded_supplier_names": [
+    "VDL ETG"
+  ],
+  "discovered_supplier_names": [
+    "Carl Zeiss SMT",
+    "VDL ETG"
+  ],
+  "errors": [],
+  "execution_mode": "slm",
+  "fallback_stages": [
+    "relationship_classification"
+  ],
+  "fallback_used": true,
+  "insufficient_public_data": false,
+  "log_file": "ASML_slm.log",
+  "model": "gemma3:4b",
+  "primary_model_success": false,
+  "provider": "ollama",
+  "rejected_absent_from_final_report": true,
+  "rejected_supplier_names_in_final_report": [],
+  "retained_supplier_names": [
+    "Carl Zeiss SMT"
+  ],
+  "retrieved_chunk_count": 0,
+  "risk_input_count": 1,
+  "risk_input_matches_retained": true,
+  "risks_identified": 0,
+  "stage_runtimes": {
+    "company_research": 0.000310741000021153,
+    "executive_report": 0.021600339999849894,
+    "retrieval": null,
+    "risk_analysis": 0.0025169559999085322,
+    "supplier_discovery": 0.3387146780000876,
+    "verification": 0.010973564000096303
+  },
+  "suppliers_discarded": 1,
+  "suppliers_discovered": 2,
+  "suppliers_retained": 1,
+  "system_failure": false,
+  "total_runtime_seconds": 0.43585567800005265,
+  "verification_confidence": 0.91,
+  "wall_clock_runtime_seconds": 0.6226720709998972,
+  "warnings": [
+    "Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT",
+    "Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf",
+    "Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG"
+  ],
+  "workflow_completion": true,
+  "workflow_status": "completed"
+}

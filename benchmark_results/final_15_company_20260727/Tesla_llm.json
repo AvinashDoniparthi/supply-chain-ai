@@ -1,0 +1,89 @@
+{
+  "analysis_complete": true,
+  "company": "Tesla",
+  "discard_reasons": [
+    {
+      "reason": "company_exists=False",
+      "supplier": "Sumitomo Metal Mining"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "Mitsubishi Materials"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "Ganfeng Lithium"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "Tianqi Lithium"
+    }
+  ],
+  "discarded_absent_from_retained": true,
+  "discarded_supplier_names": [
+    "Sumitomo Metal Mining",
+    "Mitsubishi Materials",
+    "Ganfeng Lithium",
+    "Tianqi Lithium"
+  ],
+  "discovered_supplier_names": [
+    "Panasonic",
+    "Contemporary Amperex Technology Co. Limited",
+    "LG Energy Solution",
+    "Samsung SDI",
+    "Sumitomo Metal Mining",
+    "Mitsubishi Materials",
+    "Ganfeng Lithium",
+    "Tianqi Lithium"
+  ],
+  "errors": [],
+  "execution_mode": "llm",
+  "fallback_stages": [
+    "relationship_classification"
+  ],
+  "fallback_used": true,
+  "insufficient_public_data": false,
+  "log_file": "Tesla_llm.log",
+  "model": "gemini-2.5-flash",
+  "primary_model_success": false,
+  "provider": "google",
+  "rejected_absent_from_final_report": true,
+  "rejected_supplier_names_in_final_report": [],
+  "retained_supplier_names": [
+    "Panasonic",
+    "Contemporary Amperex Technology Co. Limited",
+    "LG Energy Solution",
+    "Samsung SDI"
+  ],
+  "retrieved_chunk_count": 0,
+  "risk_input_count": 4,
+  "risk_input_matches_retained": true,
+  "risks_identified": 1,
+  "stage_runtimes": {
+    "company_research": 0.0003034999999727006,
+    "executive_report": 0.13662475899991477,
+    "retrieval": null,
+    "risk_analysis": 0.004653891000089061,
+    "supplier_discovery": 1.0384329109999726,
+    "verification": 0.045668546000115384
+  },
+  "suppliers_discarded": 4,
+  "suppliers_discovered": 8,
+  "suppliers_retained": 4,
+  "system_failure": false,
+  "total_runtime_seconds": 1.3955789740000455,
+  "verification_confidence": 0.88,
+  "wall_clock_runtime_seconds": 1.7322916329999316,
+  "warnings": [
+    "Relationship classification primary model failed for Panasonic: Relationship classification failed for Panasonic",
+    "Relationship classification primary model failed for Contemporary Amperex Technology Co. Limited: Relationship classification failed for Contemporary Amperex Technology Co. Limited",
+    "Relationship classification primary model failed for LG Energy Solution: Relationship classification failed for LG Energy Solution",
+    "Relationship classification primary model failed for Samsung SDI: Relationship classification failed for Samsung SDI",
+    "Relationship classification primary model failed for Sumitomo Metal Mining: Relationship classification failed for Sumitomo Metal Mining",
+    "Relationship classification primary model failed for Mitsubishi Materials: Relationship classification failed for Mitsubishi Materials",
+    "Relationship classification primary model failed for Ganfeng Lithium: Relationship classification failed for Ganfeng Lithium",
+    "Relationship classification primary model failed for Tianqi Lithium: Relationship classification failed for Tianqi Lithium"
+  ],
+  "workflow_completion": true,
+  "workflow_status": "completed"
+}

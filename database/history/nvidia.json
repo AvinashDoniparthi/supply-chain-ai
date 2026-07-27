@@ -1271,6 +1271,122 @@
         "Sony Semiconductor Solutions",
         "Carl Zeiss SMT"
       ]
+    },
+    {
+      "timestamp": "2026-07-27T21:23:13.904996",
+      "mode": "llm",
+      "health_score": 82.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:23:20.146158",
+      "mode": "rag",
+      "health_score": 83.1,
+      "health_status": "Good",
+      "supplier_count": 10,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "Samsung Electronics",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:23:23.965992",
+      "mode": "slm",
+      "health_score": 82.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:27:43.286645",
+      "mode": "llm",
+      "health_score": 82.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:27:46.922080",
+      "mode": "rag",
+      "health_score": 83.1,
+      "health_status": "Good",
+      "supplier_count": 10,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "Samsung Electronics",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:27:49.609860",
+      "mode": "slm",
+      "health_score": 82.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
     }
   ]
 }

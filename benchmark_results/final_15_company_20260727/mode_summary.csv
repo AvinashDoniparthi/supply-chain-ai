@@ -1,0 +1,4 @@
+execution_mode,runs,provider_models,workflow_completion_rate,primary_model_success_rate,fallback_rate,insufficient_data_runs,system_failure_runs,average_runtime_seconds,retrieval_runs_with_chunks,risk_input_integrity_failures,rejected_supplier_integrity_failures
+llm,15,google:gemini-2.5-flash,1.0,0.0,0.6,6,0,1.4967305505333266,0,0,0
+rag,15,google:gemini-2.5-flash,1.0,0.0,0.6,6,0,1.858533773933353,9,0,0
+slm,15,ollama:gemma3:4b,1.0,0.0,0.6,6,0,1.4745323425999837,0,0,0

@@ -1,0 +1,169 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Nvidia
+Mode: SLM
+Max Depth: 3
+Generated At: 2026-07-27 21:27:49 IST
+
+1. EXECUTIVE SUMMARY
+Nvidia has a moderately healthy supply chain with strong dependence on SK hynix, TSMC, and Applied Materials. The main concern is geographic disruption exposure among key suppliers.
+
+Recommendations
+1. Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: Nvidia -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+
+2. DISCOVERY QUALITY
+Suppliers discovered: 10
+Suppliers retained after verification: 9
+Suppliers discarded: 1
+- Discard reasons are preserved in the run benchmark record.
+Coverage: High - 2 discovered Tier-1 suppliers identified.
+Verification-adjusted coverage: High (90%; 9/10 suppliers verified).
+
+3. SUPPLY CHAIN HEALTH
+Status: Good - 82.2/100.
+Supplier Count: 9
+Critical Suppliers: 0
+High-Risk Suppliers: 1
+Summary: Nvidia's supply chain appears good overall. 1 supplier(s) face high or critical risk exposure. Verification quality is high (9/10 suppliers verified).
+
+4. SUPPLIER NETWORK
+4.1 Tier 1 Suppliers
+TIER 1 SUPPLIERS
+Direct suppliers to Nvidia
+
+1. SK hynix
+   Relationship : Supplier
+   Confidence   : 0.90
+   Verification : Verified (0.91)
+
+2. TSMC
+   Relationship : Supplier
+   Confidence   : 0.86
+   Verification : Verified (0.91)
+
+4.2 Tier 2 Suppliers
+TIER 2 SUPPLIERS
+Upstream suppliers connected through Tier 1 suppliers
+
+1. ASML
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> ASML
+   Relationship : Upstream Supplier
+   Confidence   : 0.91
+   Verification : Verified (0.91)
+
+2. Applied Materials
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+   Relationship : Upstream Supplier
+   Confidence   : 0.87
+   Verification : Verified (0.89)
+
+3. Lam Research
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+   Relationship : Upstream Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.88)
+
+4. Murata Manufacturing
+   Parent       : Samsung Electronics
+   Path         : Nvidia -> Samsung Electronics -> Murata Manufacturing
+   Relationship : Upstream Supplier
+   Confidence   : 0.89
+   Verification : Verified (0.91)
+
+5. Sony Semiconductor Solutions
+   Parent       : Samsung Electronics
+   Path         : Nvidia -> Samsung Electronics -> Sony Semiconductor Solutions
+   Relationship : Upstream Supplier
+   Confidence   : 0.89
+   Verification : Verified (0.91)
+
+6. Tokyo Electron
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+   Relationship : Upstream Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.88)
+
+4.3 Tier 3 Suppliers
+TIER 3 SUPPLIERS
+Upstream suppliers connected through Tier 2 suppliers
+
+1. Carl Zeiss SMT
+   Parent       : ASML
+   Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
+   Relationship : Upstream Supplier
+   Confidence   : 0.90
+   Verification : Verified (0.91)
+
+5. TOP RISKS
+High
+1. Geopolitical risk involving TSMC
+   Affected Path: Nvidia -> Taiwan Semiconductor Manufacturing Company
+   Reason: Taiwan geopolitical exposure through TSMC. Affected path: Nvidia -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+   Confidence: 0.90
+   Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+
+Medium
+None identified
+
+Low
+None identified
+
+6. DATA QUALITY WARNINGS
+Low Verification Confidence
+None identified
+
+Failed Verification
+None identified
+
+Missing Verification Result
+None identified
+
+7. CRITICAL SUPPLIERS
+1. TSMC
+   Tier         : 1
+   Confidence   : 0.86
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+2. SK hynix
+   Tier         : 1
+   Confidence   : 0.90
+   Reason       : Supplier manufactures core memory components and appears to be a sole-source dependency.
+
+3. Applied Materials
+   Tier         : 2
+   Confidence   : 0.87
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+4. Tokyo Electron
+   Tier         : 2
+   Confidence   : 0.85
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+8. PERFORMANCE TIMINGS
+Company Research             : <0.1s (cache)
+Supplier Discovery           : 2.0s
+Relationship Classification  : <0.1s (heuristic)
+Verification                 : <0.1s
+Risk Analysis                : <0.1s
+Confidence Scoring           : <0.1s
+Criticality Scoring          : <0.1s
+Health Scoring               : <0.1s
+Report Generation            : 0.3s
+History Persistence          : <0.1s
+Graph Export                 : <0.1s
+
+Total Runtime                : 2.4s
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"Nvidia","discard_reasons":[{"reason":"company_exists=False","supplier":"VDL ETG"}],"discarded_supplier_names":["VDL ETG"],"discovered_supplier_names":["Taiwan Semiconductor Manufacturing Company","SK hynix","ASML","Applied Materials","Lam Research","Tokyo Electron","Murata Manufacturing","Sony Semiconductor Solutions","Carl Zeiss SMT","VDL ETG"],"errors":[],"execution_mode":"slm","fallback_stages":["relationship_classification"],"fallback_used":true,"insufficient_public_data":false,"model":"gemma3:4b","primary_model_success":false,"provider":"ollama","retained_supplier_names":["Taiwan Semiconductor Manufacturing Company","SK hynix","ASML","Applied Materials","Lam Research","Tokyo Electron","Murata Manufacturing","Sony Semiconductor Solutions","Carl Zeiss SMT"],"retrieved_chunk_count":0,"risk_input_count":9,"risks_identified":1,"stage_runtimes":{"company_research":0.000263766999978543,"executive_report":0.30681101400000443,"retrieval":null,"risk_analysis":0.007910036000112086,"supplier_discovery":1.9598732570000266,"verification":0.021268699000074776},"suppliers_discarded":1,"suppliers_discovered":10,"suppliers_retained":9,"system_failure":false,"total_runtime_seconds":2.4308980309999697,"verification_confidence":0.9,"warnings":["Relationship classification primary model failed for Taiwan Semiconductor: Relationship classification failed for Taiwan Semiconductor","Relationship classification primary model failed for SK Hynix: Relationship classification failed for SK Hynix","Relationship classification primary model failed for Samsung Electronics: Relationship classification failed for Samsung Electronics","Relationship classification primary model failed for ASML: Relationship classification failed for ASML","Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials","Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research","Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron","Relationship classification primary model failed for Murata Manufacturing: Relationship classification failed for Murata Manufacturing","Relationship classification primary model failed for Sony Semiconductor: Relationship classification failed for Sony Semiconductor","Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT","Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf","Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG"],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 88
+Chroma collection count after indexing: 3775

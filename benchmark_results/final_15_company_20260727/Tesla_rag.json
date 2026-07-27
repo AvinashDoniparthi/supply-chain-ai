@@ -1,0 +1,92 @@
+{
+  "analysis_complete": true,
+  "company": "Tesla",
+  "discard_reasons": [
+    {
+      "reason": "company_exists=False",
+      "supplier": "Sumitomo Metal Mining"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "Mitsubishi Materials"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "Ganfeng Lithium"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "Tianqi Lithium"
+    }
+  ],
+  "discarded_absent_from_retained": true,
+  "discarded_supplier_names": [
+    "Sumitomo Metal Mining",
+    "Mitsubishi Materials",
+    "Ganfeng Lithium",
+    "Tianqi Lithium"
+  ],
+  "discovered_supplier_names": [
+    "Panasonic",
+    "Contemporary Amperex Technology Co. Limited",
+    "LG Energy Solution",
+    "Samsung SDI",
+    "Sumitomo Metal Mining",
+    "Mitsubishi Materials",
+    "Ganfeng Lithium",
+    "Tianqi Lithium"
+  ],
+  "errors": [],
+  "execution_mode": "rag",
+  "fallback_stages": [
+    "relationship_classification",
+    "rag_report_generation"
+  ],
+  "fallback_used": true,
+  "insufficient_public_data": false,
+  "log_file": "Tesla_rag.log",
+  "model": "gemini-2.5-flash",
+  "primary_model_success": false,
+  "provider": "google",
+  "rejected_absent_from_final_report": true,
+  "rejected_supplier_names_in_final_report": [],
+  "retained_supplier_names": [
+    "Panasonic",
+    "Contemporary Amperex Technology Co. Limited",
+    "LG Energy Solution",
+    "Samsung SDI"
+  ],
+  "retrieved_chunk_count": 20,
+  "risk_input_count": 4,
+  "risk_input_matches_retained": true,
+  "risks_identified": 1,
+  "stage_runtimes": {
+    "company_research": 0.0002760709999165556,
+    "executive_report": 0.27900861600005555,
+    "retrieval": 0.6327480260001721,
+    "risk_analysis": 0.0038165299999946,
+    "supplier_discovery": 0.8090487829999802,
+    "verification": 0.3044255869999688
+  },
+  "suppliers_discarded": 4,
+  "suppliers_discovered": 8,
+  "suppliers_retained": 4,
+  "system_failure": false,
+  "total_runtime_seconds": 2.004060038000034,
+  "verification_confidence": 0.89,
+  "wall_clock_runtime_seconds": 2.235900245000039,
+  "warnings": [
+    "Relationship classification primary model failed for Panasonic: Relationship classification failed for Panasonic",
+    "Relationship classification primary model failed for Contemporary Amperex Technology Co. Limited: Relationship classification failed for Contemporary Amperex Technology Co. Limited",
+    "Relationship classification primary model failed for LG Energy Solution: Relationship classification failed for LG Energy Solution",
+    "Relationship classification primary model failed for Samsung SDI: Relationship classification failed for Samsung SDI",
+    "Relationship classification primary model failed for Sumitomo Metal Mining: Relationship classification failed for Sumitomo Metal Mining",
+    "Relationship classification primary model failed for Mitsubishi Materials: Relationship classification failed for Mitsubishi Materials",
+    "Relationship classification primary model failed for Ganfeng Lithium: Relationship classification failed for Ganfeng Lithium",
+    "Relationship classification primary model failed for Tianqi Lithium: Relationship classification failed for Tianqi Lithium",
+    "RAG report primary model failed for Tesla: [Errno 8] nodename nor servname provided, or not known",
+    "RAG report fallback used for Tesla: [Errno 8] nodename nor servname provided, or not known"
+  ],
+  "workflow_completion": true,
+  "workflow_status": "completed"
+}

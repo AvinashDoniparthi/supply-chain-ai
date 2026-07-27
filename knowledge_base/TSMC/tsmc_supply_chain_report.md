@@ -4,14 +4,14 @@
 - Company: TSMC
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 20:51:31 IST
+- Generated At: 2026-07-27 21:28:17 IST
 - 1. EXECUTIVE SUMMARY
 - TSMC has a moderately healthy supply chain with strong dependence on Applied Materials, Tokyo Electron, and ASML. The main concern is limited verification depth or supplier concentration.
 - 2. DISCOVERY QUALITY
 - Suppliers discovered: 7
 - Suppliers retained after verification: 6
 - Suppliers discarded: 1
-- - VDL ETG: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: High - 5 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: High (86%; 6/7 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -157,6 +157,6 @@
 - Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T15:21:31.964670+00:00
+- Generated Timestamp: 2026-07-27T15:58:17.777846+00:00
 - Mode: slm
 - Max Depth: 3

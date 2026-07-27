@@ -1,0 +1,75 @@
+{
+  "analysis_complete": true,
+  "company": "TSMC",
+  "discard_reasons": [
+    {
+      "reason": "company_exists=False",
+      "supplier": "VDL ETG"
+    }
+  ],
+  "discarded_absent_from_retained": true,
+  "discarded_supplier_names": [
+    "VDL ETG"
+  ],
+  "discovered_supplier_names": [
+    "ASML",
+    "Applied Materials",
+    "Lam Research",
+    "Tokyo Electron",
+    "Entegris",
+    "Carl Zeiss SMT",
+    "VDL ETG"
+  ],
+  "errors": [],
+  "execution_mode": "llm",
+  "fallback_stages": [
+    "relationship_classification"
+  ],
+  "fallback_used": true,
+  "insufficient_public_data": false,
+  "log_file": "TSMC_llm.log",
+  "model": "gemini-2.5-flash",
+  "primary_model_success": false,
+  "provider": "google",
+  "rejected_absent_from_final_report": true,
+  "rejected_supplier_names_in_final_report": [],
+  "retained_supplier_names": [
+    "ASML",
+    "Applied Materials",
+    "Lam Research",
+    "Tokyo Electron",
+    "Entegris",
+    "Carl Zeiss SMT"
+  ],
+  "retrieved_chunk_count": 0,
+  "risk_input_count": 6,
+  "risk_input_matches_retained": true,
+  "risks_identified": 0,
+  "stage_runtimes": {
+    "company_research": 0.0002956350001568353,
+    "executive_report": 0.2115234939999482,
+    "retrieval": null,
+    "risk_analysis": 0.004470275999892692,
+    "supplier_discovery": 0.6323552050000671,
+    "verification": 0.025237286999981734
+  },
+  "suppliers_discarded": 1,
+  "suppliers_discovered": 7,
+  "suppliers_retained": 6,
+  "system_failure": false,
+  "total_runtime_seconds": 1.0086521719999837,
+  "verification_confidence": 0.89,
+  "wall_clock_runtime_seconds": 1.4482013039998947,
+  "warnings": [
+    "Relationship classification primary model failed for ASML: Relationship classification failed for ASML",
+    "Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials",
+    "Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research",
+    "Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron",
+    "Relationship classification primary model failed for Entegris: Relationship classification failed for Entegris",
+    "Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT",
+    "Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf",
+    "Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG"
+  ],
+  "workflow_completion": true,
+  "workflow_status": "completed"
+}

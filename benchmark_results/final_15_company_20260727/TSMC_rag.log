@@ -1,0 +1,52 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: TSMC
+Mode: RAG
+Max Depth: 3
+Generated At: 2026-07-27 21:28:16 IST
+Retrieved Context Chunks: 18
+
+RAG REPORT
+RAG EXECUTIVE SUMMARY
+TSMC's retrieved supply-chain health is Good with a score of 78.0/100. Key retrieved suppliers include ASML, Applied Materials, Lam Research.
+
+SUPPLY CHAIN HEALTH
+- Score: 78.0
+- Status: Good
+- Interpretation: TSMC's supply chain appears good overall. No major operational disruptions were detected. Verification quality is medium (6/8 suppliers verified).
+
+KEY SUPPLIERS
+- ASML (Tier 1, EUV lithography systems)
+- Applied Materials (Tier 1, Semiconductor manufacturing equipment)
+- Lam Research (Tier 1, Etch and deposition tools)
+- Tokyo Electron (Tier 1, Semiconductor production tools)
+- Entegris (Tier 1, Materials handling)
+- Carl Zeiss SMT (Tier 2, Lithography optics)
+
+TIER DEPENDENCIES
+- TSMC -> ASML
+- TSMC -> Applied Materials
+- TSMC -> Lam Research
+- TSMC -> Tokyo Electron
+- TSMC -> Entegris
+- TSMC -> ASML -> Carl Zeiss SMT
+
+MAJOR RISKS
+- Information not available in retrieved context.
+
+RECOMMENDATIONS
+- Information not available in retrieved context.
+
+DATA LIMITATIONS
+- Risk context was not retrieved.
+- Recommendation context was not retrieved.
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"TSMC","discard_reasons":[{"reason":"company_exists=False","supplier":"Trumpf"},{"reason":"company_exists=False","supplier":"VDL ETG"}],"discarded_supplier_names":["Trumpf","VDL ETG"],"discovered_supplier_names":["ASML","Applied Materials","Lam Research","Tokyo Electron","Entegris","Carl Zeiss SMT","Trumpf","VDL ETG"],"errors":[],"execution_mode":"rag","fallback_stages":["relationship_classification","rag_report_generation"],"fallback_used":true,"insufficient_public_data":false,"model":"gemini-2.5-flash","primary_model_success":false,"provider":"google","retained_supplier_names":["ASML","Applied Materials","Lam Research","Tokyo Electron","Entegris","Carl Zeiss SMT"],"retrieved_chunk_count":18,"risk_input_count":6,"risks_identified":0,"stage_runtimes":{"company_research":0.000264324999989185,"executive_report":0.28166490199987493,"retrieval":0.6369229239999186,"risk_analysis":0.00557434799998191,"supplier_discovery":0.6163654009999391,"verification":0.2865930800001024},"suppliers_discarded":2,"suppliers_discovered":8,"suppliers_retained":6,"system_failure":false,"total_runtime_seconds":1.574959089999993,"verification_confidence":0.89,"warnings":["Relationship classification primary model failed for ASML: Relationship classification failed for ASML","Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials","Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research","Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron","Relationship classification primary model failed for Entegris: Relationship classification failed for Entegris","Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT","Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf","Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG","RAG report primary model failed for TSMC: [Errno 8] nodename nor servname provided, or not known","RAG report fallback used for TSMC: [Errno 8] nodename nor servname provided, or not known"],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 85
+Chroma collection count after indexing: 3799

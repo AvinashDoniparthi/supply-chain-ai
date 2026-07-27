@@ -4,7 +4,7 @@
 - Company: AMD
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 20:49:09 IST
+- Generated At: 2026-07-27 21:28:01 IST
 - 1. EXECUTIVE SUMMARY
 - AMD has a moderately healthy semiconductor supply chain with strong dependence on TSMC, Samsung, and outsourced packaging suppliers. The main concern is geographic disruption exposure among key Asian semiconductor suppliers.
 - Recommendations
@@ -13,7 +13,7 @@
 - Suppliers discovered: 13
 - Suppliers retained after verification: 12
 - Suppliers discarded: 1
-- - VDL ETG: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: High - 5 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: High (92%; 12/13 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -270,6 +270,6 @@
 - Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T15:19:10.277683+00:00
+- Generated Timestamp: 2026-07-27T15:58:02.899338+00:00
 - Mode: slm
 - Max Depth: 3

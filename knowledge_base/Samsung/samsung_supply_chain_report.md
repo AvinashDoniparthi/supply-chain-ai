@@ -4,14 +4,14 @@
 - Company: Samsung
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 20:47:06 IST
+- Generated At: 2026-07-27 21:27:39 IST
 - 1. EXECUTIVE SUMMARY
 - Samsung has a moderately healthy supply chain with strong dependence on Qualcomm, Murata Manufacturing, and Amkor Technology. The main concern is limited verification depth or supplier concentration.
 - 2. DISCOVERY QUALITY
 - Suppliers discovered: 12
 - Suppliers retained after verification: 11
 - Suppliers discarded: 1
-- - VDL ETG: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: High - 5 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: High (92%; 11/12 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -237,6 +237,6 @@
 - Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T15:17:06.722963+00:00
+- Generated Timestamp: 2026-07-27T15:57:40.623318+00:00
 - Mode: slm
 - Max Depth: 3

@@ -1,0 +1,16 @@
+company,runs,workflow_completed,primary_model_successes,fallback_runs,insufficient_data_runs,system_failure_runs,retained_suppliers_total,risk_input_integrity_failures,runtime_missing_runs
+Apple,3,3,0,3,0,0,30,0,0
+Samsung,3,3,0,3,0,0,33,0,0
+Nvidia,3,3,0,3,0,0,28,0,0
+AMD,3,3,0,3,0,0,36,0,0
+Intel,3,3,0,3,0,0,15,0,0
+Microsoft,3,3,0,0,3,0,0,0,0
+Tesla,3,3,0,3,0,0,12,0,0
+TSMC,3,3,0,3,0,0,18,0,0
+ASML,3,3,0,3,0,0,3,0,0
+Foxconn,3,3,0,3,0,0,34,0,0
+Micron Technology,3,3,0,0,3,0,0,0,0
+Logitech,3,3,0,0,3,0,0,0,0
+Sonos,3,3,0,0,3,0,0,0,0
+GoPro,3,3,0,0,3,0,0,0,0
+Framework Computer,3,3,0,0,3,0,0,0,0

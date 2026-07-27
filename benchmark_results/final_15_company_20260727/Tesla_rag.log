@@ -1,0 +1,50 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Tesla
+Mode: RAG
+Max Depth: 3
+Generated At: 2026-07-27 21:28:11 IST
+Retrieved Context Chunks: 20
+
+RAG REPORT
+RAG EXECUTIVE SUMMARY
+Tesla's retrieved supply-chain health is Good with a score of 78.0/100. Key retrieved suppliers include Panasonic, Contemporary Amperex Technology Co. Limited, LG Energy Solution. The main retrieved risk themes are Geopolitical risk for Contemporary Amperex Technology Co. Limited.
+
+SUPPLY CHAIN HEALTH
+- Score: 78.0
+- Status: Good
+- Interpretation: Tesla's supply chain appears good overall. No major operational disruptions were detected. Verification quality is medium (4/8 suppliers verified).
+
+KEY SUPPLIERS
+- Panasonic (Tier 1, Battery cells)
+- Contemporary Amperex Technology Co. Limited (Tier 1, LFP battery cells)
+- LG Energy Solution (Tier 1, Battery cells)
+- Samsung SDI (Tier 1, Battery cells)
+
+TIER DEPENDENCIES
+- Tesla -> Panasonic
+- Tesla -> Contemporary Amperex Technology Co. Limited
+- Tesla -> LG Energy Solution
+- Tesla -> Samsung SDI
+
+MAJOR RISKS
+- Risk: Geopolitical
+  Affected supplier/path: Tesla -> Contemporary Amperex Technology Co. Limited
+  Severity: Medium
+  Reason: Geographic tension exposure through Contemporary Amperex Technology Co. Limited. Affected path: Tesla -> Contemporary Amperex Technology Co. Limited. Reason: Contemporary Amperex Technology Co. Limited is located in China, creating trade or political exposure for this supply path.
+
+RECOMMENDATIONS
+- Monitor trade policy changes and explore friend-shoring options.
+
+DATA LIMITATIONS
+- No missing retrieved sections identified.
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"Tesla","discard_reasons":[{"reason":"company_exists=False","supplier":"Sumitomo Metal Mining"},{"reason":"company_exists=False","supplier":"Mitsubishi Materials"},{"reason":"company_exists=False","supplier":"Ganfeng Lithium"},{"reason":"company_exists=False","supplier":"Tianqi Lithium"}],"discarded_supplier_names":["Sumitomo Metal Mining","Mitsubishi Materials","Ganfeng Lithium","Tianqi Lithium"],"discovered_supplier_names":["Panasonic","Contemporary Amperex Technology Co. Limited","LG Energy Solution","Samsung SDI","Sumitomo Metal Mining","Mitsubishi Materials","Ganfeng Lithium","Tianqi Lithium"],"errors":[],"execution_mode":"rag","fallback_stages":["relationship_classification","rag_report_generation"],"fallback_used":true,"insufficient_public_data":false,"model":"gemini-2.5-flash","primary_model_success":false,"provider":"google","retained_supplier_names":["Panasonic","Contemporary Amperex Technology Co. Limited","LG Energy Solution","Samsung SDI"],"retrieved_chunk_count":20,"risk_input_count":4,"risks_identified":1,"stage_runtimes":{"company_research":0.0002760709999165556,"executive_report":0.27900861600005555,"retrieval":0.6327480260001721,"risk_analysis":0.0038165299999946,"supplier_discovery":0.8090487829999802,"verification":0.3044255869999688},"suppliers_discarded":4,"suppliers_discovered":8,"suppliers_retained":4,"system_failure":false,"total_runtime_seconds":2.004060038000034,"verification_confidence":0.89,"warnings":["Relationship classification primary model failed for Panasonic: Relationship classification failed for Panasonic","Relationship classification primary model failed for Contemporary Amperex Technology Co. Limited: Relationship classification failed for Contemporary Amperex Technology Co. Limited","Relationship classification primary model failed for LG Energy Solution: Relationship classification failed for LG Energy Solution","Relationship classification primary model failed for Samsung SDI: Relationship classification failed for Samsung SDI","Relationship classification primary model failed for Sumitomo Metal Mining: Relationship classification failed for Sumitomo Metal Mining","Relationship classification primary model failed for Mitsubishi Materials: Relationship classification failed for Mitsubishi Materials","Relationship classification primary model failed for Ganfeng Lithium: Relationship classification failed for Ganfeng Lithium","Relationship classification primary model failed for Tianqi Lithium: Relationship classification failed for Tianqi Lithium","RAG report primary model failed for Tesla: [Errno 8] nodename nor servname provided, or not known","RAG report fallback used for Tesla: [Errno 8] nodename nor servname provided, or not known"],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 87
+Chroma collection count after indexing: 3790

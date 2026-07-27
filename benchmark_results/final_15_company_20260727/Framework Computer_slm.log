@@ -1,0 +1,87 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Framework Computer
+Mode: SLM
+Max Depth: 3
+Generated At: 2026-07-27 21:28:44 IST
+
+1. EXECUTIVE SUMMARY
+None identified
+
+2. DISCOVERY QUALITY
+Suppliers discovered: 0
+Suppliers retained after verification: 0
+Suppliers discarded: 0
+Coverage: Insufficient Data - 0 discovered Tier-1 suppliers identified.
+
+3. SUPPLY CHAIN HEALTH
+None identified
+
+4. SUPPLIER NETWORK
+4.1 Tier 1 Suppliers
+TIER 1 SUPPLIERS
+Direct suppliers to Framework Computer
+
+None identified
+
+4.2 Tier 2 Suppliers
+TIER 2 SUPPLIERS
+Upstream suppliers connected through Tier 1 suppliers
+
+None identified
+
+4.3 Tier 3 Suppliers
+TIER 3 SUPPLIERS
+Upstream suppliers connected through Tier 2 suppliers
+
+None identified
+
+5. TOP RISKS
+High
+None identified
+
+Medium
+None identified
+
+Low
+None identified
+
+No supplier-specific risks detected
+
+6. DATA QUALITY WARNINGS
+Low Verification Confidence
+None identified
+
+Failed Verification
+None identified
+
+Missing Verification Result
+None identified
+
+7. CRITICAL SUPPLIERS
+None identified
+
+8. PERFORMANCE TIMINGS
+Company Research             : <0.1s
+Supplier Discovery           : 0.2s
+Relationship Classification  : <0.1s (llm)
+Verification                 : <0.1s
+Risk Analysis                : <0.1s
+Confidence Scoring           : <0.1s
+Criticality Scoring          : <0.1s
+Health Scoring               : <0.1s
+Report Generation            : <0.1s
+History Persistence          : <0.1s
+Graph Export                 : <0.1s
+
+Total Runtime                : 0.2s
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"Framework Computer","discard_reasons":[],"discarded_supplier_names":[],"discovered_supplier_names":[],"errors":[],"execution_mode":"slm","fallback_stages":[],"fallback_used":false,"insufficient_public_data":true,"model":"gemma3:4b","primary_model_success":null,"provider":"ollama","retained_supplier_names":[],"retrieved_chunk_count":0,"risk_input_count":0,"risks_identified":0,"stage_runtimes":{"company_research":0.002809020999848144,"executive_report":1.0953000128210988e-05,"retrieval":null,"risk_analysis":6.666099989161012e-05,"supplier_discovery":0.15607347500008473,"verification":7.288999995580525e-05},"suppliers_discarded":0,"suppliers_discovered":0,"suppliers_retained":0,"system_failure":false,"total_runtime_seconds":0.1713891209999474,"verification_confidence":null,"warnings":[],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 88
+Chroma collection count after indexing: 3831

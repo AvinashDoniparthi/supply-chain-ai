@@ -4,14 +4,14 @@
 - Company: Intel
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 20:49:49 IST
+- Generated At: 2026-07-27 21:28:06 IST
 - 1. EXECUTIVE SUMMARY
 - Intel has a moderately healthy supply chain with strong dependence on Applied Materials, Tokyo Electron, and ASML. The main concern is limited verification depth or supplier concentration.
 - 2. DISCOVERY QUALITY
 - Suppliers discovered: 6
 - Suppliers retained after verification: 5
 - Suppliers discarded: 1
-- - VDL ETG: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: High - 4 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: High (83%; 5/6 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -145,6 +145,6 @@
 - Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T15:19:49.626841+00:00
+- Generated Timestamp: 2026-07-27T15:58:06.642665+00:00
 - Mode: slm
 - Max Depth: 3

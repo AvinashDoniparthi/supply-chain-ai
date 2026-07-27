@@ -1,0 +1,67 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: AMD
+Mode: RAG
+Max Depth: 3
+Generated At: 2026-07-27 21:27:58 IST
+Retrieved Context Chunks: 31
+
+RAG REPORT
+RAG EXECUTIVE SUMMARY
+AMD's retrieved supply-chain health is Good with a score of 81.1/100. Key retrieved suppliers include Taiwan Semiconductor Manufacturing Company, GlobalFoundries, Samsung Electronics. The main retrieved risk themes are Geopolitical risk for TSMC, Geopolitical risk for ASE Technology.
+
+SUPPLY CHAIN HEALTH
+- Score: 81.1
+- Status: Good
+- Interpretation: AMD's supply chain appears good overall. 2 supplier(s) face high or critical risk exposure. Verification quality is high (12/14 suppliers verified).
+
+KEY SUPPLIERS
+- Taiwan Semiconductor Manufacturing Company (Tier 1, Semiconductor foundry)
+- GlobalFoundries (Tier 1, Semiconductor foundry)
+- Samsung Electronics (Tier 1, Semiconductor manufacturing)
+- ASE Technology (Tier 1, Semiconductor packaging)
+- Amkor Technology (Tier 1, Semiconductor packaging)
+- ASML (Tier 2, EUV lithography systems)
+- Applied Materials (Tier 2, Semiconductor manufacturing equipment)
+- Lam Research (Tier 2, Etch and deposition tools)
+
+TIER DEPENDENCIES
+- AMD -> Taiwan Semiconductor Manufacturing Company
+- AMD -> GlobalFoundries
+- AMD -> Samsung Electronics
+- AMD -> ASE Technology
+- AMD -> Amkor Technology
+- AMD -> Taiwan Semiconductor Manufacturing Company -> ASML
+- AMD -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+- AMD -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+
+MAJOR RISKS
+- Risk: Geopolitical
+  Affected supplier/path: AMD -> Taiwan Semiconductor Manufacturing Company
+  Severity: High
+  Reason: Taiwan geopolitical exposure through TSMC. Affected path: AMD -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- Risk: Geopolitical
+  Affected supplier/path: AMD -> ASE Technology
+  Severity: High
+  Reason: Taiwan geopolitical exposure through ASE Technology. Affected path: AMD -> ASE Technology. Reason: ASE Technology is located in Taiwan, a high-tension geopolitical region.
+
+RECOMMENDATIONS
+- Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: AMD -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+
+DATA LIMITATIONS
+- No missing retrieved sections identified.
+
+TIER 3 SUPPLIERS
+1. Carl Zeiss SMT
+   Path         : AMD -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
+   Verification : Verified (0.90)
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"AMD","discard_reasons":[{"reason":"company_exists=False","supplier":"Trumpf"},{"reason":"company_exists=False","supplier":"VDL ETG"}],"discarded_supplier_names":["Trumpf","VDL ETG"],"discovered_supplier_names":["Taiwan Semiconductor Manufacturing Company","GlobalFoundries","Samsung Electronics","ASE Technology","Amkor Technology","ASML","Applied Materials","Lam Research","Tokyo Electron","Murata Manufacturing","Sony Semiconductor Solutions","Carl Zeiss SMT","Trumpf","VDL ETG"],"errors":[],"execution_mode":"rag","fallback_stages":["relationship_classification","rag_report_generation"],"fallback_used":true,"insufficient_public_data":false,"model":"gemini-2.5-flash","primary_model_success":false,"provider":"google","retained_supplier_names":["Taiwan Semiconductor Manufacturing Company","GlobalFoundries","Samsung Electronics","ASE Technology","Amkor Technology","ASML","Applied Materials","Lam Research","Tokyo Electron","Murata Manufacturing","Sony Semiconductor Solutions","Carl Zeiss SMT"],"retrieved_chunk_count":31,"risk_input_count":12,"risks_identified":2,"stage_runtimes":{"company_research":0.0002788389999750507,"executive_report":0.3310029649999251,"retrieval":0.914088073999892,"risk_analysis":0.019865040000013323,"supplier_discovery":2.8558836530000917,"verification":0.43818417900001805},"suppliers_discarded":2,"suppliers_discovered":14,"suppliers_retained":12,"system_failure":false,"total_runtime_seconds":4.227777846000208,"verification_confidence":0.9,"warnings":["Relationship classification primary model failed for TSMC: Relationship classification failed for TSMC","Relationship classification primary model failed for GlobalFoundries: Relationship classification failed for GlobalFoundries","Relationship classification primary model failed for Samsung: Relationship classification failed for Samsung","Relationship classification primary model failed for ASE Technology: Relationship classification failed for ASE Technology","Relationship classification primary model failed for Amkor Technology: Relationship classification failed for Amkor Technology","Relationship classification primary model failed for ASML: Relationship classification failed for ASML","Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials","Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research","Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron","Relationship classification primary model failed for Murata Manufacturing: Relationship classification failed for Murata Manufacturing","Relationship classification primary model failed for Sony Semiconductor: Relationship classification failed for Sony Semiconductor","Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT","Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf","Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG","RAG report primary model failed for AMD: [Errno 8] nodename nor servname provided, or not known","RAG report fallback used for AMD: [Errno 8] nodename nor servname provided, or not known"],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 85
+Chroma collection count after indexing: 3783

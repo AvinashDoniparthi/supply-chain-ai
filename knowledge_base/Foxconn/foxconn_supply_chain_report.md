@@ -4,7 +4,7 @@
 - Company: Foxconn
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 20:53:16 IST
+- Generated At: 2026-07-27 21:28:36 IST
 - 1. EXECUTIVE SUMMARY
 - Foxconn has a moderately healthy supply chain with strong dependence on TSMC, Applied Materials, and Broadcom. The main concern is geographic disruption exposure among key suppliers.
 - Recommendations
@@ -13,10 +13,7 @@
 - Suppliers discovered: 15
 - Suppliers retained after verification: 11
 - Suppliers discarded: 4
-- - E Ink Corporation: company_exists=False
-- - Netronix Inc: company_exists=False
-- - Geely Holding Group: company_exists=False
-- - PTT Public Co: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: Medium - 5 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: Medium (73%; 11/15 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -257,6 +254,6 @@
 - Tokyo Electron: 0.78
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T15:23:17.065284+00:00
+- Generated Timestamp: 2026-07-27T15:58:37.980323+00:00
 - Mode: slm
 - Max Depth: 3

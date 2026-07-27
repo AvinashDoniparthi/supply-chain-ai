@@ -1,0 +1,190 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Foxconn
+Mode: SLM
+Max Depth: 3
+Generated At: 2026-07-27 21:28:36 IST
+
+1. EXECUTIVE SUMMARY
+Foxconn has a moderately healthy supply chain with strong dependence on TSMC, Applied Materials, and Broadcom. The main concern is geographic disruption exposure among key suppliers.
+
+Recommendations
+1. Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: Foxconn -> Apple Inc. -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+
+2. DISCOVERY QUALITY
+Suppliers discovered: 15
+Suppliers retained after verification: 11
+Suppliers discarded: 4
+- Discard reasons are preserved in the run benchmark record.
+Coverage: Medium - 5 discovered Tier-1 suppliers identified.
+Verification-adjusted coverage: Medium (73%; 11/15 suppliers verified).
+
+3. SUPPLY CHAIN HEALTH
+Status: Good - 78.0/100.
+Supplier Count: 11
+Critical Suppliers: 0
+High-Risk Suppliers: 1
+Summary: Foxconn's supply chain appears good overall. 1 supplier(s) face high or critical risk exposure. Verification quality is medium (11/15 suppliers verified).
+
+4. SUPPLIER NETWORK
+4.1 Tier 1 Suppliers
+TIER 1 SUPPLIERS
+Direct suppliers to Foxconn
+
+1. Apple Inc.
+   Relationship : Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.86)
+
+4.2 Tier 2 Suppliers
+TIER 2 SUPPLIERS
+Upstream suppliers connected through Tier 1 suppliers
+
+1. Broadcom
+   Parent       : Apple Inc.
+   Path         : Foxconn -> Apple Inc. -> Broadcom Inc.
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.88)
+
+2. Samsung Electronics
+   Parent       : Apple Inc.
+   Path         : Foxconn -> Apple Inc. -> Samsung Electronics
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.88)
+
+3. TSMC
+   Parent       : Apple Inc.
+   Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.89)
+
+4.3 Tier 3 Suppliers
+TIER 3 SUPPLIERS
+Upstream suppliers connected through Tier 2 suppliers
+
+1. ASML
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> ASML
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.91)
+
+2. Applied Materials
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.89)
+
+3. Lam Research
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.88)
+
+4. Murata Manufacturing
+   Parent       : Samsung Electronics
+   Path         : Foxconn -> Apple Inc. -> Samsung Electronics -> Murata Manufacturing
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.91)
+
+5. Qualcomm
+   Parent       : Samsung Electronics
+   Path         : Foxconn -> Apple Inc. -> Samsung Electronics -> Qualcomm
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.88)
+
+6. Sony Semiconductor Solutions
+   Parent       : Samsung Electronics
+   Path         : Foxconn -> Apple Inc. -> Samsung Electronics -> Sony Semiconductor Solutions
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.91)
+
+7. Tokyo Electron
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+   Relationship : Upstream Supplier
+   Confidence   : 0.78
+   Verification : Verified (0.88)
+
+5. TOP RISKS
+High
+1. Geopolitical risk involving TSMC
+   Affected Path: Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company
+   Reason: Taiwan geopolitical exposure through TSMC. Affected path: Foxconn -> Apple Inc. -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+   Confidence: 0.90
+   Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+
+Medium
+None identified
+
+Low
+None identified
+
+6. DATA QUALITY WARNINGS
+Low Verification Confidence
+None identified
+
+Failed Verification
+None identified
+
+Missing Verification Result
+None identified
+
+7. CRITICAL SUPPLIERS
+1. TSMC
+   Tier         : 2
+   Confidence   : 0.78
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+2. Applied Materials
+   Tier         : 3
+   Confidence   : 0.78
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+3. Broadcom
+   Tier         : 2
+   Confidence   : 0.78
+   Reason       : Supplier manufactures core chip components and appears to be a sole-source dependency.
+
+4. Samsung Electronics
+   Tier         : 2
+   Confidence   : 0.78
+   Reason       : Supplier manufactures core display components and appears to be a sole-source dependency.
+
+5. Tokyo Electron
+   Tier         : 3
+   Confidence   : 0.78
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+8. PERFORMANCE TIMINGS
+Company Research             : <0.1s (cache)
+Supplier Discovery           : 4.3s (cache)
+Relationship Classification  : 0.1s (heuristic)
+Verification                 : <0.1s
+Risk Analysis                : <0.1s
+Confidence Scoring           : <0.1s
+Criticality Scoring          : <0.1s
+Health Scoring               : <0.1s
+Report Generation            : 0.5s
+History Persistence          : <0.1s
+Graph Export                 : <0.1s
+
+Total Runtime                : 5.1s
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"Foxconn","discard_reasons":[{"reason":"company_exists=False","supplier":"E Ink Corporation"},{"reason":"company_exists=False","supplier":"Netronix Inc"},{"reason":"company_exists=False","supplier":"Geely Holding Group"},{"reason":"company_exists=False","supplier":"PTT Public Co"}],"discarded_supplier_names":["E Ink Corporation","Netronix Inc","Geely Holding Group","PTT Public Co"],"discovered_supplier_names":["Apple Inc.","E Ink Corporation","Netronix Inc","Geely Holding Group","PTT Public Co","Taiwan Semiconductor Manufacturing Company","Broadcom Inc.","Samsung Electronics","ASML","Applied Materials","Lam Research","Tokyo Electron","Qualcomm","Murata Manufacturing","Sony Semiconductor Solutions"],"errors":[],"execution_mode":"slm","fallback_stages":["relationship_classification"],"fallback_used":true,"insufficient_public_data":false,"model":"gemma3:4b","primary_model_success":false,"provider":"ollama","retained_supplier_names":["Apple Inc.","Taiwan Semiconductor Manufacturing Company","Broadcom Inc.","Samsung Electronics","ASML","Applied Materials","Lam Research","Tokyo Electron","Qualcomm","Murata Manufacturing","Sony Semiconductor Solutions"],"retrieved_chunk_count":0,"risk_input_count":11,"risks_identified":1,"stage_runtimes":{"company_research":0.00032553999994888727,"executive_report":0.5038740049999433,"retrieval":null,"risk_analysis":0.009549078999953053,"supplier_discovery":4.339171694000015,"verification":0.05330211699993015},"suppliers_discarded":4,"suppliers_discovered":15,"suppliers_retained":11,"system_failure":false,"total_runtime_seconds":5.137379008999915,"verification_confidence":0.89,"warnings":["Relationship classification primary model failed for Apple: Relationship classification failed for Apple","Relationship classification primary model failed for E Ink Corporation: Relationship classification failed for E Ink Corporation","Relationship classification primary model failed for Netronix Inc: Relationship classification failed for Netronix Inc","Relationship classification primary model failed for Geely Holding Group: Relationship classification failed for Geely Holding Group","Relationship classification primary model failed for PTT Public Co: Relationship classification failed for PTT Public Co","Relationship classification primary model failed for Taiwan Semiconductor: Relationship classification failed for Taiwan Semiconductor","Relationship classification primary model failed for Broadcom: Relationship classification failed for Broadcom","Relationship classification primary model failed for Samsung Electronics: Relationship classification failed for Samsung Electronics","Relationship classification primary model failed for Corning: Relationship classification failed for Corning","Relationship classification primary model failed for ASML: Relationship classification failed for ASML","Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials","Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research","Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron","Relationship classification primary model failed for Qualcomm: Relationship classification failed for Qualcomm","Relationship classification primary model failed for Murata Manufacturing: Relationship classification failed for Murata Manufacturing","Relationship classification primary model failed for Sony Semiconductor: Relationship classification failed for Sony Semiconductor"],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 88
+Chroma collection count after indexing: 3831

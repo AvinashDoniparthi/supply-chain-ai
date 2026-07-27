@@ -4,7 +4,7 @@
 - Company: Nvidia
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 20:48:05 IST
+- Generated At: 2026-07-27 21:27:49 IST
 - 1. EXECUTIVE SUMMARY
 - Nvidia has a moderately healthy supply chain with strong dependence on SK hynix, TSMC, and Applied Materials. The main concern is geographic disruption exposure among key suppliers.
 - Recommendations
@@ -13,7 +13,7 @@
 - Suppliers discovered: 10
 - Suppliers retained after verification: 9
 - Suppliers discarded: 1
-- - VDL ETG: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: High - 2 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: High (90%; 9/10 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -220,6 +220,6 @@
 - Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T15:18:05.554999+00:00
+- Generated Timestamp: 2026-07-27T15:57:49.921726+00:00
 - Mode: slm
 - Max Depth: 3

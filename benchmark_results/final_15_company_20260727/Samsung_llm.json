@@ -1,0 +1,90 @@
+{
+  "analysis_complete": true,
+  "company": "Samsung",
+  "discard_reasons": [
+    {
+      "reason": "company_exists=False",
+      "supplier": "VDL ETG"
+    }
+  ],
+  "discarded_absent_from_retained": true,
+  "discarded_supplier_names": [
+    "VDL ETG"
+  ],
+  "discovered_supplier_names": [
+    "ASML",
+    "Corning Inc.",
+    "Qualcomm",
+    "Murata Manufacturing",
+    "Sony Semiconductor Solutions",
+    "Carl Zeiss SMT",
+    "VDL ETG",
+    "Amkor Technology",
+    "Taiwan Semiconductor Manufacturing Company",
+    "Applied Materials",
+    "Lam Research",
+    "Tokyo Electron"
+  ],
+  "errors": [],
+  "execution_mode": "llm",
+  "fallback_stages": [
+    "relationship_classification"
+  ],
+  "fallback_used": true,
+  "insufficient_public_data": false,
+  "log_file": "Samsung_llm.log",
+  "model": "gemini-2.5-flash",
+  "primary_model_success": false,
+  "provider": "google",
+  "rejected_absent_from_final_report": true,
+  "rejected_supplier_names_in_final_report": [],
+  "retained_supplier_names": [
+    "ASML",
+    "Corning Inc.",
+    "Qualcomm",
+    "Murata Manufacturing",
+    "Sony Semiconductor Solutions",
+    "Carl Zeiss SMT",
+    "Amkor Technology",
+    "Taiwan Semiconductor Manufacturing Company",
+    "Applied Materials",
+    "Lam Research",
+    "Tokyo Electron"
+  ],
+  "retrieved_chunk_count": 0,
+  "risk_input_count": 11,
+  "risk_input_matches_retained": true,
+  "risks_identified": 0,
+  "stage_runtimes": {
+    "company_research": 0.00035233299990977685,
+    "executive_report": 0.409072740000056,
+    "retrieval": null,
+    "risk_analysis": 0.003178853999997955,
+    "supplier_discovery": 2.2336428850001084,
+    "verification": 0.024031894000017928
+  },
+  "suppliers_discarded": 1,
+  "suppliers_discovered": 12,
+  "suppliers_retained": 11,
+  "system_failure": false,
+  "total_runtime_seconds": 2.843424215999903,
+  "verification_confidence": 0.89,
+  "wall_clock_runtime_seconds": 3.511027798999976,
+  "warnings": [
+    "Relationship classification primary model failed for ASML: Relationship classification failed for ASML",
+    "Relationship classification primary model failed for Corning: Relationship classification failed for Corning",
+    "Relationship classification primary model failed for Qualcomm: Relationship classification failed for Qualcomm",
+    "Relationship classification primary model failed for Murata Manufacturing: Relationship classification failed for Murata Manufacturing",
+    "Relationship classification primary model failed for Sony Semiconductor: Relationship classification failed for Sony Semiconductor",
+    "Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT",
+    "Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf",
+    "Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG",
+    "Relationship classification primary model failed for Amkor Technology: Relationship classification failed for Amkor Technology",
+    "Relationship classification primary model failed for TSMC: Relationship classification failed for TSMC",
+    "Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials",
+    "Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research",
+    "Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron"
+  ],
+  "workflow_completion": true,
+  "workflow_status": "completed"
+}

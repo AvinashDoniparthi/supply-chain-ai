@@ -906,6 +906,96 @@
         "Tokyo Electron",
         "Carl Zeiss SMT"
       ]
+    },
+    {
+      "timestamp": "2026-07-27T21:23:44.999738",
+      "mode": "llm",
+      "health_score": 86.2,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:23:50.124033",
+      "mode": "rag",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:23:51.874174",
+      "mode": "slm",
+      "health_score": 86.2,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:28:03.928468",
+      "mode": "llm",
+      "health_score": 86.2,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:28:05.569376",
+      "mode": "rag",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-27T21:28:06.520165",
+      "mode": "slm",
+      "health_score": 86.2,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
     }
   ]
 }

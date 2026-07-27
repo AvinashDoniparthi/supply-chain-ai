@@ -500,10 +500,7 @@ def _discovery_quality_lines(state: AgentState) -> List[str]:
     lines.append(f"Suppliers retained after verification: {retained_count}")
     lines.append(f"Suppliers discarded: {len(discarded)}")
     if discarded:
-        for item in discarded:
-            lines.append(
-                f"- {item.get('supplier_name', 'Unknown')}: {item.get('reason', 'Verification failed')}"
-            )
+        lines.append("- Discard reasons are preserved in the run benchmark record.")
     if coverage.get("coverage_basis") == "expected_suppliers":
         lines.append(
             f"Coverage: {coverage['label']} - {coverage['matched_expected_count']}/"

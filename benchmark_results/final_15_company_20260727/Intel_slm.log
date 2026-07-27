@@ -1,0 +1,124 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Intel
+Mode: SLM
+Max Depth: 3
+Generated At: 2026-07-27 21:28:06 IST
+
+1. EXECUTIVE SUMMARY
+Intel has a moderately healthy supply chain with strong dependence on Applied Materials, Tokyo Electron, and ASML. The main concern is limited verification depth or supplier concentration.
+
+2. DISCOVERY QUALITY
+Suppliers discovered: 6
+Suppliers retained after verification: 5
+Suppliers discarded: 1
+- Discard reasons are preserved in the run benchmark record.
+Coverage: High - 4 discovered Tier-1 suppliers identified.
+Verification-adjusted coverage: High (83%; 5/6 suppliers verified).
+
+3. SUPPLY CHAIN HEALTH
+Status: Good - 86.2/100.
+Supplier Count: 5
+Critical Suppliers: 0
+High-Risk Suppliers: 0
+Summary: Intel's supply chain appears good overall. No major operational disruptions were detected. Verification quality is high (5/6 suppliers verified).
+
+4. SUPPLIER NETWORK
+4.1 Tier 1 Suppliers
+TIER 1 SUPPLIERS
+Direct suppliers to Intel
+
+1. ASML
+   Relationship : Supplier
+   Confidence   : 0.91
+   Verification : Verified (0.91)
+
+2. Applied Materials
+   Relationship : Supplier
+   Confidence   : 0.87
+   Verification : Verified (0.89)
+
+3. Lam Research
+   Relationship : Supplier
+   Confidence   : 0.90
+   Verification : Verified (0.91)
+
+4. Tokyo Electron
+   Relationship : Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.88)
+
+4.2 Tier 2 Suppliers
+TIER 2 SUPPLIERS
+Upstream suppliers connected through Tier 1 suppliers
+
+1. Carl Zeiss SMT
+   Parent       : ASML
+   Path         : Intel -> ASML -> Carl Zeiss SMT
+   Relationship : Upstream Supplier
+   Confidence   : 0.90
+   Verification : Verified (0.91)
+
+4.3 Tier 3 Suppliers
+TIER 3 SUPPLIERS
+Upstream suppliers connected through Tier 2 suppliers
+
+None identified
+
+5. TOP RISKS
+High
+None identified
+
+Medium
+None identified
+
+Low
+None identified
+
+No supplier-specific risks detected
+
+6. DATA QUALITY WARNINGS
+Low Verification Confidence
+None identified
+
+Failed Verification
+None identified
+
+Missing Verification Result
+None identified
+
+7. CRITICAL SUPPLIERS
+1. Applied Materials
+   Tier         : 1
+   Confidence   : 0.87
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+2. Tokyo Electron
+   Tier         : 1
+   Confidence   : 0.85
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+8. PERFORMANCE TIMINGS
+Company Research             : <0.1s (cache)
+Supplier Discovery           : 0.5s
+Relationship Classification  : <0.1s (heuristic)
+Verification                 : <0.1s
+Risk Analysis                : <0.1s
+Confidence Scoring           : <0.1s
+Criticality Scoring          : <0.1s
+Health Scoring               : <0.1s
+Report Generation            : 0.1s
+History Persistence          : <0.1s
+Graph Export                 : <0.1s
+
+Total Runtime                : 0.7s
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"Intel","discard_reasons":[{"reason":"company_exists=False","supplier":"VDL ETG"}],"discarded_supplier_names":["VDL ETG"],"discovered_supplier_names":["ASML","Applied Materials","Lam Research","Tokyo Electron","Carl Zeiss SMT","VDL ETG"],"errors":[],"execution_mode":"slm","fallback_stages":["relationship_classification"],"fallback_used":true,"insufficient_public_data":false,"model":"gemma3:4b","primary_model_success":false,"provider":"ollama","retained_supplier_names":["ASML","Applied Materials","Lam Research","Tokyo Electron","Carl Zeiss SMT"],"retrieved_chunk_count":0,"risk_input_count":5,"risks_identified":0,"stage_runtimes":{"company_research":0.00027890599994861986,"executive_report":0.11705951900012224,"retrieval":null,"risk_analysis":0.0028047380001225974,"supplier_discovery":0.53631650300008,"verification":0.015235591999953613},"suppliers_discarded":1,"suppliers_discovered":6,"suppliers_retained":5,"system_failure":false,"total_runtime_seconds":0.7667971549999493,"verification_confidence":0.9,"warnings":["Relationship classification primary model failed for ASML: Relationship classification failed for ASML","Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials","Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research","Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron","Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT","Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf","Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG"],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 88
+Chroma collection count after indexing: 3790

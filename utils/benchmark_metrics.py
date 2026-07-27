@@ -82,6 +82,35 @@ def build_benchmark_record(state: AgentState, workflow_status: str) -> Dict[str,
         except Exception:
             pass
 
+    discovered = state.discovered_suppliers
+    if not discovered and state.discovered_entities:
+        discovered = state.discovered_entities
+    discovered_names = [
+        supplier.canonical_name or supplier.name
+        for supplier in (discovered or [])
+    ]
+    discarded_names = [
+        item.get("canonical_name") or item.get("supplier_name")
+        for item in state.discarded_suppliers
+        if item.get("canonical_name") or item.get("supplier_name")
+    ]
+    discard_reasons = [
+        {
+            "supplier": item.get("canonical_name") or item.get("supplier_name"),
+            "reason": item.get("reason") or "unspecified",
+        }
+        for item in state.discarded_suppliers
+    ]
+    system_failure = workflow_status not in {"completed", "insufficient_public_data"}
+    insufficient_public_data = (
+        workflow_status == "insufficient_public_data"
+        or (
+            workflow_status == "completed"
+            and not state.suppliers
+            and not system_failure
+        )
+    )
+
     record = {
         "company": state.target_company or (state.company.name if state.company else None),
         "execution_mode": state.execution_mode,
@@ -91,10 +120,16 @@ def build_benchmark_record(state: AgentState, workflow_status: str) -> Dict[str,
         "primary_model_success": state.run_metadata.get("primary_model_success"),
         "fallback_used": bool(state.run_metadata.get("fallback_used", False)),
         "fallback_stages": list(state.run_metadata.get("fallback_stages", [])),
-        "suppliers_discovered": len(state.discovered_suppliers or state.discovered_entities),
-        "suppliers_discarded": len(state.discarded_suppliers),
+        "suppliers_discovered": len(discovered_names),
+        "discovered_supplier_names": discovered_names,
+        "suppliers_discarded": len(discarded_names),
+        "discarded_supplier_names": discarded_names,
+        "discard_reasons": discard_reasons,
         "suppliers_retained": len(state.suppliers),
-        "risk_input_count": len(state.suppliers) if _stage_runtime(state, "risk_analysis") is not None else 0,
+        "retained_supplier_names": [
+            supplier.canonical_name or supplier.name for supplier in state.suppliers
+        ],
+        "risk_input_count": len(state.suppliers),
         "risks_identified": len(state.risk_assessments),
         "verification_confidence": verification_confidence,
         "retrieved_chunk_count": len(state.rag_context) if state.execution_mode == "rag" else 0,
@@ -105,6 +140,8 @@ def build_benchmark_record(state: AgentState, workflow_status: str) -> Dict[str,
         "total_runtime_seconds": total_runtime,
         "errors": list(state.errors),
         "warnings": list(state.run_metadata.get("warnings", [])),
+        "insufficient_public_data": insufficient_public_data,
+        "system_failure": system_failure,
     }
     state.run_metadata["benchmark_record"] = record
     return record

@@ -1,0 +1,19 @@
+company,execution_mode,workflow_status,suppliers_discovered,suppliers_retained,warnings,errors,log_file
+Framework Computer,llm,completed,0,0,[],[],Framework Computer_llm.log
+Framework Computer,rag,completed,0,0,[],[],Framework Computer_rag.log
+Framework Computer,slm,completed,0,0,[],[],Framework Computer_slm.log
+GoPro,llm,completed,0,0,[],[],GoPro_llm.log
+GoPro,rag,completed,0,0,[],[],GoPro_rag.log
+GoPro,slm,completed,0,0,[],[],GoPro_slm.log
+Logitech,llm,completed,0,0,[],[],Logitech_llm.log
+Logitech,rag,completed,0,0,[],[],Logitech_rag.log
+Logitech,slm,completed,0,0,[],[],Logitech_slm.log
+Micron Technology,llm,completed,0,0,[],[],Micron Technology_llm.log
+Micron Technology,rag,completed,0,0,[],[],Micron Technology_rag.log
+Micron Technology,slm,completed,0,0,[],[],Micron Technology_slm.log
+Microsoft,llm,completed,0,0,[],[],Microsoft_llm.log
+Microsoft,rag,completed,0,0,[],[],Microsoft_rag.log
+Microsoft,slm,completed,0,0,[],[],Microsoft_slm.log
+Sonos,llm,completed,0,0,[],[],Sonos_llm.log
+Sonos,rag,completed,0,0,[],[],Sonos_rag.log
+Sonos,slm,completed,0,0,[],[],Sonos_slm.log

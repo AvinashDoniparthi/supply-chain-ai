@@ -1,0 +1,111 @@
+{
+  "analysis_complete": true,
+  "company": "Foxconn",
+  "discard_reasons": [
+    {
+      "reason": "company_exists=False",
+      "supplier": "E Ink Corporation"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "Netronix Inc"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "Geely Holding Group"
+    },
+    {
+      "reason": "company_exists=False",
+      "supplier": "PTT Public Co"
+    }
+  ],
+  "discarded_absent_from_retained": true,
+  "discarded_supplier_names": [
+    "E Ink Corporation",
+    "Netronix Inc",
+    "Geely Holding Group",
+    "PTT Public Co"
+  ],
+  "discovered_supplier_names": [
+    "Apple Inc.",
+    "E Ink Corporation",
+    "Netronix Inc",
+    "Geely Holding Group",
+    "PTT Public Co",
+    "Taiwan Semiconductor Manufacturing Company",
+    "Broadcom Inc.",
+    "Samsung Electronics",
+    "ASML",
+    "Applied Materials",
+    "Lam Research",
+    "Tokyo Electron",
+    "Qualcomm",
+    "Murata Manufacturing",
+    "Sony Semiconductor Solutions"
+  ],
+  "errors": [],
+  "execution_mode": "llm",
+  "fallback_stages": [
+    "relationship_classification"
+  ],
+  "fallback_used": true,
+  "insufficient_public_data": false,
+  "log_file": "Foxconn_llm.log",
+  "model": "gemini-2.5-flash",
+  "primary_model_success": false,
+  "provider": "google",
+  "rejected_absent_from_final_report": true,
+  "rejected_supplier_names_in_final_report": [],
+  "retained_supplier_names": [
+    "Apple Inc.",
+    "Taiwan Semiconductor Manufacturing Company",
+    "Broadcom Inc.",
+    "Samsung Electronics",
+    "ASML",
+    "Applied Materials",
+    "Lam Research",
+    "Tokyo Electron",
+    "Qualcomm",
+    "Murata Manufacturing",
+    "Sony Semiconductor Solutions"
+  ],
+  "retrieved_chunk_count": 0,
+  "risk_input_count": 11,
+  "risk_input_matches_retained": true,
+  "risks_identified": 1,
+  "stage_runtimes": {
+    "company_research": 0.0003100899998571549,
+    "executive_report": 0.509577414999967,
+    "retrieval": null,
+    "risk_analysis": 0.009638849999873855,
+    "supplier_discovery": 4.292974174000165,
+    "verification": 0.05388453799992021
+  },
+  "suppliers_discarded": 4,
+  "suppliers_discovered": 15,
+  "suppliers_retained": 11,
+  "system_failure": false,
+  "total_runtime_seconds": 5.13153140999998,
+  "verification_confidence": 0.89,
+  "wall_clock_runtime_seconds": 5.857743076000133,
+  "warnings": [
+    "Relationship classification primary model failed for Apple: Relationship classification failed for Apple",
+    "Relationship classification primary model failed for E Ink Corporation: Relationship classification failed for E Ink Corporation",
+    "Relationship classification primary model failed for Netronix Inc: Relationship classification failed for Netronix Inc",
+    "Relationship classification primary model failed for Geely Holding Group: Relationship classification failed for Geely Holding Group",
+    "Relationship classification primary model failed for PTT Public Co: Relationship classification failed for PTT Public Co",
+    "Relationship classification primary model failed for Taiwan Semiconductor: Relationship classification failed for Taiwan Semiconductor",
+    "Relationship classification primary model failed for Broadcom: Relationship classification failed for Broadcom",
+    "Relationship classification primary model failed for Samsung Electronics: Relationship classification failed for Samsung Electronics",
+    "Relationship classification primary model failed for Corning: Relationship classification failed for Corning",
+    "Relationship classification primary model failed for ASML: Relationship classification failed for ASML",
+    "Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials",
+    "Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research",
+    "Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron",
+    "Relationship classification primary model failed for Qualcomm: Relationship classification failed for Qualcomm",
+    "Relationship classification primary model failed for Murata Manufacturing: Relationship classification failed for Murata Manufacturing",
+    "Relationship classification primary model failed for Sony Semiconductor: Relationship classification failed for Sony Semiconductor"
+  ],
+  "workflow_completion": true,
+  "workflow_status": "completed"
+}

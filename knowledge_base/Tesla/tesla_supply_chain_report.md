@@ -4,17 +4,14 @@
 - Company: Tesla
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 20:50:49 IST
+- Generated At: 2026-07-27 21:28:12 IST
 - 1. EXECUTIVE SUMMARY
 - Tesla has a moderately healthy supply chain with strong dependence on Contemporary Amperex Technology Co. Limited, Samsung SDI, and Panasonic.
 - 2. DISCOVERY QUALITY
 - Suppliers discovered: 8
 - Suppliers retained after verification: 4
 - Suppliers discarded: 4
-- - Sumitomo Metal Mining: company_exists=False
-- - Mitsubishi Materials: company_exists=False
-- - Ganfeng Lithium: company_exists=False
-- - Tianqi Lithium: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: Medium - 4 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: Medium (50%; 4/8 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -145,6 +142,6 @@
 - Samsung SDI: 0.78
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T15:20:49.433445+00:00
+- Generated Timestamp: 2026-07-27T15:58:13.072205+00:00
 - Mode: slm
 - Max Depth: 3

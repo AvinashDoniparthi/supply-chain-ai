@@ -1,0 +1,50 @@
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Intel
+Mode: RAG
+Max Depth: 3
+Generated At: 2026-07-27 21:28:05 IST
+Retrieved Context Chunks: 16
+
+RAG REPORT
+RAG EXECUTIVE SUMMARY
+Intel's retrieved supply-chain health is Good with a score of 78.0/100. Key retrieved suppliers include ASML, Applied Materials, Lam Research.
+
+SUPPLY CHAIN HEALTH
+- Score: 78.0
+- Status: Good
+- Interpretation: Intel's supply chain appears good overall. No major operational disruptions were detected. Verification quality is medium (5/7 suppliers verified).
+
+KEY SUPPLIERS
+- ASML (Tier 1, EUV lithography systems)
+- Applied Materials (Tier 1, Semiconductor manufacturing equipment)
+- Lam Research (Tier 1, Etch and deposition tools)
+- Tokyo Electron (Tier 1, Semiconductor production tools)
+- Carl Zeiss SMT (Tier 2, Lithography optics)
+
+TIER DEPENDENCIES
+- Intel -> ASML
+- Intel -> Applied Materials
+- Intel -> Lam Research
+- Intel -> Tokyo Electron
+- Intel -> ASML -> Carl Zeiss SMT
+
+MAJOR RISKS
+- Information not available in retrieved context.
+
+RECOMMENDATIONS
+- Information not available in retrieved context.
+
+DATA LIMITATIONS
+- Risk context was not retrieved.
+- Recommendation context was not retrieved.
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"Intel","discard_reasons":[{"reason":"company_exists=False","supplier":"Trumpf"},{"reason":"company_exists=False","supplier":"VDL ETG"}],"discarded_supplier_names":["Trumpf","VDL ETG"],"discovered_supplier_names":["ASML","Applied Materials","Lam Research","Tokyo Electron","Carl Zeiss SMT","Trumpf","VDL ETG"],"errors":[],"execution_mode":"rag","fallback_stages":["relationship_classification","rag_report_generation"],"fallback_used":true,"insufficient_public_data":false,"model":"gemini-2.5-flash","primary_model_success":false,"provider":"google","retained_supplier_names":["ASML","Applied Materials","Lam Research","Tokyo Electron","Carl Zeiss SMT"],"retrieved_chunk_count":16,"risk_input_count":5,"risks_identified":0,"stage_runtimes":{"company_research":0.0003186299998105824,"executive_report":0.2229860729999018,"retrieval":0.46758666300002005,"risk_analysis":0.003909623000026841,"supplier_discovery":0.5490486819999205,"verification":0.21180394099997102},"suppliers_discarded":2,"suppliers_discovered":7,"suppliers_retained":5,"system_failure":false,"total_runtime_seconds":1.2819520630000625,"verification_confidence":0.9,"warnings":["Relationship classification primary model failed for ASML: Relationship classification failed for ASML","Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials","Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research","Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron","Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT","Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf","Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG","RAG report primary model failed for Intel: [Errno 8] nodename nor servname provided, or not known","RAG report fallback used for Intel: [Errno 8] nodename nor servname provided, or not known"],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 85
+Chroma collection count after indexing: 3790

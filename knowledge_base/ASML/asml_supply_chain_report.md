@@ -4,14 +4,14 @@
 - Company: ASML
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-24 20:51:58 IST
+- Generated At: 2026-07-27 21:28:20 IST
 - 1. EXECUTIVE SUMMARY
 - ASML has a moderately healthy supply chain with strong dependence on Carl Zeiss SMT. The main concern is limited verification depth or supplier concentration.
 - 2. DISCOVERY QUALITY
 - Suppliers discovered: 2
 - Suppliers retained after verification: 1
 - Suppliers discarded: 1
-- - VDL ETG: company_exists=False
+- - Discard reasons are preserved in the run benchmark record.
 - Coverage: Medium - 2 discovered Tier-1 suppliers identified.
 - Verification-adjusted coverage: Medium (80%; 1/2 suppliers verified).
 - 3. SUPPLY CHAIN HEALTH
@@ -90,6 +90,6 @@
 - Carl Zeiss SMT: 0.90
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-24T15:21:58.377461+00:00
+- Generated Timestamp: 2026-07-27T15:58:20.121665+00:00
 - Mode: slm
 - Max Depth: 3
