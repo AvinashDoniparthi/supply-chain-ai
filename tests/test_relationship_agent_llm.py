@@ -147,6 +147,31 @@ class TestRelationshipAgent(unittest.TestCase):
 
         self.assertEqual(result.relationship_type, "product_or_brand")
 
+    @patch("agents.relationship_agent.enrich_supplier_evidence_with_rag")
+    def test_heuristic_exception_is_not_retried_as_the_same_fallback(self, mock_enrich):
+        mock_enrich.side_effect = lambda state, stage: state
+        state = AgentState(
+            target_company="Apple",
+            benchmark_fast_mode=True,
+            execution_mode="llm",
+        )
+        state.suppliers = [
+            SupplierInfo(
+                name="TSMC",
+                canonical_name="TSMC",
+                location="Taiwan",
+                evidence=[{"snippet": "TSMC supplies chips to Apple."}],
+            )
+        ]
+
+        with patch.object(
+            HeuristicRelationshipClassifier,
+            "classify",
+            side_effect=RuntimeError("heuristic bug"),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "heuristic bug"):
+                relationship_agent(state)
+
 
 if __name__ == "__main__":
     unittest.main()

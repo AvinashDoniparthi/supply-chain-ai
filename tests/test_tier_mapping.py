@@ -824,7 +824,9 @@ class TestTierMapping(unittest.TestCase):
         self.assertIn(
             "Taiwan Semiconductor Manufacturing Company", final_state.seen_companies
         )
-        self.assertIn("ASML", [supplier.name for supplier in final_state.suppliers])
+        # Verification is a downstream gate; this test validates recursive
+        # discovery, so inspect the preserved pre-verification candidates.
+        self.assertIn("ASML", [supplier.name for supplier in final_state.discovered_suppliers])
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ def _emit(message: str = "") -> None:
 
 
 def _now() -> float:
-    return time.monotonic()
+    return time.perf_counter()
 
 
 def _timeout_value(state: Any) -> int:
@@ -119,6 +119,30 @@ def finish_all_stages(state: Any) -> None:
         return
     for stage_key in list(state.stage_started_at.keys()):
         finish_stage(state, stage_key)
+
+
+def start_workflow_timer(state: Any) -> None:
+    """Start the single monotonic high-resolution workflow timer."""
+    if state is None:
+        return
+    metadata = getattr(state, "run_metadata", None)
+    if isinstance(metadata, dict):
+        metadata["workflow_started_perf_counter"] = _now()
+
+
+def finish_workflow_timer(state: Any) -> Optional[float]:
+    """Finish the workflow timer and return elapsed seconds, if started."""
+    if state is None:
+        return None
+    metadata = getattr(state, "run_metadata", None)
+    if not isinstance(metadata, dict):
+        return None
+    started = metadata.get("workflow_started_perf_counter")
+    if started is None:
+        return None
+    elapsed = max(0.0, _now() - float(started))
+    metadata["total_runtime_seconds"] = elapsed
+    return elapsed
 
 
 def stage_elapsed(state: Any, stage_key: str) -> float:

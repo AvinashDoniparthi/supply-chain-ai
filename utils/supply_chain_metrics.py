@@ -46,9 +46,10 @@ def calculate_discovery_coverage(state: AgentState) -> Dict[str, Any]:
     expected_suppliers = expected_tier1_suppliers(target) if use_expected else set()
     expected = {canonical_supplier_name(name) for name in expected_suppliers}
 
+    suppliers_for_discovery = list(state.discovered_suppliers or state.suppliers)
     tier1_supplier_list = [
         canonical_supplier_name(supplier.canonical_name or supplier.name)
-        for supplier in state.suppliers
+        for supplier in suppliers_for_discovery
         if supplier.tier == 1
     ]
     tier1_suppliers = set(tier1_supplier_list)
@@ -129,7 +130,7 @@ def calculate_discovery_coverage(state: AgentState) -> Dict[str, Any]:
 
 def calculate_verification_quality(state: AgentState) -> Dict[str, Any]:
     """Return verification quality metrics without treating failures as risks."""
-    suppliers = list(state.suppliers)
+    suppliers = list(state.discovered_suppliers or state.suppliers)
     if not suppliers:
         return {
             "verified_count": 0,
@@ -158,6 +159,11 @@ def calculate_verification_quality(state: AgentState) -> Dict[str, Any]:
     for result in state.verification_results:
         verification_map[canonical_supplier_name(result.supplier_name)] = result
 
+    discarded_map = {
+        canonical_supplier_name(item.get("canonical_name") or item.get("supplier_name", "")): item
+        for item in getattr(state, "discarded_suppliers", [])
+    }
+
     verified_count = 0
     failed_count = 0
     missing_count = 0
@@ -166,11 +172,15 @@ def calculate_verification_quality(state: AgentState) -> Dict[str, Any]:
         key = canonical_supplier_name(supplier.canonical_name or supplier.name)
         result = verification_map.get(key)
         if not result:
-            missing_count += 1
-        elif result.verified:
+            if key in discarded_map:
+                failed_count += 1
+            else:
+                missing_count += 1
+        elif result.verified and result.company_exists:
             verified_count += 1
         else:
             failed_count += 1
+
 
     total_count = len(suppliers)
     quality_ratio = verified_count / total_count if total_count else 0.0

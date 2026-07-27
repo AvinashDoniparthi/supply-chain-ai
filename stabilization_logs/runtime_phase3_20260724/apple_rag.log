@@ -1,0 +1,78 @@
+/Users/avinash/Desktop/supply-chain-ai/retrieval/vector_store.py:101: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  return Chroma(
+/Users/avinash/Desktop/supply-chain-ai/retrieval/vector_store.py:567: LangChainDeprecationWarning: Since Chroma 0.4.x the manual persistence method is no longer supported as docs are automatically persisted.
+  persist()
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Apple
+Mode: RAG
+Max Depth: 3
+Generated At: 2026-07-24 21:33:04 IST
+Retrieved Context Chunks: 32
+
+RAG REPORT
+RAG EXECUTIVE SUMMARY
+Apple's retrieved supply-chain health is Good with a score of 78.0/100. Key retrieved suppliers include Taiwan Semiconductor Manufacturing Company, Hon Hai Precision Industry Co., Ltd., Pegatron Corporation. The main retrieved risk themes are Geopolitical risk for TSMC, Geopolitical risk for Hon Hai Precision Industry.
+
+SUPPLY CHAIN HEALTH
+- Score: 78.0
+- Status: Good
+- Interpretation: Apple's supply chain appears good overall. 3 supplier(s) face high or critical risk exposure. Verification quality is high (10/12 suppliers verified).
+
+KEY SUPPLIERS
+- Taiwan Semiconductor Manufacturing Company (Tier 1, Advanced processors)
+- Hon Hai Precision Industry Co., Ltd. (Tier 1, iPhone assembly)
+- Pegatron Corporation (Tier 1, Device assembly)
+- Broadcom Inc. (Tier 1, Wireless chips)
+- Murata Manufacturing (Tier 1, Capacitors)
+- ASML (Tier 2, EUV lithography systems)
+- Applied Materials (Tier 2, Semiconductor manufacturing equipment)
+- Lam Research (Tier 2, Etch and deposition tools)
+
+TIER DEPENDENCIES
+- Apple -> Taiwan Semiconductor Manufacturing Company
+- Apple -> Hon Hai Precision Industry Co., Ltd.
+- Apple -> Pegatron Corporation
+- Apple -> Broadcom Inc.
+- Apple -> Murata Manufacturing
+- Apple -> Taiwan Semiconductor Manufacturing Company -> ASML
+- Apple -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+- Apple -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+
+MAJOR RISKS
+- Risk: Geopolitical
+  Affected supplier/path: Apple -> Taiwan Semiconductor Manufacturing Company
+  Severity: High
+  Reason: Taiwan geopolitical exposure through TSMC. Affected path: Apple -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- Risk: Geopolitical
+  Affected supplier/path: Apple -> Hon Hai Precision Industry Co., Ltd.
+  Severity: High
+  Reason: Taiwan geopolitical exposure through Hon Hai Precision Industry. Affected path: Apple -> Hon Hai Precision Industry. Reason: Hon Hai Precision Industry is located in Taiwan / China, a high-tension geopolitical region.
+- Risk: Geopolitical
+  Affected supplier/path: Apple -> Pegatron Corporation
+  Severity: High
+  Reason: Taiwan geopolitical exposure through Pegatron. Affected path: Apple -> Pegatron. Reason: Pegatron is located in Taiwan / China, a high-tension geopolitical region.
+
+RECOMMENDATIONS
+- Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: Apple -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+
+DATA LIMITATIONS
+- No missing retrieved sections identified.
+
+TIER 3 SUPPLIERS
+1. Carl Zeiss SMT
+   Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
+   Verification : Verified (0.90)
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+BENCHMARK_RECORD {"company":"Apple","errors":[],"execution_mode":"rag","fallback_stages":["relationship_classification","rag_report_generation"],"fallback_used":true,"model":"gemini-2.5-flash","primary_model_success":false,"provider":"google","retrieved_chunk_count":32,"risk_input_count":10,"risks_identified":3,"stage_runtimes":{"company_research":0.0005530620001081843,"executive_report":1.7356417040009546,"retrieval":1.5924009419995855,"risk_analysis":0.046807626998997875,"supplier_discovery":3.5714145860001736,"verification":0.4395393479990162},"suppliers_discarded":2,"suppliers_discovered":12,"suppliers_retained":10,"total_runtime_seconds":25.19694573400011,"verification_confidence":0.9,"warnings":["Relationship classification primary model failed for Taiwan Semiconductor: Relationship classification failed for Taiwan Semiconductor","Relationship classification primary model failed for Hon Hai Precision Industry: Relationship classification failed for Hon Hai Precision Industry","Relationship classification primary model failed for Pegatron: Relationship classification failed for Pegatron","Relationship classification primary model failed for Broadcom: Relationship classification failed for Broadcom","Relationship classification primary model failed for Murata Manufacturing: Relationship classification failed for Murata Manufacturing","Relationship classification primary model failed for ASML: Relationship classification failed for ASML","Relationship classification primary model failed for Applied Materials: Relationship classification failed for Applied Materials","Relationship classification primary model failed for Lam Research: Relationship classification failed for Lam Research","Relationship classification primary model failed for Tokyo Electron: Relationship classification failed for Tokyo Electron","Relationship classification primary model failed for Carl Zeiss SMT: Relationship classification failed for Carl Zeiss SMT","Relationship classification primary model failed for Trumpf: Relationship classification failed for Trumpf","Relationship classification primary model failed for VDL ETG: Relationship classification failed for VDL ETG","RAG report primary model failed for Apple: [Errno 8] nodename nor servname provided, or not known","RAG report fallback used for Apple: [Errno 8] nodename nor servname provided, or not known"],"workflow_status":"completed"}
+Knowledge base files loaded: 16
+Knowledge base chunks created: 85
+Chroma collection count after indexing: 3498
+real 29.98
+user 9.94
+sys 0.80

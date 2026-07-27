@@ -11,6 +11,7 @@ class VerificationResult(BaseModel):
     evidence_quality: float = Field(default=0.0, ge=0.0, le=1.0)
     source_quality: float = Field(default=0.0, ge=0.0, le=1.0)
     confidence_score: float = Field(ge=0.0, le=1.0)
+    verification_status: str = "PENDING"
     website: Optional[str] = None
     headquarters: Optional[str] = None
     evidence_sources: List[str] = Field(default_factory=list)

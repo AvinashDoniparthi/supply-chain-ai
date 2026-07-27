@@ -1,0 +1,2299 @@
+BENCHMARK_START_TIME=2026-07-24T20:46:05+0530
+BENCHMARK_COMPANY=Samsung
+BENCHMARK_MODE=llm
+DEBUG:__main__:[LANGCHAIN INITIALIZATION] Provider: OpenAI/Gemini
+DEBUG:__main__:[LANGCHAIN INITIALIZATION] Prompt Templates Loaded
+DEBUG:__main__:[LANGCHAIN INITIALIZATION] Chains Registered
+DEBUG:__main__:[LANGCHAIN INITIALIZATION] Vector Store Ready
+INFO:scraping.company_scraper:Searching for company: Samsung
+INFO:scraping.company_scraper:Using cached company data for Samsung
+DEBUG:agents.supplier_agent:Processing queued company: Samsung (canonical: Samsung Electronics)
+DEBUG:scraping.supplier_discovery:CURATED SUPPLIER GRAPH HIT: Samsung
+INFO:agents.supplier_agent:Accepted tier-1 supplier evidence
+INFO:agents.supplier_agent:Accepted tier-1 supplier evidence
+INFO:agents.supplier_agent:Accepted tier-1 supplier evidence
+INFO:agents.supplier_agent:Accepted tier-1 supplier evidence
+INFO:agents.supplier_agent:Accepted tier-1 supplier evidence
+INFO:agents.supplier_agent:[NORMALIZE] Candidate: Sony Semiconductor Solutions -> Sony Semiconductor
+INFO:agents.supplier_agent:[TOP-K] Candidates Found: 5 Candidates Retained: 5
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 5
+Current Depth: 0
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: ASML (canonical: ASML)
+DEBUG:scraping.supplier_discovery:CURATED SUPPLIER GRAPH HIT: ASML
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: Carl Zeiss SMT | Tier: 2 | Signals: strong:\bsupplier\b, strong:\bsupplies\b, strong:\bsupplies\b.{0,80}\b(?:components?|parts?|chips?|displays?|memory|materials?|equipment|systems?)\b | Score: 15.0 | Threshold: 3 | Decision: Accepted
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: Trumpf | Tier: 2 | Signals: strong:\bsupplier\b | Score: 5.0 | Threshold: 3 | Decision: Accepted
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: VDL ETG | Tier: 2 | Signals: strong:\bsupplier\b, strong:\bsupplies\b, strong:\bsupplies\b.{0,80}\b(?:components?|parts?|chips?|displays?|memory|materials?|equipment|systems?)\b | Score: 15.0 | Threshold: 3 | Decision: Accepted
+INFO:agents.supplier_agent:[TOP-K] Candidates Found: 3 Candidates Retained: 3
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 7
+Current Depth: 1
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: Corning Inc. (canonical: Corning Inc.)
+DEBUG:scraping.supplier_discovery:CACHE HIT: Corning Inc.
+INFO:agents.supplier_agent:Tier-2 evidence does not explicitly show Apple supplies, manufactures for, or provides components/materials/equipment/services to Corning Inc.
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Apple Reason: Tier-2 evidence does not explicitly show Apple supplies, manufactures for, or provides components/materials/equipment/services to Corning Inc.
+INFO:agents.supplier_agent:Tier-2 evidence does not explicitly show American Motors Corporation supplies, manufactures for, or provides components/materials/equipment/services to Corning Inc.
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: American Motors Corporation Reason: Tier-2 evidence does not explicitly show American Motors Corporation supplies, manufactures for, or provides components/materials/equipment/services to Corning Inc.
+INFO:agents.supplier_agent:Tier-2 evidence does not explicitly show Apple Inc supplies, manufactures for, or provides components/materials/equipment/services to Corning Inc.
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Apple Inc Reason: Tier-2 evidence does not explicitly show Apple Inc supplies, manufactures for, or provides components/materials/equipment/services to Corning Inc.
+INFO:agents.supplier_agent:[TOP-K] Candidates Found: 0 Candidates Retained: 0
+WARNING:agents.supplier_agent:No valid supplier candidates after filtering for Corning Inc.
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 6
+Current Depth: 1
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: Qualcomm (canonical: Qualcomm)
+DEBUG:scraping.supplier_discovery:LEGACY CACHE HIT: database/cache/qualcomm_v6.json
+INFO:agents.supplier_agent:Tier-2 evidence does not explicitly show Semiconductor Manufacturing International Corporation supplies, manufactures for, or provides components/materials/equipment/services to Qualcomm
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Semiconductor Manufacturing International Corporation Reason: Tier-2 evidence does not explicitly show Semiconductor Manufacturing International Corporation supplies, manufactures for, or provides components/materials/equipment/services to Qualcomm
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: Amkor Technology | Tier: 2 | Signals: strong:\bsupplier\b, strong:\bosat\b, strong:\bsupplier\b | Score: 15.5 | Threshold: 3 | Decision: Accepted
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: TSMC | Tier: 2 | Signals: strong:\bsupplier\b, strong:\bcontract\s+chipmaker\b, strong:\bserves?\s+as\s+(?:the\s+)?main\s+supplier\s+for\b | Score: 15.25 | Threshold: 3 | Decision: Accepted
+INFO:agents.supplier_agent:[TOP-K] Candidates Found: 2 Candidates Retained: 2
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 7
+Current Depth: 1
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: Murata Manufacturing (canonical: Murata Manufacturing)
+DEBUG:scraping.supplier_discovery:CACHE HIT: Murata Manufacturing
+INFO:agents.supplier_agent:Tier-2 evidence does not explicitly show Nintendo Switch supplies, manufactures for, or provides components/materials/equipment/services to Murata Manufacturing
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Nintendo Switch Reason: Tier-2 evidence does not explicitly show Nintendo Switch supplies, manufactures for, or provides components/materials/equipment/services to Murata Manufacturing
+INFO:agents.supplier_agent:[TOP-K] Candidates Found: 0 Candidates Retained: 0
+WARNING:agents.supplier_agent:No valid supplier candidates after filtering for Murata Manufacturing
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 6
+Current Depth: 1
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: Sony Semiconductor Solutions (canonical: Sony Semiconductor Solutions)
+DEBUG:scraping.supplier_discovery:CACHE MISS: Sony Semiconductor Solutions
+INFO:scraping.supplier_discovery:Searching for real suppliers of Sony Semiconductor Solutions via Wikipedia...
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia page context failed for 'Sony Semiconductor Solutions': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions&format=json&limit=1 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (2): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (3): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions supply chain': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+supply+chain&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (4): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions foundry suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+foundry+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (5): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions manufacturing partners': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+manufacturing+partners&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (6): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions chip packaging suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+chip+packaging+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (7): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions contract manufacturers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+contract+manufacturers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (8): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions ODM suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+ODM+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (9): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions original design manufacturers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+original+design+manufacturers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (10): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions outsourced manufacturing': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+outsourced+manufacturing&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (11): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions wafer fabrication suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+wafer+fabrication+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (12): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions OSAT suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+OSAT+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:scraping.supplier_discovery:CACHE MISS: Sony Semiconductor
+INFO:scraping.supplier_discovery:Searching for real suppliers of Sony Semiconductor via Wikipedia...
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (13): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia page context failed for 'Sony Semiconductor': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor&format=json&limit=1 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (14): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (15): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor supply chain': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+supply+chain&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (16): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor foundry suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+foundry+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (17): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor manufacturing partners': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+manufacturing+partners&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (18): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor chip packaging suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+chip+packaging+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (19): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor contract manufacturers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+contract+manufacturers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (20): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor ODM suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+ODM+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (21): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor original design manufacturers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+original+design+manufacturers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (22): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor outsourced manufacturing': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+outsourced+manufacturing&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (23): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor wafer fabrication suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+wafer+fabrication+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (24): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor OSAT suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+OSAT+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:scraping.supplier_discovery:CACHE MISS: Sony Semiconductor Solutions Corporation
+INFO:scraping.supplier_discovery:Searching for real suppliers of Sony Semiconductor Solutions Corporation via Wikipedia...
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (25): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia page context failed for 'Sony Semiconductor Solutions Corporation': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation&format=json&limit=1 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (26): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (27): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation supply chain': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+supply+chain&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (28): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation foundry suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+foundry+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (29): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation manufacturing partners': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+manufacturing+partners&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (30): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation chip packaging suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+chip+packaging+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (31): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation contract manufacturers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+contract+manufacturers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (32): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation ODM suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+ODM+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (33): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation original design manufacturers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+original+design+manufacturers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (34): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation outsourced manufacturing': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+outsourced+manufacturing&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (35): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation wafer fabrication suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+wafer+fabrication+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (36): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Sony Semiconductor Solutions Corporation OSAT suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Sony+Semiconductor+Solutions+Corporation+OSAT+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+WARNING:agents.supplier_agent:No suppliers discovered for Sony Semiconductor Solutions
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 5
+Current Depth: 1
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: Carl Zeiss SMT (canonical: Carl Zeiss SMT)
+DEBUG:scraping.supplier_discovery:CACHE MISS: Carl Zeiss SMT
+INFO:scraping.supplier_discovery:Searching for real suppliers of Carl Zeiss SMT via Wikipedia...
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia page context failed for 'Carl Zeiss SMT': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Carl+Zeiss+SMT&format=json&limit=1 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (2): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Carl Zeiss SMT suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Carl+Zeiss+SMT+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (3): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Carl Zeiss SMT supply chain': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Carl+Zeiss+SMT+supply+chain&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (4): en.wikipedia.org:443
+ERROR:scraping.supplier_discovery:Wikipedia search failed for 'Carl Zeiss SMT foundry suppliers': HTTPSConnectionPool(host='en.wikipedia.org', port=443): Max retries exceeded with url: /w/api.php?action=query&list=search&srsearch=Carl+Zeiss+SMT+foundry+suppliers&format=json&limit=20 (Caused by NameResolutionError("HTTPSConnection(host='en.wikipedia.org', port=443): Failed to resolve 'en.wikipedia.org' ([Errno 8] nodename nor servname provided, or not known)"))
+DEBUG:scraping.supplier_discovery:CACHE MISS: Zeiss
+INFO:scraping.supplier_discovery:Searching for real suppliers of Zeiss via Wikipedia...
+WARNING:agents.supplier_agent:No suppliers discovered for Carl Zeiss SMT
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 4
+Current Depth: 2
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: Trumpf (canonical: Trumpf)
+DEBUG:scraping.supplier_discovery:CACHE MISS: Trumpf
+INFO:scraping.supplier_discovery:Searching for real suppliers of Trumpf via Wikipedia...
+WARNING:agents.supplier_agent:No suppliers discovered for Trumpf
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 3
+Current Depth: 2
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: VDL ETG (canonical: VDL ETG)
+DEBUG:scraping.supplier_discovery:CACHE MISS: VDL ETG
+INFO:scraping.supplier_discovery:Searching for real suppliers of VDL ETG via Wikipedia...
+WARNING:agents.supplier_agent:No suppliers discovered for VDL ETG
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 2
+Current Depth: 2
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: Amkor Technology (canonical: Amkor Technology)
+DEBUG:scraping.supplier_discovery:CACHE HIT: Amkor Technology
+INFO:agents.supplier_agent:Tier-3 evidence does not explicitly show Nvidia supplies, manufactures for, or provides components/materials/equipment/services to Amkor Technology
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Nvidia Reason: Tier-3 evidence does not explicitly show Nvidia supplies, manufactures for, or provides components/materials/equipment/services to Amkor Technology
+INFO:agents.supplier_agent:Tier-3 evidence does not explicitly show Taiwan Semiconductor supplies, manufactures for, or provides components/materials/equipment/services to Amkor Technology
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Taiwan Semiconductor Reason: Tier-3 evidence does not explicitly show Taiwan Semiconductor supplies, manufactures for, or provides components/materials/equipment/services to Amkor Technology
+INFO:agents.supplier_agent:Tier-3 evidence does not explicitly show Samsung Electronics supplies, manufactures for, or provides components/materials/equipment/services to Amkor Technology
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Samsung Electronics Reason: Tier-3 evidence does not explicitly show Samsung Electronics supplies, manufactures for, or provides components/materials/equipment/services to Amkor Technology
+INFO:agents.supplier_agent:Tier-3 evidence does not explicitly show Applied Micro Circuits Corporation supplies, manufactures for, or provides components/materials/equipment/services to Amkor Technology
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Applied Micro Circuits Corporation Reason: Tier-3 evidence does not explicitly show Applied Micro Circuits Corporation supplies, manufactures for, or provides components/materials/equipment/services to Amkor Technology
+INFO:agents.supplier_agent:[TOP-K] Candidates Found: 0 Candidates Retained: 0
+WARNING:agents.supplier_agent:No valid supplier candidates after filtering for Amkor Technology
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 1
+Current Depth: 2
+Decision: continue_discovery
+DEBUG:agents.supplier_agent:Processing queued company: Taiwan Semiconductor Manufacturing Company (canonical: Taiwan Semiconductor Manufacturing Company)
+DEBUG:scraping.supplier_discovery:CURATED SUPPLIER GRAPH HIT: Taiwan Semiconductor Manufacturing Company
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: ASML | Tier: 3 | Signals: strong:\bsupplier\b, strong:\bsupplies\b, strong:\bsupplies\b.{0,80}\b(?:components?|parts?|chips?|displays?|memory|materials?|equipment|systems?)\b, weak:\bsemiconductor\s+(?:manufacturing|foundry|fabrication|supply\s+chain|industry)\b | Score: 16.0 | Threshold: 5 | Decision: Accepted
+INFO:agents.supplier_agent:[DEDUP] Skipped duplicate: ASML
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: Applied Materials | Tier: 3 | Signals: strong:\bsupplier\b, strong:\bprovides?\b.{0,80}\b(?:components?|parts?|chips?|displays?|memory|services?|materials?|equipment|systems?)\b.{0,40}\b(?:to|for)\b, weak:\bsemiconductor\s+(?:manufacturing|foundry|fabrication|supply\s+chain|industry)\b | Score: 11.0 | Threshold: 5 | Decision: Accepted
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: Lam Research | Tier: 3 | Signals: strong:\bsupplier\b, strong:\bsupplies\b, weak:\bsemiconductor\s+(?:manufacturing|foundry|fabrication|supply\s+chain|industry)\b | Score: 11.0 | Threshold: 5 | Decision: Accepted
+INFO:agents.supplier_agent:[EVIDENCE SCORE] Candidate: Tokyo Electron | Tier: 3 | Signals: strong:\bsupplier\b, strong:\bprovides?\b.{0,80}\b(?:components?|parts?|chips?|displays?|memory|services?|materials?|equipment|systems?)\b.{0,40}\b(?:to|for)\b, weak:\bsemiconductor\s+(?:manufacturing|foundry|fabrication|supply\s+chain|industry)\b | Score: 11.0 | Threshold: 5 | Decision: Accepted
+INFO:agents.supplier_agent:Tier-3 evidence does not explicitly show Entegris supplies, manufactures for, or provides components/materials/equipment/services to Taiwan Semiconductor Manufacturing Company
+INFO:agents.supplier_agent:[EVIDENCE FILTER] Rejected: Entegris Reason: Tier-3 evidence does not explicitly show Entegris supplies, manufactures for, or provides components/materials/equipment/services to Taiwan Semiconductor Manufacturing Company
+INFO:agents.supplier_agent:[TOP-K] Candidates Found: 3 Candidates Retained: 3
+DEBUG:workflows.supply_chain_workflow:[TIER ROUTER]
+Queue Size: 0
+Current Depth: 2
+Decision: discovery_complete
+DEBUG:agents.relationship_agent:[PIPELINE COUNT] Before relationship_agent: 13 suppliers
+DEBUG:agents.relationship_agent:[RELATIONSHIP INIT] provider=google model=gemini-2.5-flash api_key_source=GOOGLE_API_KEY
+DEBUG:chains.relationship_chain:[RELATIONSHIP CHAIN] Initializing provider=google model=gemini-2.5-flash
+DEBUG:providers.llm_provider:[LLM CONFIG] Provider: google | Model: gemini-2.5-flash | Key Source: GOOGLE_API_KEY
+DEBUG:providers.llm_provider:[LLM PROVIDER] provider=google model=gemini-2.5-flash api_key_source=GOOGLE_API_KEY
+DEBUG:chains.relationship_chain:[RELATIONSHIP CHAIN] Initialization succeeded provider=google model=gemini-2.5-flash
+DEBUG:agents.relationship_agent:[RELATIONSHIP INIT] Chain initialization succeeded provider=google model=gemini-2.5-flash
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.69 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Samsung candidate=ASML
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for ASML; using heuristic fallback: Relationship classification failed for ASML
+DEBUG:agents.relationship_agent:Company: ASML | Relationship: supplier | Confidence: 0.95 | Evidence Score: 11.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.09 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Samsung candidate=Corning
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Corning; using heuristic fallback: Relationship classification failed for Corning
+DEBUG:agents.relationship_agent:Company: Corning | Relationship: supplier | Confidence: 0.95 | Evidence Score: 10.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.07 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Samsung candidate=Qualcomm
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Qualcomm; using heuristic fallback: Relationship classification failed for Qualcomm
+DEBUG:agents.relationship_agent:Company: Qualcomm | Relationship: supplier | Confidence: 0.85 | Evidence Score: 5.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.19 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Samsung candidate=Murata Manufacturing
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Murata Manufacturing; using heuristic fallback: Relationship classification failed for Murata Manufacturing
+DEBUG:agents.relationship_agent:Company: Murata Manufacturing | Relationship: supplier | Confidence: 0.95 | Evidence Score: 10.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.26 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Samsung candidate=Sony Semiconductor
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Sony Semiconductor; using heuristic fallback: Relationship classification failed for Sony Semiconductor
+DEBUG:agents.relationship_agent:Company: Sony Semiconductor | Relationship: supplier | Confidence: 0.95 | Evidence Score: 10.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.77 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=ASML candidate=Carl Zeiss SMT
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Carl Zeiss SMT; using heuristic fallback: Relationship classification failed for Carl Zeiss SMT
+DEBUG:agents.relationship_agent:Company: Carl Zeiss SMT | Relationship: upstream_supplier | Confidence: 0.95 | Evidence Score: 10.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.97 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=ASML candidate=Trumpf
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Trumpf; using heuristic fallback: Relationship classification failed for Trumpf
+DEBUG:agents.relationship_agent:Company: Trumpf | Relationship: unrelated | Confidence: 0.35 | Evidence Score: 0.0 | Reasoning: Evidence does not establish a supplier relationship.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.56 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=ASML candidate=VDL ETG
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for VDL ETG; using heuristic fallback: Relationship classification failed for VDL ETG
+DEBUG:agents.relationship_agent:Company: VDL ETG | Relationship: upstream_supplier | Confidence: 0.95 | Evidence Score: 10.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.92 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Qualcomm candidate=Amkor Technology
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Amkor Technology; using heuristic fallback: Relationship classification failed for Amkor Technology
+DEBUG:agents.relationship_agent:Company: Amkor Technology | Relationship: upstream_supplier | Confidence: 0.95 | Evidence Score: 10.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.59 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Qualcomm candidate=TSMC
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for TSMC; using heuristic fallback: Relationship classification failed for TSMC
+DEBUG:agents.relationship_agent:Company: TSMC | Relationship: upstream_supplier | Confidence: 0.95 | Evidence Score: 15.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.24 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Taiwan Semiconductor Manufacturing Company candidate=Applied Materials
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Applied Materials; using heuristic fallback: Relationship classification failed for Applied Materials
+DEBUG:agents.relationship_agent:Company: Applied Materials | Relationship: upstream_supplier | Confidence: 0.88 | Evidence Score: 6.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.56 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Taiwan Semiconductor Manufacturing Company candidate=Lam Research
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Lam Research; using heuristic fallback: Relationship classification failed for Lam Research
+DEBUG:agents.relationship_agent:Company: Lam Research | Relationship: upstream_supplier | Confidence: 0.85 | Evidence Score: 5.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+INFO:google_genai._api_client:Retrying google.genai._api_client.BaseApiClient._request_once in 1.66 seconds as it raised ConnectError: [Errno 8] nodename nor servname provided, or not known.
+DEBUG:httpcore.connection:connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=30.0 socket_options=None
+DEBUG:httpcore.connection:connect_tcp.failed exception=ConnectError(gaierror(8, 'nodename nor servname provided, or not known'))
+ERROR:agents.relationship_agent:[RELATIONSHIP INVOKE] Chain invocation failed target=Taiwan Semiconductor Manufacturing Company candidate=Tokyo Electron
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/avinash/Desktop/supply-chain-ai/agents/relationship_agent.py", line 96, in classify
+    result: RelationshipClassification = self.chain.invoke(
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/runnables/base.py", line 3444, in invoke
+    input_ = context.run(step.invoke, input_, config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 2701, in invoke
+    return super().invoke(input, config, stop=stop, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 476, in invoke
+    self.generate_prompt(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1849, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1656, in generate
+    self._generate_with_cache(
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_core/language_models/chat_models.py", line 1994, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/langchain_google_genai/chat_models.py", line 3234, in _generate
+    response: GenerateContentResponse = self.client.models.generate_content(
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 6480, in generate_content
+    response = self._generate_content(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/models.py", line 4916, in _generate_content
+    response = self._api_client.request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1611, in request
+    response = self._request(http_request, http_options, stream=False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1402, in _request
+    return retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/tenacity/__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/google/genai/_api_client.py", line 1380, in _request_once
+    response = self._httpx_client.send(httpx_request, stream=stream)  # type: ignore[union-attr]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/local/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/avinash/Desktop/supply-chain-ai/venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 8] nodename nor servname provided, or not known
+DEBUG:agents.relationship_agent:Relationship classifier failed for Tokyo Electron; using heuristic fallback: Relationship classification failed for Tokyo Electron
+DEBUG:agents.relationship_agent:Company: Tokyo Electron | Relationship: upstream_supplier | Confidence: 0.85 | Evidence Score: 5.0 | Reasoning: Evidence contains direct supplier, manufacturing, foundry, component, or assembly language.
+DEBUG:agents.relationship_agent:[PIPELINE COUNT] After relationship_agent: 13 suppliers
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: ASML | Classification: supplier | Confidence: 0.95 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Corning Inc. | Classification: supplier | Confidence: 0.95 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Qualcomm | Classification: supplier | Confidence: 0.85 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Murata Manufacturing | Classification: supplier | Confidence: 0.95 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Sony Semiconductor Solutions | Classification: supplier | Confidence: 0.95 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Carl Zeiss SMT | Classification: upstream_supplier | Confidence: 0.95 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Trumpf | Classification: unrelated | Confidence: 0.35 | Removed: True
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: VDL ETG | Classification: upstream_supplier | Confidence: 0.95 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Amkor Technology | Classification: upstream_supplier | Confidence: 0.95 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Taiwan Semiconductor Manufacturing Company | Classification: upstream_supplier | Confidence: 0.95 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Applied Materials | Classification: upstream_supplier | Confidence: 0.88 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Lam Research | Classification: upstream_supplier | Confidence: 0.85 | Removed: False
+DEBUG:agents.deduplication_agent:[RELATIONSHIP FILTER] Supplier: Tokyo Electron | Classification: upstream_supplier | Confidence: 0.85 | Removed: False
+DEBUG:agents.deduplication_agent:[DEDUPLICATION SUMMARY]
+DEBUG:agents.deduplication_agent:Total Unique Entities Discovered: 13
+DEBUG:agents.deduplication_agent:Entities Retained After Filtering: 12
+DEBUG:agents.deduplication_agent:Entities Removed (non-supplier labels): 1
+DEBUG:agents.deduplication_agent:Retained Relationship Types: ['supplier', 'upstream_supplier']
+DEBUG:agents.deduplication_agent:  - ASML: supplier (0.95) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Corning: supplier (0.95) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Qualcomm: supplier (0.85) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Murata Manufacturing: supplier (0.95) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Sony Semiconductor Solutions: supplier (0.95) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Carl Zeiss SMT: upstream_supplier (0.95) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Trumpf: unrelated (0.35) -> REMOVE
+DEBUG:agents.deduplication_agent:  - VDL ETG: upstream_supplier (0.95) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Amkor Technology: upstream_supplier (0.95) -> RETAIN
+DEBUG:agents.deduplication_agent:  - TSMC: upstream_supplier (0.95) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Applied Materials: upstream_supplier (0.88) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Lam Research: upstream_supplier (0.85) -> RETAIN
+DEBUG:agents.deduplication_agent:  - Tokyo Electron: upstream_supplier (0.85) -> RETAIN
+DEBUG:agents.deduplication_agent:[PIPELINE COUNT] After deduplication_agent: 12 suppliers
+DEBUG:agents.verification_agent:[PIPELINE COUNT] Before verification_agent: 12 suppliers
+DEBUG:agents.verification_agent:Verifying: ASML
+DEBUG:agents.verification_agent:Supplier: ASML | Verified: True | Confidence: 0.91 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Corning Inc.
+DEBUG:agents.verification_agent:Supplier: Corning Inc. | Verified: True | Confidence: 0.91 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Qualcomm
+DEBUG:agents.verification_agent:Supplier: Qualcomm | Verified: True | Confidence: 0.88 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Murata Manufacturing
+DEBUG:agents.verification_agent:Supplier: Murata Manufacturing | Verified: True | Confidence: 0.91 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Sony Semiconductor Solutions
+DEBUG:agents.verification_agent:Supplier: Sony Semiconductor Solutions | Verified: True | Confidence: 0.91 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Carl Zeiss SMT
+DEBUG:agents.verification_agent:Supplier: Carl Zeiss SMT | Verified: True | Confidence: 0.91 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: VDL ETG
+INFO:scraping.company_scraper:Searching for company: VDL ETG
+WARNING:agents.verification_agent:Discarded supplier after verification: VDL ETG (company_exists=False)
+DEBUG:agents.verification_agent:Supplier: VDL ETG | Verified: False | Confidence: 0.35 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Amkor Technology
+DEBUG:agents.verification_agent:Supplier: Amkor Technology | Verified: True | Confidence: 0.90 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Taiwan Semiconductor Manufacturing Company
+DEBUG:agents.verification_agent:Supplier: Taiwan Semiconductor Manufacturing Company | Verified: True | Confidence: 0.86 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Applied Materials
+DEBUG:agents.verification_agent:Supplier: Applied Materials | Verified: True | Confidence: 0.89 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Lam Research
+DEBUG:agents.verification_agent:Supplier: Lam Research | Verified: True | Confidence: 0.88 | HQ: Unknown
+DEBUG:agents.verification_agent:Verifying: Tokyo Electron
+DEBUG:agents.verification_agent:Supplier: Tokyo Electron | Verified: True | Confidence: 0.88 | HQ: Unknown
+DEBUG:agents.verification_agent:[PIPELINE COUNT] After verification_agent: 11 suppliers
+DEBUG:agents.risk_agent:=== RISK INPUT TRACE ===
+DEBUG:agents.risk_agent:Suppliers sent to risk analysis: 11
+DEBUG:agents.risk_agent:Supplier: ASML | Canonical: ASML | Location: Netherlands
+DEBUG:agents.risk_agent:Supplier: Corning | Canonical: Corning Inc. | Location: United States
+DEBUG:agents.risk_agent:Supplier: Qualcomm | Canonical: Qualcomm | Location: United States
+DEBUG:agents.risk_agent:Supplier: Murata Manufacturing | Canonical: Murata Manufacturing | Location: Japan
+DEBUG:agents.risk_agent:Supplier: Sony Semiconductor Solutions | Canonical: Sony Semiconductor Solutions | Location: Japan
+DEBUG:agents.risk_agent:Supplier: Carl Zeiss SMT | Canonical: Carl Zeiss SMT | Location: Germany
+DEBUG:agents.risk_agent:Supplier: Amkor Technology | Canonical: Amkor Technology | Location: Unknown (Verified by Research)
+DEBUG:agents.risk_agent:Supplier: TSMC | Canonical: Taiwan Semiconductor Manufacturing Company | Location: Unknown (Verified by Research)
+DEBUG:agents.risk_agent:Supplier: Applied Materials | Canonical: Applied Materials | Location: United States
+DEBUG:agents.risk_agent:Supplier: Lam Research | Canonical: Lam Research | Location: United States
+DEBUG:agents.risk_agent:Supplier: Tokyo Electron | Canonical: Tokyo Electron | Location: Japan
+DEBUG:agents.risk_agent:Risk intelligence agent orchestrating risk assessments
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: ASML
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Corning
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Qualcomm
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Murata Manufacturing
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Sony Semiconductor Solutions
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Carl Zeiss SMT
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Amkor Technology
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: TSMC
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Applied Materials
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Lam Research
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Geopolitical PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Tokyo Electron
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:TOTAL RISKS FROM Geopolitical: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: ASML
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Corning
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Qualcomm
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Murata Manufacturing
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Sony Semiconductor Solutions
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Carl Zeiss SMT
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Amkor Technology
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: TSMC
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Applied Materials
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Lam Research
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== News PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Tokyo Electron
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:No recent risk-related news found
+DEBUG:agents.risk_agent:TOTAL RISKS FROM News: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: ASML
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Corning
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Qualcomm
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Murata Manufacturing
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Sony Semiconductor Solutions
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Carl Zeiss SMT
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Amkor Technology
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: TSMC
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Applied Materials
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Lam Research
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:=== Financial PROVIDER DEBUG ===
+DEBUG:agents.risk_agent:Supplier: Tokyo Electron
+DEBUG:agents.risk_agent:Articles Retrieved: 0
+DEBUG:agents.risk_agent:Articles After Date Filter: 0
+DEBUG:agents.risk_agent:Articles Triggering Risk: 0
+DEBUG:agents.risk_agent:Risks Generated: 0
+DEBUG:agents.risk_agent:No recent financial risk signals found.
+DEBUG:agents.risk_agent:TOTAL RISKS FROM Financial: 0
+DEBUG:agents.risk_agent:TOTAL RISKS GENERATED: 0
+DEBUG:agents.confidence_agent:Supplier: ASML | Discovery: 0.96 | Relationship: 0.95 | Verification: 0.91 | Risk: 0.75 | Final Score: 0.91 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 91% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Corning | Discovery: 0.89 | Relationship: 0.95 | Verification: 0.91 | Risk: 0.75 | Final Score: 0.89 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 91% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Qualcomm | Discovery: 0.88 | Relationship: 0.85 | Verification: 0.88 | Risk: 0.75 | Final Score: 0.85 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 88% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Murata Manufacturing | Discovery: 0.87 | Relationship: 0.95 | Verification: 0.91 | Risk: 0.75 | Final Score: 0.89 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 91% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Sony Semiconductor Solutions | Discovery: 0.86 | Relationship: 0.95 | Verification: 0.91 | Risk: 0.75 | Final Score: 0.89 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 91% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Carl Zeiss SMT | Discovery: 0.93 | Relationship: 0.95 | Verification: 0.91 | Risk: 0.75 | Final Score: 0.90 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 91% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Amkor Technology | Discovery: 0.91 | Relationship: 0.95 | Verification: 0.90 | Risk: 0.75 | Final Score: 0.89 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 90% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: TSMC | Discovery: 0.87 | Relationship: 0.95 | Verification: 0.86 | Risk: 0.75 | Final Score: 0.87 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 86% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Applied Materials | Discovery: 0.91 | Relationship: 0.88 | Verification: 0.89 | Risk: 0.75 | Final Score: 0.87 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 89% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Lam Research | Discovery: 0.90 | Relationship: 0.85 | Verification: 0.88 | Risk: 0.75 | Final Score: 0.85 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 88% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Supplier: Tokyo Electron | Discovery: 0.89 | Relationship: 0.85 | Verification: 0.88 | Risk: 0.75 | Final Score: 0.85 | Reasoning: Verification quality is high (11/12 suppliers verified), lowering confidence. Strongly identified supplier with high-confidence relationship classification. Successfully verified with 88% confidence. No supplier-specific risk signals were detected in the assessed data.
+DEBUG:agents.confidence_agent:Confidence summary
+DEBUG:agents.confidence_agent:Highest Confidence Suppliers:
+DEBUG:agents.confidence_agent:1. ASML (0.91)
+DEBUG:agents.confidence_agent:2. Carl Zeiss SMT (0.9)
+DEBUG:agents.confidence_agent:Lowest Confidence Suppliers:
+DEBUG:agents.confidence_agent:1. Tokyo Electron (0.85)
+DEBUG:agents.criticality_agent:Supplier: ASML | Criticality Score: 0.59 | Level: Medium | Reason: Supplier provides non-core support services and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Corning | Criticality Score: 0.59 | Level: Medium | Reason: Supplier provides non-core support services and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Qualcomm | Criticality Score: 0.79 | Level: High | Reason: Supplier manufactures core chip components and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Murata Manufacturing | Criticality Score: 0.73 | Level: High | Reason: Supplier provides essential component services and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Sony Semiconductor Solutions | Criticality Score: 0.59 | Level: Medium | Reason: Supplier provides non-core support services and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Carl Zeiss SMT | Criticality Score: 0.5 | Level: Medium | Reason: Supplier provides non-core support services and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Amkor Technology | Criticality Score: 0.72 | Level: High | Reason: Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: TSMC | Criticality Score: 0.6 | Level: Medium | Reason: Supplier provides essential component services and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Applied Materials | Criticality Score: 0.71 | Level: High | Reason: Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Lam Research | Criticality Score: 0.48 | Level: Low | Reason: Supplier provides non-core support services and appears to be a sole-source dependency.
+DEBUG:agents.criticality_agent:Supplier: Tokyo Electron | Criticality Score: 0.7 | Level: High | Reason: Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+DEBUG:agents.health_agent:Overall Score: 85.4
+DEBUG:agents.health_agent:Status: Good
+DEBUG:agents.health_agent:Critical Suppliers: 0
+DEBUG:agents.health_agent:High Risk Suppliers: 0
+DEBUG:agents.health_agent:Discovery Coverage: {'target': 'Samsung', 'coverage_basis': 'discovered_suppliers', 'tier1_supplier_count': 5, 'canonical_tier1_supplier_count': 5, 'expected_count': 5, 'matched_expected_count': 5, 'coverage_ratio': 1.0, 'precision': 1.0, 'false_positive_rate': 0.0, 'canonical_uniqueness_ratio': 1.0, 'label': 'High', 'raw_coverage_label': 'High', 'verification_adjusted_ratio': 0.9167, 'verification_adjusted_label': 'High', 'matched_suppliers': ['ASML', 'Corning Inc.', 'Murata Manufacturing', 'Qualcomm', 'Sony Semiconductor Solutions'], 'missing_expected_suppliers': [], 'false_positive_suppliers': []}
+DEBUG:agents.health_agent:Summary: Samsung's supply chain appears good overall. No major operational disruptions were detected. Verification quality is high (11/12 suppliers verified).
+DEBUG:agents.executive_report_agent:Health Score: 85.4
+DEBUG:agents.executive_report_agent:Health Status: Good
+DEBUG:agents.executive_report_agent:Key Suppliers:
+DEBUG:agents.executive_report_agent:- Qualcomm
+DEBUG:agents.executive_report_agent:- Murata Manufacturing
+DEBUG:agents.executive_report_agent:- Amkor Technology
+DEBUG:agents.executive_report_agent:- Applied Materials
+DEBUG:agents.executive_report_agent:- Tokyo Electron
+DEBUG:agents.executive_report_agent:Major Risks:
+DEBUG:agents.executive_report_agent:Recommendations:
+DEBUG:agents.history_agent:Previous Runs: 61
+DEBUG:agents.history_agent:Current Health: 85.4
+DEBUG:agents.history_agent:Previous Health: 84.4
+DEBUG:agents.history_agent:Health Delta: 1.0
+DEBUG:agents.history_agent:Supplier Delta: 10
+DEBUG:agents.history_agent:Risk Delta: 0
+DEBUG:agents.history_agent:History Saved: database/history/samsung.json
+DEBUG:agents.graph_export_agent:Nodes Created: 12
+DEBUG:agents.graph_export_agent:Edges Created: 11
+DEBUG:agents.graph_export_agent:Graph Saved: database/graphs/samsung.json
+/Users/avinash/Desktop/supply-chain-ai/retrieval/vector_store.py:101: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  return Chroma(
+DEBUG:chromadb.config:Starting component System
+DEBUG:chromadb.config:Starting component Posthog
+/Users/avinash/Desktop/supply-chain-ai/retrieval/knowledge_base_ingestion.py:139: LangChainDeprecationWarning: Since Chroma 0.4.x the manual persistence method is no longer supported as docs are automatically persisted.
+  persist()
+Starting supply-chain analysis for Samsung
+[1/6] Researching Company
+Company agent started: Samsung
+Company agent completed: Samsung
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+Supplier discoveries:
+- ASML (tier=1)
+- Corning Inc. (tier=1)
+- Qualcomm (tier=1)
+- Murata Manufacturing (tier=1)
+- Sony Semiconductor Solutions (tier=1)
+Supplier agent completed: 5 discovered
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+Supplier discoveries:
+- Carl Zeiss SMT (tier=2)
+- Trumpf (tier=2)
+- VDL ETG (tier=2)
+Supplier agent completed: 3 discovered
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+Supplier discoveries:
+- Amkor Technology (tier=2)
+- Taiwan Semiconductor Manufacturing Company (tier=2)
+Supplier agent completed: 2 discovered
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+[LIMIT] Max web queries reached (40). Skipping Wikipedia supplier search for 'Carl Zeiss SMT manufacturing partners'.
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+[2/6] Discovering Suppliers
+Supplier agent started: Samsung
+Supplier discoveries:
+- Applied Materials (tier=3)
+- Lam Research (tier=3)
+- Tokyo Electron (tier=3)
+Supplier agent completed: 3 discovered
+[3/6] Classifying Relationships
+Relationship agent started: 13 entities
+Relationship agent completed: 13 classified
+Deduplication agent started
+Deduplication agent completed: 12 retained
+[4/6] Verifying Suppliers
+Verification agent started: 12 suppliers
+Verified supplier: ASML (0.91)
+Verified supplier: Corning Inc. (0.91)
+Verified supplier: Qualcomm (0.88)
+Verified supplier: Murata Manufacturing (0.91)
+Verified supplier: Sony Semiconductor Solutions (0.91)
+Verified supplier: Carl Zeiss SMT (0.91)
+Verified supplier: Amkor Technology (0.90)
+Verified supplier: Taiwan Semiconductor Manufacturing Company (0.86)
+Verified supplier: Applied Materials (0.89)
+Verified supplier: Lam Research (0.88)
+Verified supplier: Tokyo Electron (0.88)
+Verification agent completed: 11 verified, 1 discarded
+[5/6] Assessing Risks
+Risk agent started: 11 suppliers
+Risk agent completed: 0 accepted risks
+Confidence agent started
+Confidence agent completed: 11 scored
+Criticality agent started
+Criticality agent completed: 11 scored
+Health agent started
+Health agent completed: 85.4/100 (Good)
+[6/6] Generating Report
+Executive report agent started
+Executive report agent completed
+History agent started
+History agent completed
+Graph export agent started
+Graph export agent completed
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Samsung
+Mode: LLM-only
+Max Depth: 3
+Generated At: 2026-07-24 20:46:30 IST
+
+1. EXECUTIVE SUMMARY
+Samsung has a moderately healthy supply chain with strong dependence on Qualcomm, Murata Manufacturing, and Amkor Technology. The main concern is limited verification depth or supplier concentration.
+
+2. DISCOVERY QUALITY
+Suppliers discovered: 12
+Suppliers retained after verification: 11
+Suppliers discarded: 1
+- VDL ETG: company_exists=False
+Coverage: High - 5 discovered Tier-1 suppliers identified.
+Verification-adjusted coverage: High (92%; 11/12 suppliers verified).
+
+3. SUPPLY CHAIN HEALTH
+Status: Good - 85.4/100.
+Supplier Count: 11
+Critical Suppliers: 0
+High-Risk Suppliers: 0
+Summary: Samsung's supply chain appears good overall. No major operational disruptions were detected. Verification quality is high (11/12 suppliers verified).
+
+4. SUPPLIER NETWORK
+4.1 Tier 1 Suppliers
+TIER 1 SUPPLIERS
+Direct suppliers to Samsung
+
+1. ASML
+   Relationship : Supplier
+   Confidence   : 0.91
+   Verification : Verified (0.91)
+
+2. Corning
+   Relationship : Supplier
+   Confidence   : 0.89
+   Verification : Verified (0.91)
+
+3. Murata Manufacturing
+   Relationship : Supplier
+   Confidence   : 0.89
+   Verification : Verified (0.91)
+
+4. Qualcomm
+   Relationship : Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.88)
+
+5. Sony Semiconductor Solutions
+   Relationship : Supplier
+   Confidence   : 0.89
+   Verification : Verified (0.91)
+
+4.2 Tier 2 Suppliers
+TIER 2 SUPPLIERS
+Upstream suppliers connected through Tier 1 suppliers
+
+1. Amkor Technology
+   Parent       : Qualcomm
+   Path         : Samsung -> Qualcomm -> Amkor Technology
+   Relationship : Upstream Supplier
+   Confidence   : 0.89
+   Verification : Verified (0.90)
+
+2. Carl Zeiss SMT
+   Parent       : ASML
+   Path         : Samsung -> ASML -> Carl Zeiss SMT
+   Relationship : Upstream Supplier
+   Confidence   : 0.90
+   Verification : Verified (0.91)
+
+3. TSMC
+   Parent       : Qualcomm
+   Path         : Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company
+   Relationship : Upstream Supplier
+   Confidence   : 0.87
+   Verification : Verified (0.86)
+
+4.3 Tier 3 Suppliers
+TIER 3 SUPPLIERS
+Upstream suppliers connected through Tier 2 suppliers
+
+1. Applied Materials
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+   Relationship : Upstream Supplier
+   Confidence   : 0.87
+   Verification : Verified (0.89)
+
+2. Lam Research
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+   Relationship : Upstream Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.88)
+
+3. Tokyo Electron
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+   Relationship : Upstream Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.88)
+
+5. TOP RISKS
+High
+None identified
+
+Medium
+None identified
+
+Low
+None identified
+
+No supplier-specific risks detected
+
+6. DATA QUALITY WARNINGS
+Low Verification Confidence
+None identified
+
+Failed Verification
+None identified
+
+Missing Verification Result
+None identified
+
+7. CRITICAL SUPPLIERS
+1. Qualcomm
+   Tier         : 1
+   Confidence   : 0.85
+   Reason       : Supplier manufactures core chip components and appears to be a sole-source dependency.
+
+2. Murata Manufacturing
+   Tier         : 1
+   Confidence   : 0.89
+   Reason       : Supplier provides essential component services and appears to be a sole-source dependency.
+
+3. Amkor Technology
+   Tier         : 2
+   Confidence   : 0.89
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+4. Applied Materials
+   Tier         : 3
+   Confidence   : 0.87
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+5. Tokyo Electron
+   Tier         : 3
+   Confidence   : 0.85
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+8. PERFORMANCE TIMINGS
+Company Research             : <0.1s (cache)
+Supplier Discovery           : 2.1s (curated)
+Relationship Classification  : 19.8s (llm)
+Verification                 : <0.1s
+Risk Analysis                : <0.1s
+Confidence Scoring           : <0.1s
+Criticality Scoring          : <0.1s
+Health Scoring               : <0.1s
+Report Generation            : 0.4s
+History Persistence          : <0.1s
+Graph Export                 : <0.1s
+
+Total Runtime                : 22.3s
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+
+DEBUG FLAT SUPPLIER LIST
+- ASML
+- Corning
+- Qualcomm
+- Murata Manufacturing
+- Sony Semiconductor Solutions
+- Carl Zeiss SMT
+- Amkor Technology
+- TSMC
+- Applied Materials
+- Lam Research
+- Tokyo Electron
+Knowledge report generated: knowledge_base/Samsung/samsung_supply_chain_report.md
+Knowledge base files loaded: 8
+Knowledge base chunks created: 45
+Chroma collection count after indexing: 3078
+BENCHMARK_END_TIME=2026-07-24T20:46:32+0530
+BENCHMARK_WALL_RUNTIME_SECONDS=27
+BENCHMARK_EXIT_CODE=0

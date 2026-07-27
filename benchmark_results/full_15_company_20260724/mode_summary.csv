@@ -1,0 +1,4 @@
+mode,runs,workflow_completion_rate,primary_model_invoked_runs,primary_model_success_rate,fallback_usage_rate,average_runtime_seconds_excluding_missing,average_wall_runtime_seconds,average_suppliers_discovered,average_suppliers_retained,average_discard_rate,average_risks_identified,average_verification_confidence,insufficient_data_cases,system_failures
+llm,15,1.0,9,0.0,0.6,10.533,15.2,5.6,4.6,0.2142,0.533,0.786,6,0
+rag,15,1.0,9,0.0,0.6,0.233,16.667,6.2,4.733,0.2869,0.533,0.713,6,0
+slm,15,1.0,9,0.0,0.6,1.42,6.0,5.6,4.6,0.2142,0.533,0.786,6,0

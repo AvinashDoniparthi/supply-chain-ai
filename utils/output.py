@@ -493,6 +493,17 @@ def _discovery_quality_lines(state: AgentState) -> List[str]:
     coverage = calculate_discovery_coverage(state)
     verification_quality = calculate_verification_quality(state)
     lines = []
+    discovered_count = len(state.discovered_suppliers or state.suppliers)
+    retained_count = len(state.suppliers)
+    discarded = getattr(state, "discarded_suppliers", []) or []
+    lines.append(f"Suppliers discovered: {discovered_count}")
+    lines.append(f"Suppliers retained after verification: {retained_count}")
+    lines.append(f"Suppliers discarded: {len(discarded)}")
+    if discarded:
+        for item in discarded:
+            lines.append(
+                f"- {item.get('supplier_name', 'Unknown')}: {item.get('reason', 'Verification failed')}"
+            )
     if coverage.get("coverage_basis") == "expected_suppliers":
         lines.append(
             f"Coverage: {coverage['label']} - {coverage['matched_expected_count']}/"

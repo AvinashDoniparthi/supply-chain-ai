@@ -255,6 +255,10 @@ class AgentState(BaseModel):
 
     # Supply chain mapping
     suppliers: List[SupplierInfo] = Field(default_factory=list)
+    discovered_suppliers: List[SupplierInfo] = Field(
+        default_factory=list,
+        description="Supplier candidates retained after discovery/classification and before verification",
+    )
     discovered_entities: List[SupplierInfo] = Field(
         default_factory=list,
         description="All entities found during discovery, before filtering",
@@ -263,6 +267,10 @@ class AgentState(BaseModel):
 
     # Intelligence layers
     verification_results: List[VerificationResult] = Field(default_factory=list)
+    discarded_suppliers: List[Dict[str, Any]] = Field(
+        default_factory=list,
+        description="Supplier candidates discarded by verification, with reasons for evaluation metrics",
+    )
     risk_assessments: List[RiskAnalysis] = Field(default_factory=list)
     supplier_confidence_scores: List[SupplierConfidence] = Field(default_factory=list)
     supplier_criticality_scores: List[SupplierCriticality] = Field(default_factory=list)

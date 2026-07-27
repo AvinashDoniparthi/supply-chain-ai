@@ -1305,6 +1305,69 @@
       "suppliers": [
         "Sony Semiconductor Solutions"
       ]
+    },
+    {
+      "timestamp": "2026-07-24T20:46:30.690681",
+      "mode": "llm",
+      "health_score": 85.4,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Corning",
+        "Qualcomm",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT",
+        "Amkor Technology",
+        "TSMC",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:46:59.975240",
+      "mode": "rag",
+      "health_score": 86.1,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Corning",
+        "Qualcomm",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT",
+        "Amkor Technology",
+        "TSMC",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:47:06.378351",
+      "mode": "slm",
+      "health_score": 85.4,
+      "health_status": "Good",
+      "supplier_count": 11,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Corning",
+        "Qualcomm",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT",
+        "Amkor Technology",
+        "TSMC",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron"
+      ]
     }
   ]
 }

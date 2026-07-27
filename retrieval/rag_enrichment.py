@@ -4,6 +4,7 @@ from typing import Any, Dict, Iterable, List
 
 from models.state import AgentState, SupplierInfo
 from retrieval.vector_store import index_analysis, search_analysis
+from utils.runtime_controls import finish_stage, start_stage
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +55,7 @@ def enrich_supplier_evidence_with_rag(
     if not rag_enabled(state) or not state.suppliers:
         return state
 
+    start_stage(state, "retrieval")
     try:
         index_analysis(state)
     except Exception as exc:
@@ -68,6 +70,7 @@ def enrich_supplier_evidence_with_rag(
                 "reason": str(exc),
             }
         )
+        finish_stage(state, "retrieval")
         return state
 
     total_added = 0
@@ -117,4 +120,5 @@ def enrich_supplier_evidence_with_rag(
             "status": "success",
         }
     )
+    finish_stage(state, "retrieval")
     return state

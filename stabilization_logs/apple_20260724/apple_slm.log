@@ -1,0 +1,193 @@
+/Users/avinash/Desktop/supply-chain-ai/retrieval/vector_store.py:101: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  return Chroma(
+/Users/avinash/Desktop/supply-chain-ai/retrieval/knowledge_base_ingestion.py:139: LangChainDeprecationWarning: Since Chroma 0.4.x the manual persistence method is no longer supported as docs are automatically persisted.
+  persist()
+==================================================
+SUPPLY CHAIN INTELLIGENCE REPORT
+==================================================
+
+Company: Apple
+Mode: SLM
+Max Depth: 3
+Generated At: 2026-07-24 21:10:45 IST
+
+1. EXECUTIVE SUMMARY
+Apple has a moderately healthy supply chain with strong dependence on TSMC, Broadcom, and Murata Manufacturing. The main concern is geographic disruption exposure among key suppliers.
+
+Recommendations
+1. Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: Apple -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+
+2. DISCOVERY QUALITY
+Suppliers discovered: 11
+Suppliers retained after verification: 10
+Suppliers discarded: 1
+- VDL ETG: company_exists=False
+Coverage: High - 5 discovered Tier-1 suppliers identified.
+Verification-adjusted coverage: High (91%; 10/11 suppliers verified).
+
+3. SUPPLY CHAIN HEALTH
+Status: Good - 77.7/100.
+Supplier Count: 10
+Critical Suppliers: 0
+High-Risk Suppliers: 3
+Summary: Apple's supply chain appears good overall. 3 supplier(s) face high or critical risk exposure. Verification quality is high (10/11 suppliers verified).
+
+4. SUPPLIER NETWORK
+4.1 Tier 1 Suppliers
+TIER 1 SUPPLIERS
+Direct suppliers to Apple
+
+1. Broadcom
+   Relationship : Supplier
+   Confidence   : 0.86
+   Verification : Verified (0.88)
+
+2. Hon Hai Precision Industry
+   Relationship : Supplier
+   Confidence   : 0.86
+   Verification : Verified (0.91)
+
+3. Murata Manufacturing
+   Relationship : Supplier
+   Confidence   : 0.90
+   Verification : Verified (0.91)
+
+4. Pegatron
+   Relationship : Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.91)
+
+5. TSMC
+   Relationship : Supplier
+   Confidence   : 0.83
+   Verification : Verified (0.89)
+
+4.2 Tier 2 Suppliers
+TIER 2 SUPPLIERS
+Upstream suppliers connected through Tier 1 suppliers
+
+1. ASML
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> ASML
+   Relationship : Upstream Supplier
+   Confidence   : 0.91
+   Verification : Verified (0.91)
+
+2. Applied Materials
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+   Relationship : Upstream Supplier
+   Confidence   : 0.87
+   Verification : Verified (0.89)
+
+3. Lam Research
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+   Relationship : Upstream Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.88)
+
+4. Tokyo Electron
+   Parent       : Taiwan Semiconductor Manufacturing Company
+   Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+   Relationship : Upstream Supplier
+   Confidence   : 0.85
+   Verification : Verified (0.88)
+
+4.3 Tier 3 Suppliers
+TIER 3 SUPPLIERS
+Upstream suppliers connected through Tier 2 suppliers
+
+1. Carl Zeiss SMT
+   Parent       : ASML
+   Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
+   Relationship : Upstream Supplier
+   Confidence   : 0.90
+   Verification : Verified (0.91)
+
+5. TOP RISKS
+High
+1. Geopolitical risk involving TSMC
+   Affected Path: Apple -> Taiwan Semiconductor Manufacturing Company
+   Reason: Taiwan geopolitical exposure through TSMC. Affected path: Apple -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+   Confidence: 0.90
+   Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+
+2. Geopolitical risk involving Hon Hai Precision Industry
+   Affected Path: Apple -> Hon Hai Precision Industry Co., Ltd.
+   Reason: Taiwan geopolitical exposure through Hon Hai Precision Industry. Affected path: Apple -> Hon Hai Precision Industry. Reason: Hon Hai Precision Industry is located in Taiwan / China, a high-tension geopolitical region.
+   Confidence: 0.90
+   Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+
+3. Geopolitical risk involving Pegatron
+   Affected Path: Apple -> Pegatron Corporation
+   Reason: Taiwan geopolitical exposure through Pegatron. Affected path: Apple -> Pegatron. Reason: Pegatron is located in Taiwan / China, a high-tension geopolitical region.
+   Confidence: 0.90
+   Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+
+Medium
+None identified
+
+Low
+None identified
+
+6. DATA QUALITY WARNINGS
+Low Verification Confidence
+None identified
+
+Failed Verification
+None identified
+
+Missing Verification Result
+None identified
+
+7. CRITICAL SUPPLIERS
+1. TSMC
+   Tier         : 1
+   Confidence   : 0.83
+   Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+2. Broadcom
+   Tier         : 1
+   Confidence   : 0.86
+   Reason       : Supplier manufactures core chip components and appears to be a sole-source dependency.
+
+3. Hon Hai Precision Industry
+   Tier         : 1
+   Confidence   : 0.86
+   Reason       : Supplier provides essential assembly services and appears to be a sole-source dependency.
+
+4. Pegatron
+   Tier         : 1
+   Confidence   : 0.85
+   Reason       : Supplier provides essential assembly services and appears to be a sole-source dependency.
+
+5. Murata Manufacturing
+   Tier         : 1
+   Confidence   : 0.90
+   Reason       : Supplier provides essential component services and appears to be a sole-source dependency.
+
+8. PERFORMANCE TIMINGS
+Company Research             : <0.1s (cache)
+Supplier Discovery           : 3.6s
+Relationship Classification  : 0.1s (llm)
+Verification                 : <0.1s
+Risk Analysis                : <0.1s
+Confidence Scoring           : <0.1s
+Criticality Scoring          : <0.1s
+Health Scoring               : <0.1s
+Report Generation            : 0.5s
+History Persistence          : <0.1s
+Graph Export                 : <0.1s
+
+Total Runtime                : 4.3s
+
+==================================================
+ANALYSIS COMPLETE
+==================================================
+Knowledge base files loaded: 16
+Knowledge base chunks created: 88
+Chroma collection count after indexing: 3449
+real 10.19
+user 9.63
+sys 0.63

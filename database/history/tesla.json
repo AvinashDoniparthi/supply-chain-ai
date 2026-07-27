@@ -947,6 +947,174 @@
       "suppliers": [
         "Gigafactory Shanghai"
       ]
+    },
+    {
+      "timestamp": "2026-07-24T19:59:43.156152",
+      "mode": "llm",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:00:03.627136",
+      "mode": "rag",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:00:08.683861",
+      "mode": "slm",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:00:24.493222",
+      "mode": "llm",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:00:46.225748",
+      "mode": "rag",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:00:48.046923",
+      "mode": "llm",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:00:51.419045",
+      "mode": "slm",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:01:12.811468",
+      "mode": "rag",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:01:21.256962",
+      "mode": "slm",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:50:22.756219",
+      "mode": "llm",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:50:43.501324",
+      "mode": "rag",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:50:49.304374",
+      "mode": "slm",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 4,
+      "risk_count": 1,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI"
+      ]
     }
   ]
 }

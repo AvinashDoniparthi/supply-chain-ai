@@ -861,6 +861,51 @@
         "Trumpf",
         "VDL ETG"
       ]
+    },
+    {
+      "timestamp": "2026-07-24T20:49:25.514363",
+      "mode": "llm",
+      "health_score": 86.2,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:49:44.361447",
+      "mode": "rag",
+      "health_score": 78.0,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:49:49.511350",
+      "mode": "slm",
+      "health_score": 86.2,
+      "health_status": "Good",
+      "supplier_count": 5,
+      "risk_count": 0,
+      "suppliers": [
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Carl Zeiss SMT"
+      ]
     }
   ]
 }

@@ -14,6 +14,7 @@ from scraping.supplier_discovery import (
     is_product_or_brand_name,
 )
 from utils.output import OutputMode, agent_event, debug_log, emit, progress
+from utils.benchmark_metrics import record_primary_model_result
 from utils.runtime_controls import (
     can_consume_llm_call,
     emit_skip_once,
@@ -352,7 +353,13 @@ def relationship_agent(state: AgentState) -> AgentState:
                         candidate_entity=candidate_name,
                         evidence=classification_evidence,
                     )
+                    record_primary_model_result(
+                        state,
+                        stage="relationship_classification",
+                        success=True,
+                    )
                 else:
+                    set_stage_status(state, "relationship_classification", "heuristic")
                     result = HeuristicRelationshipClassifier().classify(
                         target_company=relationship_source,
                         candidate_entity=candidate_name,
@@ -365,6 +372,18 @@ def relationship_agent(state: AgentState) -> AgentState:
                     evidence=classification_evidence,
                 )
         except Exception as exc:
+            if not isinstance(active_classifier, LLMRelationshipClassifier):
+                # There is no primary model to recover from here. Re-running the
+                # same heuristic would only hide a deterministic classifier bug.
+                raise
+            set_stage_status(state, "relationship_classification", "heuristic")
+            record_primary_model_result(
+                state,
+                stage="relationship_classification",
+                success=False,
+                fallback=True,
+                warning=f"Relationship classification primary model failed for {candidate_name}: {exc}",
+            )
             debug_log(
                 logger,
                 "Relationship classifier failed for %s; using heuristic fallback: %s",

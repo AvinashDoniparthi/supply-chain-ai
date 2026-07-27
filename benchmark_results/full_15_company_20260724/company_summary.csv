@@ -1,0 +1,16 @@
+company,runs,workflow_completion_rate,primary_model_invoked_runs,primary_model_success_rate,fallback_usage_rate,average_runtime_seconds_excluding_missing,average_wall_runtime_seconds,average_suppliers_discovered,average_suppliers_retained,average_discard_rate,average_risks_identified,average_verification_confidence,insufficient_data_cases,system_failures
+Apple,3,1.0,3,0.0,1.0,11.45,20.667,11.333,10.0,0.1162,3.0,0.884,0,0
+Samsung,3,1.0,3,0.0,1.0,12.45,20.667,12.333,11.0,0.1068,0.0,0.893,0,0
+Nvidia,3,1.0,3,0.0,1.0,11.1,19.667,10.667,9.333,0.1222,1.0,0.878,0,0
+AMD,3,1.0,3,0.0,1.0,12.7,21.667,13.333,12.0,0.0989,2.0,0.901,0,0
+Intel,3,1.0,3,0.0,1.0,5.9,13.0,6.333,5.0,0.2063,0.0,0.794,0,0
+Microsoft,3,1.0,0,,0.0,0.2,4.667,0.0,0.0,,0.0,,3,0
+Tesla,3,1.0,3,0.0,1.0,8.1,15.333,8.0,4.0,0.5,1.0,0.5,0,0
+TSMC,3,1.0,3,0.0,1.0,7.2,14.333,7.333,6.0,0.1786,0.0,0.821,0,0
+ASML,3,1.0,3,0.0,1.0,2.65,8.667,2.333,1.0,0.5556,0.0,0.444,0,0
+Foxconn,3,1.0,3,0.0,1.0,16.7,26.333,15.333,11.333,0.2611,1.0,0.739,0,0
+Micron Technology,3,1.0,0,,0.0,0.4,5.0,0.0,0.0,,0.0,,3,0
+Logitech,3,1.0,0,,0.0,0.2,4.667,0.0,0.0,,0.0,,3,0
+Sonos,3,1.0,0,,0.0,0.2,5.0,0.0,0.0,,0.0,,3,0
+GoPro,3,1.0,0,,0.0,0.2,5.0,0.0,0.0,,0.0,,3,0
+Framework Computer,3,1.0,0,,0.0,0.2,4.667,0.0,0.0,,0.0,,3,0

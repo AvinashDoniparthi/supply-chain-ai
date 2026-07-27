@@ -1213,6 +1213,64 @@
         "Trumpf",
         "VDL ETG"
       ]
+    },
+    {
+      "timestamp": "2026-07-24T20:47:31.022993",
+      "mode": "llm",
+      "health_score": 82.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:47:59.228128",
+      "mode": "rag",
+      "health_score": 83.3,
+      "health_status": "Good",
+      "supplier_count": 10,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "Samsung Electronics",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
+    },
+    {
+      "timestamp": "2026-07-24T20:48:05.282901",
+      "mode": "slm",
+      "health_score": 82.2,
+      "health_status": "Good",
+      "supplier_count": 9,
+      "risk_count": 1,
+      "suppliers": [
+        "TSMC",
+        "SK hynix",
+        "ASML",
+        "Applied Materials",
+        "Lam Research",
+        "Tokyo Electron",
+        "Murata Manufacturing",
+        "Sony Semiconductor Solutions",
+        "Carl Zeiss SMT"
+      ]
     }
   ]
 }

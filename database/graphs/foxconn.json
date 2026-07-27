@@ -14,34 +14,6 @@
       "parent_company": "Foxconn"
     },
     {
-      "id": "E Ink Corporation",
-      "label": "E Ink Corporation",
-      "node_type": "supplier",
-      "tier": 1,
-      "parent_company": "Foxconn"
-    },
-    {
-      "id": "Netronix Inc",
-      "label": "Netronix Inc",
-      "node_type": "supplier",
-      "tier": 1,
-      "parent_company": "Foxconn"
-    },
-    {
-      "id": "Geely Holding Group",
-      "label": "Geely Holding Group",
-      "node_type": "supplier",
-      "tier": 1,
-      "parent_company": "Foxconn"
-    },
-    {
-      "id": "PTT Public Co",
-      "label": "PTT Public Co",
-      "node_type": "supplier",
-      "tier": 1,
-      "parent_company": "Foxconn"
-    },
-    {
       "id": "TSMC",
       "label": "TSMC",
       "node_type": "supplier",
@@ -58,13 +30,6 @@
     {
       "id": "Samsung Electronics",
       "label": "Samsung Electronics",
-      "node_type": "supplier",
-      "tier": 2,
-      "parent_company": "Apple Inc."
-    },
-    {
-      "id": "Corning",
-      "label": "Corning",
       "node_type": "supplier",
       "tier": 2,
       "parent_company": "Apple Inc."
@@ -126,26 +91,6 @@
       "relationship": "supplier"
     },
     {
-      "source": "Foxconn",
-      "target": "E Ink Corporation",
-      "relationship": "supplier"
-    },
-    {
-      "source": "Foxconn",
-      "target": "Netronix Inc",
-      "relationship": "supplier"
-    },
-    {
-      "source": "Foxconn",
-      "target": "Geely Holding Group",
-      "relationship": "supplier"
-    },
-    {
-      "source": "Foxconn",
-      "target": "PTT Public Co",
-      "relationship": "supplier"
-    },
-    {
       "source": "Apple Inc.",
       "target": "TSMC",
       "relationship": "upstream_supplier"
@@ -158,11 +103,6 @@
     {
       "source": "Apple Inc.",
       "target": "Samsung Electronics",
-      "relationship": "upstream_supplier"
-    },
-    {
-      "source": "Apple Inc.",
-      "target": "Corning",
       "relationship": "upstream_supplier"
     },
     {

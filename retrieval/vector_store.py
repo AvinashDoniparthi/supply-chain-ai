@@ -15,6 +15,7 @@ except ImportError:  # pragma: no cover - current requirements use community pac
 
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_openai import OpenAIEmbeddings
+from utils.identity_resolution import resolver
 
 logger = logging.getLogger(__name__)
 
@@ -214,7 +215,14 @@ def _build_documents(state: Any) -> List[Document]:
             )
         )
 
+    active_supplier_keys = {
+        resolver.resolve(supplier.canonical_name or supplier.name).lower()
+        for supplier in getattr(state, "suppliers", []) or []
+    }
+
     for relationship in getattr(state, "relationship_results", []) or []:
+        if resolver.resolve(relationship.candidate_company).lower() not in active_supplier_keys:
+            continue
         documents.append(
             _document(
                 company,
@@ -236,6 +244,8 @@ def _build_documents(state: Any) -> List[Document]:
         )
 
     for verification in getattr(state, "verification_results", []) or []:
+        if resolver.resolve(verification.supplier_name).lower() not in active_supplier_keys:
+            continue
         documents.append(
             _document(
                 company,
@@ -403,6 +413,29 @@ def _document_id(company: str, document: Document, index: int) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32] + f"-{index}"
 
 
+def _metadata_filter(
+    *, company_key: Optional[str] = None, source_type: Optional[str] = None
+) -> Dict[str, Any]:
+    """Build a Chroma-compatible metadata equality filter.
+
+    Chroma accepts a single metadata predicate directly, but compound
+    predicates must be wrapped in ``$and``. Keeping this construction in one
+    place prevents retrieval from degrading merely because a valid two-field
+    request was encoded using an invalid top-level mapping.
+    """
+    predicates = []
+    if company_key:
+        predicates.append({"company_key": {"$eq": company_key}})
+    if source_type:
+        predicates.append({"source_type": {"$eq": source_type}})
+
+    if len(predicates) == 1:
+        return predicates[0]
+    if len(predicates) > 1:
+        return {"$and": predicates}
+    return {}
+
+
 def _search_documents(
     vector_store: Chroma,
     query: str,
@@ -412,17 +445,14 @@ def _search_documents(
     source_type: Optional[str] = None,
 ) -> List[Document]:
     search_filters: List[Dict[str, Any]] = []
-    primary_filter: Dict[str, Any] = {}
-    if company_key:
-        primary_filter["company_key"] = company_key
-    if source_type:
-        primary_filter["source_type"] = source_type
+    primary_filter = _metadata_filter(
+        company_key=company_key,
+        source_type=source_type,
+    )
     if primary_filter:
         search_filters.append(primary_filter)
 
-    fallback_filter: Dict[str, Any] = {}
-    if source_type:
-        fallback_filter["source_type"] = source_type
+    fallback_filter = _metadata_filter(source_type=source_type)
     if fallback_filter and fallback_filter not in search_filters:
         search_filters.append(fallback_filter)
 

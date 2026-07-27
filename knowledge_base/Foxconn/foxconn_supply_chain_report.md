@@ -1,0 +1,262 @@
+# Foxconn
+
+## Executive Summary
+- Company: Foxconn
+- Mode: SLM
+- Max Depth: 3
+- Generated At: 2026-07-24 20:53:16 IST
+- 1. EXECUTIVE SUMMARY
+- Foxconn has a moderately healthy supply chain with strong dependence on TSMC, Applied Materials, and Broadcom. The main concern is geographic disruption exposure among key suppliers.
+- Recommendations
+- 1. Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: Foxconn -> Apple Inc. -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- 2. DISCOVERY QUALITY
+- Suppliers discovered: 15
+- Suppliers retained after verification: 11
+- Suppliers discarded: 4
+- - E Ink Corporation: company_exists=False
+- - Netronix Inc: company_exists=False
+- - Geely Holding Group: company_exists=False
+- - PTT Public Co: company_exists=False
+- Coverage: Medium - 5 discovered Tier-1 suppliers identified.
+- Verification-adjusted coverage: Medium (73%; 11/15 suppliers verified).
+- 3. SUPPLY CHAIN HEALTH
+- Status: Good - 78.0/100.
+- Supplier Count: 11
+- Critical Suppliers: 0
+- High-Risk Suppliers: 1
+- Summary: Foxconn's supply chain appears good overall. 1 supplier(s) face high or critical risk exposure. Verification quality is medium (11/15 suppliers verified).
+- 4. SUPPLIER NETWORK
+- 4.1 Tier 1 Suppliers
+- TIER 1 SUPPLIERS
+- Direct suppliers to Foxconn
+- 1. Apple Inc.
+- Relationship : Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.86)
+- 4.2 Tier 2 Suppliers
+- TIER 2 SUPPLIERS
+- Upstream suppliers connected through Tier 1 suppliers
+- 1. Broadcom
+- Parent       : Apple Inc.
+- Path         : Foxconn -> Apple Inc. -> Broadcom Inc.
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.88)
+- 2. Samsung Electronics
+- Parent       : Apple Inc.
+- Path         : Foxconn -> Apple Inc. -> Samsung Electronics
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.88)
+- 3. TSMC
+- Parent       : Apple Inc.
+- Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.89)
+- 4.3 Tier 3 Suppliers
+- TIER 3 SUPPLIERS
+- Upstream suppliers connected through Tier 2 suppliers
+- 1. ASML
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> ASML
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.91)
+- 2. Applied Materials
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.89)
+- 3. Lam Research
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.88)
+- 4. Murata Manufacturing
+- Parent       : Samsung Electronics
+- Path         : Foxconn -> Apple Inc. -> Samsung Electronics -> Murata Manufacturing
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.91)
+- 5. Qualcomm
+- Parent       : Samsung Electronics
+- Path         : Foxconn -> Apple Inc. -> Samsung Electronics -> Qualcomm
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.88)
+- 6. Sony Semiconductor Solutions
+- Parent       : Samsung Electronics
+- Path         : Foxconn -> Apple Inc. -> Samsung Electronics -> Sony Semiconductor Solutions
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.91)
+- 7. Tokyo Electron
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+- Relationship : Upstream Supplier
+- Confidence   : 0.78
+- Verification : Verified (0.88)
+- 5. TOP RISKS
+- High
+- 1. Geopolitical risk involving TSMC
+- Affected Path: Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company
+- Reason: Taiwan geopolitical exposure through TSMC. Affected path: Foxconn -> Apple Inc. -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- Confidence: 0.90
+- Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+- Medium
+- None identified
+- Low
+- None identified
+- 6. DATA QUALITY WARNINGS
+- Low Verification Confidence
+- None identified
+- Failed Verification
+- None identified
+- Missing Verification Result
+- None identified
+- 7. CRITICAL SUPPLIERS
+- 1. TSMC
+- Tier         : 2
+- Confidence   : 0.78
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- 2. Applied Materials
+- Tier         : 3
+- Confidence   : 0.78
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- 3. Broadcom
+- Tier         : 2
+- Confidence   : 0.78
+- Reason       : Supplier manufactures core chip components and appears to be a sole-source dependency.
+- 4. Samsung Electronics
+- Tier         : 2
+- Confidence   : 0.78
+- Reason       : Supplier manufactures core display components and appears to be a sole-source dependency.
+- 5. Tokyo Electron
+- Tier         : 3
+- Confidence   : 0.78
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+
+## Supply Chain Health
+- Health Score: 78.00
+- Status: Good
+- Supplier Count: 11
+- Verified Supplier Count: 11
+
+## Tier 1 Suppliers
+- Supplier: Apple Inc.
+  - Parent: Foxconn
+  - Relationship Path: Foxconn -> Apple Inc.
+  - Relationship: supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.86)
+
+## Tier 2 Suppliers
+- Supplier: Broadcom Inc.
+  - Parent: Apple Inc.
+  - Relationship Path: Foxconn -> Apple Inc. -> Broadcom Inc.
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.88)
+- Supplier: Samsung Electronics
+  - Parent: Apple Inc.
+  - Relationship Path: Foxconn -> Apple Inc. -> Samsung Electronics
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.88)
+- Supplier: Taiwan Semiconductor Manufacturing Company
+  - Parent: Apple Inc.
+  - Relationship Path: Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.89)
+
+## Tier 3 Suppliers
+- Supplier: Applied Materials
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.89)
+- Supplier: ASML
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> ASML
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.91)
+- Supplier: Lam Research
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.88)
+- Supplier: Murata Manufacturing
+  - Parent: Samsung Electronics
+  - Relationship Path: Foxconn -> Apple Inc. -> Samsung Electronics -> Murata Manufacturing
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.91)
+- Supplier: Qualcomm
+  - Parent: Samsung Electronics
+  - Relationship Path: Foxconn -> Apple Inc. -> Samsung Electronics -> Qualcomm
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.88)
+- Supplier: Sony Semiconductor Solutions
+  - Parent: Samsung Electronics
+  - Relationship Path: Foxconn -> Apple Inc. -> Samsung Electronics -> Sony Semiconductor Solutions
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.91)
+- Supplier: Tokyo Electron
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: Foxconn -> Apple Inc. -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+  - Relationship: upstream_supplier
+  - Confidence: 0.78
+  - Verification: Verified (0.88)
+
+## Major Risks
+- Risk Type: Geopolitical
+  - Affected Supplier: TSMC
+  - Severity: High
+  - Reason: Taiwan geopolitical exposure through TSMC. Affected path: Foxconn -> Apple Inc. -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+  - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+
+## Critical Suppliers
+- Applied Materials (High, 0.71)
+- Taiwan Semiconductor Manufacturing Company (High, 0.71)
+- Broadcom Inc. (High, 0.70)
+- Qualcomm (High, 0.70)
+- Samsung Electronics (High, 0.70)
+- Tokyo Electron (High, 0.70)
+- Apple Inc. (Medium, 0.69)
+- Murata Manufacturing (Medium, 0.64)
+- ASML (Medium, 0.50)
+- Sony Semiconductor Solutions (Medium, 0.50)
+- Lam Research (Low, 0.48)
+
+## Verification Summary
+- Total Verifications: 11
+- Verified Supplier Count: 11
+- Not Verified Count: 0
+- Verified Suppliers: Apple Inc., Taiwan Semiconductor Manufacturing Company, Broadcom Inc., Samsung Electronics, ASML, Applied Materials, Lam Research, Tokyo Electron, Qualcomm, Murata Manufacturing, Sony Semiconductor Solutions
+
+## Confidence Summary
+- Apple Inc.: 0.78
+- Applied Materials: 0.78
+- ASML: 0.78
+- Broadcom Inc.: 0.78
+- Lam Research: 0.78
+- Murata Manufacturing: 0.78
+- Qualcomm: 0.78
+- Samsung Electronics: 0.78
+- Sony Semiconductor Solutions: 0.78
+- Taiwan Semiconductor Manufacturing Company: 0.78
+- Tokyo Electron: 0.78
+
+## Report Metadata
+- Generated Timestamp: 2026-07-24T15:23:17.065284+00:00
+- Mode: slm
+- Max Depth: 3

@@ -7,8 +7,29 @@
       "tier": 0
     },
     {
-      "id": "Gigafactory Shanghai",
-      "label": "Gigafactory Shanghai",
+      "id": "Panasonic",
+      "label": "Panasonic",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Tesla"
+    },
+    {
+      "id": "Contemporary Amperex Technology Co. Limited",
+      "label": "Contemporary Amperex Technology Co. Limited",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Tesla"
+    },
+    {
+      "id": "LG Energy Solution",
+      "label": "LG Energy Solution",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Tesla"
+    },
+    {
+      "id": "Samsung SDI",
+      "label": "Samsung SDI",
       "node_type": "supplier",
       "tier": 1,
       "parent_company": "Tesla"
@@ -17,7 +38,22 @@
   "edges": [
     {
       "source": "Tesla",
-      "target": "Gigafactory Shanghai",
+      "target": "Panasonic",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Tesla",
+      "target": "Contemporary Amperex Technology Co. Limited",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Tesla",
+      "target": "LG Energy Solution",
+      "relationship": "supplier"
+    },
+    {
+      "source": "Tesla",
+      "target": "Samsung SDI",
       "relationship": "supplier"
     }
   ]

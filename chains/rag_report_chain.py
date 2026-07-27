@@ -14,7 +14,14 @@ from retrieval.vector_store import (
     retrieve_context,
     retrieve_context_documents,
 )
-from utils.runtime_controls import is_fast_benchmark, is_quota_error, mark_quota_exhausted
+from utils.benchmark_metrics import record_primary_model_result, record_warning
+from utils.runtime_controls import (
+    finish_stage,
+    is_fast_benchmark,
+    is_quota_error,
+    mark_quota_exhausted,
+    start_stage,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -756,6 +763,8 @@ def generate_rag_report(
     if state is not None:
         provider = provider or getattr(state, "provider", None)
         model = model or getattr(state, "model", None)
+        if getattr(state, "execution_mode", None) == "rag":
+            start_stage(state, "retrieval")
 
     if state is not None:
         try:
@@ -818,10 +827,21 @@ def generate_rag_report(
         )
 
     if not context_chunks:
+        if state is not None and getattr(state, "execution_mode", None) == "rag":
+            finish_stage(state, "retrieval")
         return MISSING_CONTEXT_MESSAGE, []
 
     if is_fast_benchmark(state):
+        if state is not None and getattr(state, "execution_mode", None) == "rag":
+            finish_stage(state, "retrieval")
         return _fallback_report(company, section_chunks, state=state), context_chunks
+
+    # Keep deterministic context assembly outside the model-recovery boundary.
+    # If this raises, it is an application bug and must not be mislabeled as a
+    # provider failure.
+    formatted_context = _format_structured_context(section_chunks)
+    if state is not None and getattr(state, "execution_mode", None) == "rag":
+        finish_stage(state, "retrieval")
 
     try:
         llm = get_llm(provider=provider, model=model)
@@ -829,11 +849,26 @@ def generate_rag_report(
         report = chain.invoke(
             {
                 "company": company,
-                "context": _format_structured_context(section_chunks),
+                "context": formatted_context,
             }
         )
+        if state is not None:
+            record_primary_model_result(
+                state,
+                stage="rag_report_generation",
+                success=True,
+            )
     except Exception as exc:
         logger.warning("RAG report LLM generation skipped: %s", exc)
+        if state is not None:
+            record_primary_model_result(
+                state,
+                stage="rag_report_generation",
+                success=False,
+                fallback=True,
+                warning=f"RAG report primary model failed for {company}: {exc}",
+            )
+            record_warning(state, f"RAG report fallback used for {company}: {exc}")
         if state is not None and is_quota_error(exc):
             mark_quota_exhausted(state, f"RAG report generation quota exhausted for {company}: {exc}")
         return _fallback_report(company, section_chunks, state=state), context_chunks

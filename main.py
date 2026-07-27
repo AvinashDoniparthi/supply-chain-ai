@@ -13,7 +13,16 @@ from utils.output import (
     mode_from_args,
     render_final_report,
 )
-from utils.runtime_controls import finish_all_stages, is_quota_error, mark_quota_exhausted
+from utils.runtime_controls import (
+    finish_all_stages,
+    is_quota_error,
+    mark_quota_exhausted,
+)
+from utils.benchmark_metrics import (
+    build_benchmark_record,
+    emit_benchmark_record,
+)
+from utils.runtime_controls import start_workflow_timer
 from workflows.supply_chain_workflow import supply_chain_app
 
 logger = logging.getLogger(__name__)
@@ -44,9 +53,12 @@ def run_analysis(
     emit(f"Starting supply-chain analysis for {company_name}", OutputMode.DEBUG)
     benchmark_query = benchmark_target_query
     if benchmark_query is None and (product or component):
-        benchmark_query = " ".join(
-            part for part in [company_name, product, component] if part
-        ).strip() or None
+        benchmark_query = (
+            " ".join(
+                part for part in [company_name, product, component] if part
+            ).strip()
+            or None
+        )
 
     provider, model = provider_model_for_execution_mode(execution_mode)
 
@@ -86,6 +98,7 @@ def run_analysis(
     try:
         # 2. Invoke the graph
         # In LangGraph, invoke returns the final state
+        start_workflow_timer(initial_state)
         final_state_dict = supply_chain_app.invoke(initial_state)
 
         # If it returns a dict (depending on LangGraph version/config),
@@ -97,7 +110,9 @@ def run_analysis(
             else AgentState(**final_state_dict)
         )
 
+        build_benchmark_record(final_state, "completed")
         render_final_report(final_state)
+        emit_benchmark_record(final_state.run_metadata["benchmark_record"])
 
         try:
             report_path = generate_knowledge_report(final_state)
@@ -115,6 +130,8 @@ def run_analysis(
         logger.exception("Error during graph execution")
         emit(f"Analysis failed: {str(e)}")
         finish_all_stages(initial_state)
+        build_benchmark_record(initial_state, "failed")
+        emit_benchmark_record(initial_state.run_metadata["benchmark_record"])
         if fast_benchmark and is_quota_error(e):
             mark_quota_exhausted(initial_state, str(e))
             return initial_state

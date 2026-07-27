@@ -1,39 +1,275 @@
 # AMD
 
 ## Executive Summary
-- Not available.
+- Company: AMD
+- Mode: SLM
+- Max Depth: 3
+- Generated At: 2026-07-24 20:49:09 IST
+- 1. EXECUTIVE SUMMARY
+- AMD has a moderately healthy semiconductor supply chain with strong dependence on TSMC, Samsung, and outsourced packaging suppliers. The main concern is geographic disruption exposure among key Asian semiconductor suppliers.
+- Recommendations
+- 1. Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: AMD -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- 2. DISCOVERY QUALITY
+- Suppliers discovered: 13
+- Suppliers retained after verification: 12
+- Suppliers discarded: 1
+- - VDL ETG: company_exists=False
+- Coverage: High - 5 discovered Tier-1 suppliers identified.
+- Verification-adjusted coverage: High (92%; 12/13 suppliers verified).
+- 3. SUPPLY CHAIN HEALTH
+- Status: Good - 80.7/100.
+- Supplier Count: 12
+- Critical Suppliers: 0
+- High-Risk Suppliers: 2
+- Summary: AMD's supply chain appears good overall. 2 supplier(s) face high or critical risk exposure. Verification quality is high (12/13 suppliers verified).
+- 4. SUPPLIER NETWORK
+- 4.1 Tier 1 Suppliers
+- TIER 1 SUPPLIERS
+- Direct suppliers to AMD
+- 1. ASE Technology
+- Relationship : Supplier
+- Confidence   : 0.84
+- Verification : Verified (0.91)
+- 2. Amkor Technology
+- Relationship : Supplier
+- Confidence   : 0.89
+- Verification : Verified (0.91)
+- 3. GlobalFoundries
+- Relationship : Supplier
+- Confidence   : 0.86
+- Verification : Verified (0.88)
+- 4. Samsung Electronics
+- Relationship : Supplier
+- Confidence   : 0.86
+- Verification : Verified (0.85)
+- 5. TSMC
+- Relationship : Supplier
+- Confidence   : 0.86
+- Verification : Verified (0.91)
+- 4.2 Tier 2 Suppliers
+- TIER 2 SUPPLIERS
+- Upstream suppliers connected through Tier 1 suppliers
+- 1. ASML
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : AMD -> Taiwan Semiconductor Manufacturing Company -> ASML
+- Relationship : Upstream Supplier
+- Confidence   : 0.91
+- Verification : Verified (0.91)
+- 2. Applied Materials
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : AMD -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+- Relationship : Upstream Supplier
+- Confidence   : 0.87
+- Verification : Verified (0.89)
+- 3. Lam Research
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : AMD -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+- Relationship : Upstream Supplier
+- Confidence   : 0.85
+- Verification : Verified (0.88)
+- 4. Murata Manufacturing
+- Parent       : Samsung Electronics
+- Path         : AMD -> Samsung Electronics -> Murata Manufacturing
+- Relationship : Upstream Supplier
+- Confidence   : 0.89
+- Verification : Verified (0.91)
+- 5. Sony Semiconductor Solutions
+- Parent       : Samsung Electronics
+- Path         : AMD -> Samsung Electronics -> Sony Semiconductor Solutions
+- Relationship : Upstream Supplier
+- Confidence   : 0.89
+- Verification : Verified (0.91)
+- 6. Tokyo Electron
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : AMD -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+- Relationship : Upstream Supplier
+- Confidence   : 0.85
+- Verification : Verified (0.88)
+- 4.3 Tier 3 Suppliers
+- TIER 3 SUPPLIERS
+- Upstream suppliers connected through Tier 2 suppliers
+- 1. Carl Zeiss SMT
+- Parent       : ASML
+- Path         : AMD -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
+- Relationship : Upstream Supplier
+- Confidence   : 0.90
+- Verification : Verified (0.91)
+- 5. TOP RISKS
+- High
+- 1. Geopolitical risk involving TSMC
+- Affected Path: AMD -> Taiwan Semiconductor Manufacturing Company
+- Reason: Taiwan geopolitical exposure through TSMC. Affected path: AMD -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- Confidence: 0.90
+- Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+- 2. Geopolitical risk involving ASE Technology
+- Affected Path: AMD -> ASE Technology
+- Reason: Taiwan geopolitical exposure through ASE Technology. Affected path: AMD -> ASE Technology. Reason: ASE Technology is located in Taiwan, a high-tension geopolitical region.
+- Confidence: 0.90
+- Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+- Medium
+- None identified
+- Low
+- None identified
+- 6. DATA QUALITY WARNINGS
+- Low Verification Confidence
+- None identified
+- Failed Verification
+- None identified
+- Missing Verification Result
+- None identified
+- 7. CRITICAL SUPPLIERS
+- 1. TSMC
+- Tier         : 1
+- Confidence   : 0.86
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- 2. GlobalFoundries
+- Tier         : 1
+- Confidence   : 0.86
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- 3. Samsung Electronics
+- Tier         : 1
+- Confidence   : 0.86
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- 4. Applied Materials
+- Tier         : 2
+- Confidence   : 0.87
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- 5. Tokyo Electron
+- Tier         : 2
+- Confidence   : 0.85
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
 
 ## Supply Chain Health
-- Health Score: Not available
-- Status: Not available
-- Supplier Count: 0
-- Verified Supplier Count: 0
+- Health Score: 80.70
+- Status: Good
+- Supplier Count: 12
+- Verified Supplier Count: 12
 
 ## Tier 1 Suppliers
-- None verified
+- Supplier: Amkor Technology
+  - Parent: AMD
+  - Relationship Path: AMD -> Amkor Technology
+  - Relationship: supplier
+  - Confidence: 0.89
+  - Verification: Verified (0.91)
+- Supplier: ASE Technology
+  - Parent: AMD
+  - Relationship Path: AMD -> ASE Technology
+  - Relationship: supplier
+  - Confidence: 0.84
+  - Verification: Verified (0.91)
+- Supplier: GlobalFoundries
+  - Parent: AMD
+  - Relationship Path: AMD -> GlobalFoundries
+  - Relationship: supplier
+  - Confidence: 0.86
+  - Verification: Verified (0.88)
+- Supplier: Samsung Electronics
+  - Parent: AMD
+  - Relationship Path: AMD -> Samsung Electronics
+  - Relationship: supplier
+  - Confidence: 0.86
+  - Verification: Verified (0.85)
+- Supplier: Taiwan Semiconductor Manufacturing Company
+  - Parent: AMD
+  - Relationship Path: AMD -> Taiwan Semiconductor Manufacturing Company
+  - Relationship: supplier
+  - Confidence: 0.86
+  - Verification: Verified (0.91)
 
 ## Tier 2 Suppliers
-- None verified
+- Supplier: Applied Materials
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: AMD -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+  - Relationship: upstream_supplier
+  - Confidence: 0.87
+  - Verification: Verified (0.89)
+- Supplier: ASML
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: AMD -> Taiwan Semiconductor Manufacturing Company -> ASML
+  - Relationship: upstream_supplier
+  - Confidence: 0.91
+  - Verification: Verified (0.91)
+- Supplier: Lam Research
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: AMD -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+  - Relationship: upstream_supplier
+  - Confidence: 0.85
+  - Verification: Verified (0.88)
+- Supplier: Murata Manufacturing
+  - Parent: Samsung Electronics
+  - Relationship Path: AMD -> Samsung Electronics -> Murata Manufacturing
+  - Relationship: upstream_supplier
+  - Confidence: 0.89
+  - Verification: Verified (0.91)
+- Supplier: Sony Semiconductor Solutions
+  - Parent: Samsung Electronics
+  - Relationship Path: AMD -> Samsung Electronics -> Sony Semiconductor Solutions
+  - Relationship: upstream_supplier
+  - Confidence: 0.89
+  - Verification: Verified (0.91)
+- Supplier: Tokyo Electron
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: AMD -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+  - Relationship: upstream_supplier
+  - Confidence: 0.85
+  - Verification: Verified (0.88)
 
 ## Tier 3 Suppliers
-- None verified
+- Supplier: Carl Zeiss SMT
+  - Parent: ASML
+  - Relationship Path: AMD -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
+  - Relationship: upstream_supplier
+  - Confidence: 0.90
+  - Verification: Verified (0.91)
 
 ## Major Risks
-- None verified
+- Risk Type: Geopolitical
+  - Affected Supplier: TSMC
+  - Severity: High
+  - Reason: Taiwan geopolitical exposure through TSMC. Affected path: AMD -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+  - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+- Risk Type: Geopolitical
+  - Affected Supplier: ASE Technology
+  - Severity: High
+  - Reason: Taiwan geopolitical exposure through ASE Technology. Affected path: AMD -> ASE Technology. Reason: ASE Technology is located in Taiwan, a high-tension geopolitical region.
+  - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
 
 ## Critical Suppliers
-- None verified
+- Taiwan Semiconductor Manufacturing Company (High, 0.82)
+- GlobalFoundries (High, 0.79)
+- Samsung Electronics (High, 0.76)
+- Applied Materials (High, 0.71)
+- Tokyo Electron (High, 0.70)
+- Amkor Technology (Medium, 0.64)
+- ASE Technology (Medium, 0.64)
+- Murata Manufacturing (Medium, 0.64)
+- ASML (Medium, 0.50)
+- Carl Zeiss SMT (Medium, 0.50)
+- Sony Semiconductor Solutions (Medium, 0.50)
+- Lam Research (Low, 0.48)
 
 ## Verification Summary
-- Total Verifications: 0
-- Verified Supplier Count: 0
+- Total Verifications: 12
+- Verified Supplier Count: 12
 - Not Verified Count: 0
-- Verified Suppliers: None
+- Verified Suppliers: Taiwan Semiconductor Manufacturing Company, GlobalFoundries, Samsung Electronics, ASE Technology, Amkor Technology, ASML, Applied Materials, Lam Research, Tokyo Electron, Murata Manufacturing, Sony Semiconductor Solutions, Carl Zeiss SMT
 
 ## Confidence Summary
-- None verified
+- Amkor Technology: 0.89
+- Applied Materials: 0.87
+- ASE Technology: 0.84
+- ASML: 0.91
+- Carl Zeiss SMT: 0.90
+- GlobalFoundries: 0.86
+- Lam Research: 0.85
+- Murata Manufacturing: 0.89
+- Samsung Electronics: 0.86
+- Sony Semiconductor Solutions: 0.89
+- Taiwan Semiconductor Manufacturing Company: 0.86
+- Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-12T15:47:29.989244+00:00
-- Mode: rag
+- Generated Timestamp: 2026-07-24T15:19:10.277683+00:00
+- Mode: slm
 - Max Depth: 3

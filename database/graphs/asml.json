@@ -12,36 +12,12 @@
       "node_type": "supplier",
       "tier": 1,
       "parent_company": "ASML"
-    },
-    {
-      "id": "Trumpf",
-      "label": "Trumpf",
-      "node_type": "supplier",
-      "tier": 1,
-      "parent_company": "ASML"
-    },
-    {
-      "id": "VDL ETG",
-      "label": "VDL ETG",
-      "node_type": "supplier",
-      "tier": 1,
-      "parent_company": "ASML"
     }
   ],
   "edges": [
     {
       "source": "ASML",
       "target": "Carl Zeiss SMT",
-      "relationship": "supplier"
-    },
-    {
-      "source": "ASML",
-      "target": "Trumpf",
-      "relationship": "supplier"
-    },
-    {
-      "source": "ASML",
-      "target": "VDL ETG",
       "relationship": "supplier"
     }
   ]

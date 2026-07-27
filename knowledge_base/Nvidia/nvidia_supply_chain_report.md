@@ -1,39 +1,225 @@
 # Nvidia
 
 ## Executive Summary
-- Not available.
+- Company: Nvidia
+- Mode: SLM
+- Max Depth: 3
+- Generated At: 2026-07-24 20:48:05 IST
+- 1. EXECUTIVE SUMMARY
+- Nvidia has a moderately healthy supply chain with strong dependence on SK hynix, TSMC, and Applied Materials. The main concern is geographic disruption exposure among key suppliers.
+- Recommendations
+- 1. Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: Nvidia -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- 2. DISCOVERY QUALITY
+- Suppliers discovered: 10
+- Suppliers retained after verification: 9
+- Suppliers discarded: 1
+- - VDL ETG: company_exists=False
+- Coverage: High - 2 discovered Tier-1 suppliers identified.
+- Verification-adjusted coverage: High (90%; 9/10 suppliers verified).
+- 3. SUPPLY CHAIN HEALTH
+- Status: Good - 82.2/100.
+- Supplier Count: 9
+- Critical Suppliers: 0
+- High-Risk Suppliers: 1
+- Summary: Nvidia's supply chain appears good overall. 1 supplier(s) face high or critical risk exposure. Verification quality is high (9/10 suppliers verified).
+- 4. SUPPLIER NETWORK
+- 4.1 Tier 1 Suppliers
+- TIER 1 SUPPLIERS
+- Direct suppliers to Nvidia
+- 1. SK hynix
+- Relationship : Supplier
+- Confidence   : 0.90
+- Verification : Verified (0.91)
+- 2. TSMC
+- Relationship : Supplier
+- Confidence   : 0.86
+- Verification : Verified (0.91)
+- 4.2 Tier 2 Suppliers
+- TIER 2 SUPPLIERS
+- Upstream suppliers connected through Tier 1 suppliers
+- 1. ASML
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> ASML
+- Relationship : Upstream Supplier
+- Confidence   : 0.91
+- Verification : Verified (0.91)
+- 2. Applied Materials
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+- Relationship : Upstream Supplier
+- Confidence   : 0.87
+- Verification : Verified (0.89)
+- 3. Lam Research
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+- Relationship : Upstream Supplier
+- Confidence   : 0.85
+- Verification : Verified (0.88)
+- 4. Murata Manufacturing
+- Parent       : Samsung Electronics
+- Path         : Nvidia -> Samsung Electronics -> Murata Manufacturing
+- Relationship : Upstream Supplier
+- Confidence   : 0.89
+- Verification : Verified (0.91)
+- 5. Sony Semiconductor Solutions
+- Parent       : Samsung Electronics
+- Path         : Nvidia -> Samsung Electronics -> Sony Semiconductor Solutions
+- Relationship : Upstream Supplier
+- Confidence   : 0.89
+- Verification : Verified (0.91)
+- 6. Tokyo Electron
+- Parent       : Taiwan Semiconductor Manufacturing Company
+- Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+- Relationship : Upstream Supplier
+- Confidence   : 0.85
+- Verification : Verified (0.88)
+- 4.3 Tier 3 Suppliers
+- TIER 3 SUPPLIERS
+- Upstream suppliers connected through Tier 2 suppliers
+- 1. Carl Zeiss SMT
+- Parent       : ASML
+- Path         : Nvidia -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
+- Relationship : Upstream Supplier
+- Confidence   : 0.90
+- Verification : Verified (0.91)
+- 5. TOP RISKS
+- High
+- 1. Geopolitical risk involving TSMC
+- Affected Path: Nvidia -> Taiwan Semiconductor Manufacturing Company
+- Reason: Taiwan geopolitical exposure through TSMC. Affected path: Nvidia -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- Confidence: 0.90
+- Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
+- Medium
+- None identified
+- Low
+- None identified
+- 6. DATA QUALITY WARNINGS
+- Low Verification Confidence
+- None identified
+- Failed Verification
+- None identified
+- Missing Verification Result
+- None identified
+- 7. CRITICAL SUPPLIERS
+- 1. TSMC
+- Tier         : 1
+- Confidence   : 0.86
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- 2. SK hynix
+- Tier         : 1
+- Confidence   : 0.90
+- Reason       : Supplier manufactures core memory components and appears to be a sole-source dependency.
+- 3. Applied Materials
+- Tier         : 2
+- Confidence   : 0.87
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- 4. Tokyo Electron
+- Tier         : 2
+- Confidence   : 0.85
+- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
 
 ## Supply Chain Health
-- Health Score: Not available
-- Status: Not available
-- Supplier Count: 0
-- Verified Supplier Count: 0
+- Health Score: 82.20
+- Status: Good
+- Supplier Count: 9
+- Verified Supplier Count: 9
 
 ## Tier 1 Suppliers
-- None verified
+- Supplier: SK hynix
+  - Parent: Nvidia
+  - Relationship Path: Nvidia -> SK hynix
+  - Relationship: supplier
+  - Confidence: 0.90
+  - Verification: Verified (0.91)
+- Supplier: Taiwan Semiconductor Manufacturing Company
+  - Parent: Nvidia
+  - Relationship Path: Nvidia -> Taiwan Semiconductor Manufacturing Company
+  - Relationship: supplier
+  - Confidence: 0.86
+  - Verification: Verified (0.91)
 
 ## Tier 2 Suppliers
-- None verified
+- Supplier: Applied Materials
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: Nvidia -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
+  - Relationship: upstream_supplier
+  - Confidence: 0.87
+  - Verification: Verified (0.89)
+- Supplier: ASML
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: Nvidia -> Taiwan Semiconductor Manufacturing Company -> ASML
+  - Relationship: upstream_supplier
+  - Confidence: 0.91
+  - Verification: Verified (0.91)
+- Supplier: Lam Research
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: Nvidia -> Taiwan Semiconductor Manufacturing Company -> Lam Research
+  - Relationship: upstream_supplier
+  - Confidence: 0.85
+  - Verification: Verified (0.88)
+- Supplier: Murata Manufacturing
+  - Parent: Samsung Electronics
+  - Relationship Path: Nvidia -> Samsung Electronics -> Murata Manufacturing
+  - Relationship: upstream_supplier
+  - Confidence: 0.89
+  - Verification: Verified (0.91)
+- Supplier: Sony Semiconductor Solutions
+  - Parent: Samsung Electronics
+  - Relationship Path: Nvidia -> Samsung Electronics -> Sony Semiconductor Solutions
+  - Relationship: upstream_supplier
+  - Confidence: 0.89
+  - Verification: Verified (0.91)
+- Supplier: Tokyo Electron
+  - Parent: Taiwan Semiconductor Manufacturing Company
+  - Relationship Path: Nvidia -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
+  - Relationship: upstream_supplier
+  - Confidence: 0.85
+  - Verification: Verified (0.88)
 
 ## Tier 3 Suppliers
-- None verified
+- Supplier: Carl Zeiss SMT
+  - Parent: ASML
+  - Relationship Path: Nvidia -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
+  - Relationship: upstream_supplier
+  - Confidence: 0.90
+  - Verification: Verified (0.91)
 
 ## Major Risks
-- None verified
+- Risk Type: Geopolitical
+  - Affected Supplier: TSMC
+  - Severity: High
+  - Reason: Taiwan geopolitical exposure through TSMC. Affected path: Nvidia -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+  - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
 
 ## Critical Suppliers
-- None verified
+- SK hynix (High, 0.82)
+- Taiwan Semiconductor Manufacturing Company (High, 0.82)
+- Applied Materials (High, 0.71)
+- Tokyo Electron (High, 0.70)
+- Murata Manufacturing (Medium, 0.64)
+- ASML (Medium, 0.50)
+- Carl Zeiss SMT (Medium, 0.50)
+- Sony Semiconductor Solutions (Medium, 0.50)
+- Lam Research (Low, 0.48)
 
 ## Verification Summary
-- Total Verifications: 0
-- Verified Supplier Count: 0
+- Total Verifications: 9
+- Verified Supplier Count: 9
 - Not Verified Count: 0
-- Verified Suppliers: None
+- Verified Suppliers: Taiwan Semiconductor Manufacturing Company, SK hynix, ASML, Applied Materials, Lam Research, Tokyo Electron, Murata Manufacturing, Sony Semiconductor Solutions, Carl Zeiss SMT
 
 ## Confidence Summary
-- None verified
+- Applied Materials: 0.87
+- ASML: 0.91
+- Carl Zeiss SMT: 0.90
+- Lam Research: 0.85
+- Murata Manufacturing: 0.89
+- SK hynix: 0.90
+- Sony Semiconductor Solutions: 0.89
+- Taiwan Semiconductor Manufacturing Company: 0.86
+- Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-12T15:41:01.215766+00:00
-- Mode: rag
+- Generated Timestamp: 2026-07-24T15:18:05.554999+00:00
+- Mode: slm
 - Max Depth: 3

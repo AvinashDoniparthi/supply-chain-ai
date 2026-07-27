@@ -15,10 +15,39 @@ from retrieval.knowledge_base_ingestion import (
 )
 from retrieval.vector_store import (
     SOURCE_KNOWLEDGE_REPORT,
+    _search_documents,
     index_analysis_state,
     retrieve_context,
     retrieve_context_documents,
 )
+
+
+def test_chroma_compound_metadata_filter_uses_and(monkeypatch):
+    calls = []
+
+    class FakeVectorStore:
+        def similarity_search(self, query, **kwargs):
+            calls.append(kwargs)
+            return []
+
+    _search_documents(
+        FakeVectorStore(),
+        "Apple supplier",
+        k=4,
+        company_key="apple",
+        source_type=SOURCE_KNOWLEDGE_REPORT,
+    )
+
+    assert calls[0]["filter"] == {
+        "$and": [
+            {"company_key": {"$eq": "apple"}},
+            {"source_type": {"$eq": SOURCE_KNOWLEDGE_REPORT}},
+        ]
+    }
+    assert calls[1]["filter"] == {
+        "source_type": {"$eq": SOURCE_KNOWLEDGE_REPORT}
+    }
+    assert "filter" not in calls[2]
 
 
 class DeterministicEmbeddings(Embeddings):

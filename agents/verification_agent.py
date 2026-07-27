@@ -13,6 +13,8 @@ from utils.runtime_controls import finish_stage, start_stage, stop_if_timed_out
 
 logger = logging.getLogger(__name__)
 
+MIN_ACCEPTED_VERIFICATION_CONFIDENCE = 0.55
+
 class ProviderResult(BaseModel):
     """Result from an individual verification provider."""
     provider_name: str
@@ -274,6 +276,7 @@ class VerificationAggregator:
             evidence_quality=evidence_quality,
             source_quality=source_quality,
             confidence_score=min(1.0, total_confidence),
+            verification_status="VERIFIED" if final_verified else "FAILED",
             website=final_website,
             headquarters=final_hq,
             evidence_sources=sources,
@@ -323,6 +326,9 @@ def verification_agent(state: AgentState) -> AgentState:
         "[PIPELINE COUNT] Before verification_agent: %s suppliers",
         len(state.suppliers),
     )
+    candidates = list(state.suppliers)
+    state.discovered_suppliers = [supplier.model_copy(deep=True) for supplier in candidates]
+    state.discarded_suppliers = []
     state = enrich_supplier_evidence_with_rag(state, "verification")
     
     # Initialize providers
@@ -341,9 +347,10 @@ def verification_agent(state: AgentState) -> AgentState:
         rel_map[resolver.resolve(relationship.candidate_company)] = relationship
     
     verified_results = []
+    discarded_results = []
     TO_VERIFY = ["supplier", "upstream_supplier"]
     
-    for supplier in state.suppliers:
+    for supplier in candidates:
         if stop_if_timed_out(state, "verification"):
             break
 
@@ -373,10 +380,31 @@ def verification_agent(state: AgentState) -> AgentState:
             rel.confidence_score,
         )
         
-        verified_results.append(result)
-        
-        # Update supplier location if verified
-        if result.verified and result.headquarters and result.headquarters != "Unknown":
+        is_retained, discard_reason = _is_accepted_verification(result)
+        if is_retained:
+            verified_results.append(result)
+        else:
+            discarded_results.append(result)
+            state.discarded_suppliers.append(
+                {
+                    "supplier_name": supplier.name,
+                    "canonical_name": canonical_name,
+                    "tier": supplier.tier,
+                    "reason": discard_reason,
+                    "verification_status": result.verification_status,
+                    "company_exists": result.company_exists,
+                    "relationship_verified": result.relationship_verified,
+                    "confidence_score": result.confidence_score,
+                }
+            )
+            logger.warning(
+                "Discarded supplier after verification: %s (%s)",
+                canonical_name,
+                discard_reason,
+            )
+
+        # Update supplier location only when the supplier is retained.
+        if is_retained and result.headquarters and result.headquarters != "Unknown":
             supplier.location = result.headquarters
             
         debug_log(
@@ -387,13 +415,21 @@ def verification_agent(state: AgentState) -> AgentState:
             result.confidence_score,
             result.headquarters,
         )
-        if result.verified:
+        if is_retained:
             emit(
                 f"Verified supplier: {canonical_name} ({result.confidence_score:.2f})",
                 OutputMode.NORMAL,
             )
 
-    state.verification_results.extend(verified_results)
+    state.verification_results = verified_results
+    retained_names = {
+        resolver.resolve(result.supplier_name) for result in verified_results
+    }
+    state.suppliers = [
+        supplier
+        for supplier in candidates
+        if resolver.resolve(supplier.canonical_name or supplier.name) in retained_names
+    ]
     
     if verified_results:
         avg_conf = sum(r.confidence_score for r in verified_results) / len(verified_results)
@@ -406,15 +442,33 @@ def verification_agent(state: AgentState) -> AgentState:
         len(state.suppliers),
     )
     agent_event(
-        f"Verification agent completed: {len([r for r in verified_results if r.verified])} verified"
+        f"Verification agent completed: {len(verified_results)} verified, {len(discarded_results)} discarded"
     )
     finish_stage(state, "verification")
     
     state.history.append({
         "agent": "verification_agent",
         "action": "provider_based_verification",
-        "verified_count": len([r for r in verified_results if r.verified]),
+        "verified_count": len(verified_results),
+        "discarded_count": len(discarded_results),
         "status": "success"
     })
     
     return state
+
+
+def _is_accepted_verification(result: VerificationResult) -> tuple[bool, str]:
+    """Return whether a verification result is safe to pass downstream."""
+    if not result.company_exists:
+        return False, "company_exists=False"
+    if getattr(result, "verification_status", "").upper() == "FAILED":
+        return False, "verification_status=FAILED"
+    if not result.verified:
+        return False, "verified=False"
+    if result.confidence_score < MIN_ACCEPTED_VERIFICATION_CONFIDENCE:
+        return (
+            False,
+            f"confidence_score={result.confidence_score:.2f} below accepted threshold "
+            f"{MIN_ACCEPTED_VERIFICATION_CONFIDENCE:.2f}",
+        )
+    return True, ""
