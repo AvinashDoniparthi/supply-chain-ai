@@ -421,18 +421,16 @@ def verification_agent(state: AgentState) -> AgentState:
                 OutputMode.NORMAL,
             )
 
-    state.verification_results = verified_results
-    retained_names = {
-        resolver.resolve(result.supplier_name) for result in verified_results
-    }
-    state.suppliers = [
-        supplier
-        for supplier in candidates
-        if resolver.resolve(supplier.canonical_name or supplier.name) in retained_names
-    ]
+    retained_candidates, retained_results = _retain_verified_graph(
+        state,
+        candidates,
+        verified_results,
+    )
+    state.verification_results = retained_results
+    state.suppliers = retained_candidates
     
-    if verified_results:
-        avg_conf = sum(r.confidence_score for r in verified_results) / len(verified_results)
+    if retained_results:
+        avg_conf = sum(r.confidence_score for r in retained_results) / len(retained_results)
         state.confidence_scores["verification"] = round(avg_conf, 2)
     
     state.current_task = f"Verification completed for {len(verified_results)} entities using multi-provider architecture."
@@ -455,6 +453,96 @@ def verification_agent(state: AgentState) -> AgentState:
     })
     
     return state
+
+
+def _retain_verified_graph(
+    state: AgentState,
+    candidates: list,
+    verified_results: list[VerificationResult],
+) -> tuple[list, list[VerificationResult]]:
+    """Retain verified suppliers only when their verified ancestry is intact.
+
+    Verification is intentionally performed independently for every discovered
+    entity.  Retention, however, is a graph operation: a tier-N node is usable
+    only when its immediate tier-(N-1) parent is also retained.  Canonical
+    identities are used for both parent and path comparisons so display aliases
+    such as TSMC cannot create a false orphan (or hide a real one).
+    """
+    result_by_name = {
+        resolver.resolve(result.supplier_name): result for result in verified_results
+    }
+    retained_names = set()
+    retained_candidates = []
+    retained_results = []
+    discarded_names = {
+        resolver.resolve(item.get("canonical_name") or item.get("supplier_name"))
+        for item in state.discarded_suppliers
+    }
+
+    for supplier in sorted(candidates, key=lambda item: item.tier):
+        canonical_name = resolver.resolve(supplier.canonical_name or supplier.name)
+        result = result_by_name.get(canonical_name)
+        if result is None:
+            continue
+
+        reason = _graph_discard_reason(state, supplier, canonical_name, retained_names)
+        if reason:
+            if canonical_name not in discarded_names:
+                state.discarded_suppliers.append(
+                    {
+                        "supplier_name": supplier.name,
+                        "canonical_name": canonical_name,
+                        "tier": supplier.tier,
+                        "reason": reason,
+                        "verification_status": result.verification_status,
+                        "company_exists": result.company_exists,
+                        "relationship_verified": result.relationship_verified,
+                        "confidence_score": result.confidence_score,
+                    }
+                )
+                discarded_names.add(canonical_name)
+            logger.warning("Discarded supplier after graph integrity check: %s (%s)", canonical_name, reason)
+            continue
+
+        retained_names.add(canonical_name)
+        retained_candidates.append(supplier)
+        retained_results.append(result)
+
+    return retained_candidates, retained_results
+
+
+def _graph_discard_reason(
+    state: AgentState,
+    supplier,
+    canonical_name: str,
+    retained_names: set[str],
+) -> str | None:
+    """Return a graph-integrity discard reason, or ``None`` when valid."""
+    tier = int(supplier.tier or 1)
+    path = [resolver.resolve(part) for part in (supplier.relationship_path or [])]
+    target_name = resolver.resolve(state.target_company or "")
+
+    parent_name = resolver.resolve(supplier.parent_company or "") if supplier.parent_company else ""
+    if tier > 1 and not parent_name and len(path) >= 2:
+        parent_name = path[-2]
+
+    if tier > 1 and parent_name not in retained_names:
+        return "parent_supplier_not_retained"
+    if tier > 1 and parent_name == canonical_name:
+        return "parent_supplier_not_retained"
+
+    if path:
+        if path[0] != target_name or path[-1] != canonical_name:
+            return "invalid_relationship_path"
+        if tier > 1 and (len(path) < 2 or path[-2] != parent_name):
+            return "invalid_relationship_path"
+        # Every named ancestry node between the target and this supplier must
+        # already be a retained supplier.  This catches malformed paths even
+        # when parent_company happens to be correct.
+        if any(name not in retained_names for name in path[1:-1]):
+            return "invalid_relationship_path"
+
+    return None
 
 
 def _is_accepted_verification(result: VerificationResult) -> tuple[bool, str]:

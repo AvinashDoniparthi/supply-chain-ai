@@ -4,97 +4,50 @@
 - Company: Apple
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-07-27 21:30:48 IST
+- Generated At: 2026-08-02 14:59:09 IST
 - 1. EXECUTIVE SUMMARY
-- Apple has a moderately healthy supply chain with strong dependence on TSMC, Broadcom, and Murata Manufacturing. The main concern is geographic disruption exposure among key suppliers.
+- Apple has a strained supply chain with strong dependence on Hon Hai Precision Industry and Pegatron. The main concern is geographic disruption exposure among key suppliers.
 - Recommendations
-- 1. Investigate geopolitical exposure for TSMC: Taiwan geopolitical exposure through TSMC. Affected path: Apple -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
+- 1. Investigate geopolitical exposure for Hon Hai Precision Industry: Taiwan geopolitical exposure through Hon Hai Precision Industry. Affected path: Apple -> Hon Hai Precision Industry. Reason: Hon Hai Precision Industry is located in Taiwan / China, a high-tension geopolitical region.
 - 2. DISCOVERY QUALITY
-- Suppliers discovered: 11
-- Suppliers retained after verification: 10
-- Suppliers discarded: 1
-- - Discard reasons are preserved in the run benchmark record.
-- Coverage: High - 5 discovered Tier-1 suppliers identified.
-- Verification-adjusted coverage: High (91%; 10/11 suppliers verified).
+- Suppliers discovered: 2
+- Suppliers retained after verification: 2
+- Suppliers discarded: 0
+- Coverage: High - 2 discovered Tier-1 suppliers identified.
 - 3. SUPPLY CHAIN HEALTH
-- Status: Good - 77.7/100.
-- Supplier Count: 10
+- Status: Weak - 59.5/100.
+- Supplier Count: 2
 - Critical Suppliers: 0
-- High-Risk Suppliers: 3
-- Summary: Apple's supply chain appears good overall. 3 supplier(s) face high or critical risk exposure. Verification quality is high (10/11 suppliers verified).
+- High-Risk Suppliers: 2
+- Summary: Apple's supply chain appears weak overall. 2 supplier(s) face high or critical risk exposure.
 - 4. SUPPLIER NETWORK
 - 4.1 Tier 1 Suppliers
 - TIER 1 SUPPLIERS
 - Direct suppliers to Apple
-- 1. Broadcom
-- Relationship : Supplier
-- Confidence   : 0.86
-- Verification : Verified (0.88)
-- 2. Hon Hai Precision Industry
+- 1. Hon Hai Precision Industry
 - Relationship : Supplier
 - Confidence   : 0.86
 - Verification : Verified (0.91)
-- 3. Murata Manufacturing
-- Relationship : Supplier
-- Confidence   : 0.90
-- Verification : Verified (0.91)
-- 4. Pegatron
+- 2. Pegatron
 - Relationship : Supplier
 - Confidence   : 0.85
 - Verification : Verified (0.91)
-- 5. TSMC
-- Relationship : Supplier
-- Confidence   : 0.83
-- Verification : Verified (0.89)
 - 4.2 Tier 2 Suppliers
 - TIER 2 SUPPLIERS
 - Upstream suppliers connected through Tier 1 suppliers
-- 1. ASML
-- Parent       : Taiwan Semiconductor Manufacturing Company
-- Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> ASML
-- Relationship : Upstream Supplier
-- Confidence   : 0.91
-- Verification : Verified (0.91)
-- 2. Applied Materials
-- Parent       : Taiwan Semiconductor Manufacturing Company
-- Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
-- Relationship : Upstream Supplier
-- Confidence   : 0.87
-- Verification : Verified (0.89)
-- 3. Lam Research
-- Parent       : Taiwan Semiconductor Manufacturing Company
-- Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> Lam Research
-- Relationship : Upstream Supplier
-- Confidence   : 0.85
-- Verification : Verified (0.88)
-- 4. Tokyo Electron
-- Parent       : Taiwan Semiconductor Manufacturing Company
-- Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
-- Relationship : Upstream Supplier
-- Confidence   : 0.85
-- Verification : Verified (0.88)
+- None identified
 - 4.3 Tier 3 Suppliers
 - TIER 3 SUPPLIERS
 - Upstream suppliers connected through Tier 2 suppliers
-- 1. Carl Zeiss SMT
-- Parent       : ASML
-- Path         : Apple -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
-- Relationship : Upstream Supplier
-- Confidence   : 0.90
-- Verification : Verified (0.91)
+- None identified
 - 5. TOP RISKS
 - High
-- 1. Geopolitical risk involving TSMC
-- Affected Path: Apple -> Taiwan Semiconductor Manufacturing Company
-- Reason: Taiwan geopolitical exposure through TSMC. Affected path: Apple -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
-- Confidence: 0.90
-- Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
-- 2. Geopolitical risk involving Hon Hai Precision Industry
+- 1. Geopolitical risk involving Hon Hai Precision Industry
 - Affected Path: Apple -> Hon Hai Precision Industry Co., Ltd.
 - Reason: Taiwan geopolitical exposure through Hon Hai Precision Industry. Affected path: Apple -> Hon Hai Precision Industry. Reason: Hon Hai Precision Industry is located in Taiwan / China, a high-tension geopolitical region.
 - Confidence: 0.90
 - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
-- 3. Geopolitical risk involving Pegatron
+- 2. Geopolitical risk involving Pegatron
 - Affected Path: Apple -> Pegatron Corporation
 - Reason: Taiwan geopolitical exposure through Pegatron. Affected path: Apple -> Pegatron. Reason: Pegatron is located in Taiwan / China, a high-tension geopolitical region.
 - Confidence: 0.90
@@ -111,51 +64,27 @@
 - Missing Verification Result
 - None identified
 - 7. CRITICAL SUPPLIERS
-- 1. TSMC
-- Tier         : 1
-- Confidence   : 0.83
-- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
-- 2. Broadcom
-- Tier         : 1
-- Confidence   : 0.86
-- Reason       : Supplier manufactures core chip components and appears to be a sole-source dependency.
-- 3. Hon Hai Precision Industry
+- 1. Hon Hai Precision Industry
 - Tier         : 1
 - Confidence   : 0.86
 - Reason       : Supplier provides essential assembly services and appears to be a sole-source dependency.
-- 4. Pegatron
+- 2. Pegatron
 - Tier         : 1
 - Confidence   : 0.85
 - Reason       : Supplier provides essential assembly services and appears to be a sole-source dependency.
-- 5. Murata Manufacturing
-- Tier         : 1
-- Confidence   : 0.90
-- Reason       : Supplier provides essential component services and appears to be a sole-source dependency.
 
 ## Supply Chain Health
-- Health Score: 77.70
-- Status: Good
-- Supplier Count: 10
-- Verified Supplier Count: 10
+- Health Score: 59.50
+- Status: Weak
+- Supplier Count: 2
+- Verified Supplier Count: 2
 
 ## Tier 1 Suppliers
-- Supplier: Broadcom Inc.
-  - Parent: Apple
-  - Relationship Path: Apple -> Broadcom Inc.
-  - Relationship: supplier
-  - Confidence: 0.86
-  - Verification: Verified (0.88)
 - Supplier: Hon Hai Precision Industry Co., Ltd.
   - Parent: Apple
   - Relationship Path: Apple -> Hon Hai Precision Industry Co., Ltd.
   - Relationship: supplier
   - Confidence: 0.86
-  - Verification: Verified (0.91)
-- Supplier: Murata Manufacturing
-  - Parent: Apple
-  - Relationship Path: Apple -> Murata Manufacturing
-  - Relationship: supplier
-  - Confidence: 0.90
   - Verification: Verified (0.91)
 - Supplier: Pegatron Corporation
   - Parent: Apple
@@ -163,53 +92,14 @@
   - Relationship: supplier
   - Confidence: 0.85
   - Verification: Verified (0.91)
-- Supplier: Taiwan Semiconductor Manufacturing Company
-  - Parent: Apple
-  - Relationship Path: Apple -> Taiwan Semiconductor Manufacturing Company
-  - Relationship: supplier
-  - Confidence: 0.83
-  - Verification: Verified (0.89)
 
 ## Tier 2 Suppliers
-- Supplier: Applied Materials
-  - Parent: Taiwan Semiconductor Manufacturing Company
-  - Relationship Path: Apple -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
-  - Relationship: upstream_supplier
-  - Confidence: 0.87
-  - Verification: Verified (0.89)
-- Supplier: ASML
-  - Parent: Taiwan Semiconductor Manufacturing Company
-  - Relationship Path: Apple -> Taiwan Semiconductor Manufacturing Company -> ASML
-  - Relationship: upstream_supplier
-  - Confidence: 0.91
-  - Verification: Verified (0.91)
-- Supplier: Lam Research
-  - Parent: Taiwan Semiconductor Manufacturing Company
-  - Relationship Path: Apple -> Taiwan Semiconductor Manufacturing Company -> Lam Research
-  - Relationship: upstream_supplier
-  - Confidence: 0.85
-  - Verification: Verified (0.88)
-- Supplier: Tokyo Electron
-  - Parent: Taiwan Semiconductor Manufacturing Company
-  - Relationship Path: Apple -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
-  - Relationship: upstream_supplier
-  - Confidence: 0.85
-  - Verification: Verified (0.88)
+- None verified
 
 ## Tier 3 Suppliers
-- Supplier: Carl Zeiss SMT
-  - Parent: ASML
-  - Relationship Path: Apple -> Taiwan Semiconductor Manufacturing Company -> ASML -> Carl Zeiss SMT
-  - Relationship: upstream_supplier
-  - Confidence: 0.90
-  - Verification: Verified (0.91)
+- None verified
 
 ## Major Risks
-- Risk Type: Geopolitical
-  - Affected Supplier: TSMC
-  - Severity: High
-  - Reason: Taiwan geopolitical exposure through TSMC. Affected path: Apple -> TSMC. Reason: TSMC is located in Hsinchu, Taiwan, a high-tension geopolitical region.
-  - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
 - Risk Type: Geopolitical
   - Affected Supplier: Hon Hai Precision Industry
   - Severity: High
@@ -222,36 +112,20 @@
   - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
 
 ## Critical Suppliers
-- Taiwan Semiconductor Manufacturing Company (High, 0.80)
-- Broadcom Inc. (High, 0.79)
 - Hon Hai Precision Industry Co., Ltd. (High, 0.73)
-- Murata Manufacturing (High, 0.73)
 - Pegatron Corporation (High, 0.73)
-- Applied Materials (High, 0.71)
-- Tokyo Electron (High, 0.70)
-- ASML (Medium, 0.50)
-- Carl Zeiss SMT (Medium, 0.50)
-- Lam Research (Low, 0.48)
 
 ## Verification Summary
-- Total Verifications: 10
-- Verified Supplier Count: 10
+- Total Verifications: 2
+- Verified Supplier Count: 2
 - Not Verified Count: 0
-- Verified Suppliers: Taiwan Semiconductor Manufacturing Company, Hon Hai Precision Industry Co., Ltd., Pegatron Corporation, Broadcom Inc., Murata Manufacturing, ASML, Applied Materials, Lam Research, Tokyo Electron, Carl Zeiss SMT
+- Verified Suppliers: Hon Hai Precision Industry Co., Ltd., Pegatron Corporation
 
 ## Confidence Summary
-- Applied Materials: 0.87
-- ASML: 0.91
-- Broadcom Inc.: 0.86
-- Carl Zeiss SMT: 0.90
 - Hon Hai Precision Industry Co., Ltd.: 0.86
-- Lam Research: 0.85
-- Murata Manufacturing: 0.90
 - Pegatron Corporation: 0.85
-- Taiwan Semiconductor Manufacturing Company: 0.83
-- Tokyo Electron: 0.85
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-27T16:00:48.988622+00:00
+- Generated Timestamp: 2026-08-02T09:29:09.695294+00:00
 - Mode: slm
 - Max Depth: 3

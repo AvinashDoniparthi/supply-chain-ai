@@ -1,10 +1,17 @@
 import logging
+import os
 from typing import List, Dict, Any, Optional
 from abc import ABC, abstractmethod
 from models.state import AgentState
 from models.relationship import RelationshipResult
 
-from chains.relationship_chain import get_relationship_chain, RelationshipClassification
+from chains.relationship_chain import (
+    get_relationship_batch_chain,
+    get_relationship_chain,
+    RelationshipBatchClassification,
+    RelationshipBatchOutputParser,
+    RelationshipClassification,
+)
 from langchain_core.output_parsers import PydanticOutputParser
 from providers.llm_provider import print_llm_config_once, resolve_provider
 from retrieval.rag_enrichment import enrich_supplier_evidence_with_rag
@@ -31,6 +38,23 @@ logger = logging.getLogger(__name__)
 
 MIN_CLASSIFICATION_CONFIDENCE = 0.65
 MIN_SUPPLIER_EVIDENCE_SCORE = 5
+DEFAULT_RELATIONSHIP_CLASSIFICATION_BATCH_SIZE = 5
+
+
+def _relationship_batch_size() -> int:
+    raw_value = os.getenv(
+        "RELATIONSHIP_CLASSIFICATION_BATCH_SIZE",
+        str(DEFAULT_RELATIONSHIP_CLASSIFICATION_BATCH_SIZE),
+    )
+    try:
+        return max(1, int(raw_value))
+    except (TypeError, ValueError):
+        logger.warning(
+            "Invalid RELATIONSHIP_CLASSIFICATION_BATCH_SIZE=%r; using default %s",
+            raw_value,
+            DEFAULT_RELATIONSHIP_CLASSIFICATION_BATCH_SIZE,
+        )
+        return DEFAULT_RELATIONSHIP_CLASSIFICATION_BATCH_SIZE
 
 class RelationshipClassifier(ABC):
     """Abstract base class for relationship classification."""
@@ -67,6 +91,13 @@ class LLMRelationshipClassifier(RelationshipClassifier):
                 "[RELATIONSHIP INIT] Chain initialization succeeded provider=%s model=%s",
                 self.provider,
                 self.model,
+            )
+
+            self.batch_chain = get_relationship_batch_chain(
+                provider=self.provider, model=self.model
+            )
+            self.batch_parser = RelationshipBatchOutputParser(
+                pydantic_object=RelationshipBatchClassification
             )
         except Exception as e:
             logger.exception(
@@ -141,6 +172,68 @@ class LLMRelationshipClassifier(RelationshipClassifier):
             reasoning=reasoning,
             evidence_text=evidence[:500],
         )
+
+    def classify_batch(
+        self, items: List[Dict[str, str]]
+    ) -> tuple[Dict[str, RelationshipClassification], Dict[str, str]]:
+        """Classify a batch and return valid results plus supplier-specific defects."""
+
+        batch_evidence = "\n\n".join(
+            f"Input supplier_name: {item['candidate_entity']}\n"
+            f"Target Company: {item['target_company']}\n"
+            f"Evidence:\n{item['evidence']}"
+            for item in items
+        )
+        response = self.batch_chain.invoke(
+            {
+                "batch_evidence": batch_evidence,
+                "format_instructions": self.batch_parser.get_format_instructions(),
+            }
+        )
+
+        expected = {item["candidate_entity"] for item in items}
+        valid_labels = {
+            "supplier",
+            "upstream_supplier",
+            "customer",
+            "partner",
+            "competitor",
+            "unrelated",
+            "product_or_brand",
+        }
+        valid: Dict[str, RelationshipClassification] = {}
+        invalid: Dict[str, str] = {}
+        seen: Dict[str, int] = {}
+
+        for result in response.results:
+            name = result.supplier_name
+            if name not in expected:
+                logger.warning(
+                    "[RELATIONSHIP BATCH] Unknown supplier result: %r", name
+                )
+                raise RuntimeError(f"unknown supplier result: {name!r}")
+            seen[name] = seen.get(name, 0) + 1
+            if seen[name] > 1:
+                raise RuntimeError(f"duplicate supplier result: {name!r}")
+            if (
+                result.relationship not in valid_labels
+                or not isinstance(result.confidence, (int, float))
+                or not 0 <= float(result.confidence) <= 1
+                or not isinstance(result.reasoning, str)
+            ):
+                invalid[name] = "invalid supplier classification result"
+                continue
+            valid[name] = RelationshipClassification(
+                relationship=result.relationship,
+                confidence=float(result.confidence),
+                reasoning=result.reasoning,
+            )
+
+        for name in expected - set(seen):
+            invalid[name] = "missing supplier result"
+        for name in set(invalid):
+            valid.pop(name, None)
+        return valid, invalid
 
 
 class HeuristicRelationshipClassifier(RelationshipClassifier):
@@ -316,110 +409,167 @@ def relationship_agent(state: AgentState) -> AgentState:
             set_stage_status(state, "relationship_classification", "heuristic")
             active_classifier = HeuristicRelationshipClassifier()
 
-    for supplier in state.suppliers:
-        if stop_if_timed_out(state, "relationship_classification"):
-            break
+    batch_size = _relationship_batch_size()
+    batches = [
+        state.suppliers[index : index + batch_size]
+        for index in range(0, len(state.suppliers), batch_size)
+    ]
+    model_successes = 0
+    heuristic_successes = 0
+    failed_batch_numbers = []
+    logger.info(
+        "[RELATIONSHIP BATCH] suppliers=%s batches=%s batch_size=%s",
+        len(state.suppliers),
+        len(batches),
+        batch_size,
+    )
 
-        candidate_name = supplier.name
-        relationship_source = supplier.parent_company or target_company
-        canonical_name = supplier.canonical_name or candidate_name
-        evidence_snippets = supplier.evidence
-
-        # Aggregate all evidence text for this candidate
-        full_evidence_text = " ".join([e.get("snippet", "") for e in evidence_snippets])
-
-        # Perform semantic classification
-        evidence_payload = (
-            f"Supplier name: {candidate_name}\n"
-            f"Parent company: {relationship_source}\n"
-            f"Canonical company: {canonical_name}\n"
-            f"Evidence snippets:\n{full_evidence_text}"
-        )
-        classification_evidence = (
-            evidence_payload
-            if isinstance(active_classifier, LLMRelationshipClassifier)
-            else full_evidence_text
-        )
-
-        try:
-            if isinstance(active_classifier, LLMRelationshipClassifier):
-                if can_consume_llm_call(
-                    state,
-                    "relationship_classification",
-                    f"relationship classification for {candidate_name}",
-                ):
-                    result = active_classifier.classify(
-                        target_company=relationship_source,
-                        candidate_entity=candidate_name,
-                        evidence=classification_evidence,
-                    )
-                    record_primary_model_result(
-                        state,
-                        stage="relationship_classification",
-                        success=True,
-                    )
-                else:
-                    set_stage_status(state, "relationship_classification", "heuristic")
-                    result = HeuristicRelationshipClassifier().classify(
-                        target_company=relationship_source,
-                        candidate_entity=candidate_name,
-                        evidence=full_evidence_text,
-                    )
-            else:
-                result = active_classifier.classify(
-                    target_company=relationship_source,
-                    candidate_entity=candidate_name,
-                    evidence=classification_evidence,
-                )
-        except Exception as exc:
-            if not isinstance(active_classifier, LLMRelationshipClassifier):
-                # There is no primary model to recover from here. Re-running the
-                # same heuristic would only hide a deterministic classifier bug.
-                raise
-            set_stage_status(state, "relationship_classification", "heuristic")
-            record_primary_model_result(
-                state,
-                stage="relationship_classification",
-                success=False,
-                fallback=True,
-                warning=f"Relationship classification primary model failed for {candidate_name}: {exc}",
-            )
-            debug_log(
-                logger,
-                "Relationship classifier failed for %s; using heuristic fallback: %s",
-                candidate_name,
-                exc,
-            )
-            if is_quota_error(exc):
-                mark_quota_exhausted(
-                    state,
-                    f"Relationship classification quota exhausted for {candidate_name}: {exc}",
-                )
-            result = HeuristicRelationshipClassifier().classify(
-                target_company=relationship_source,
-                candidate_entity=candidate_name,
-                evidence=full_evidence_text,
-            )
-
-        result = result.model_copy(update={"evidence_text": full_evidence_text[:500]})
+    def append_result(supplier, result):
+        result = result.model_copy(update={"evidence_text": " ".join(
+            e.get("snippet", "") for e in supplier.evidence
+        )[:500]})
         result = _enforce_relationship_thresholds(result)
         if result.relationship_type == "supplier" and supplier.tier > 1:
             result = result.model_copy(update={"relationship_type": "upstream_supplier"})
         elif result.relationship_type == "upstream_supplier" and supplier.tier <= 1:
             result = result.model_copy(update={"relationship_type": "supplier"})
-
         state.relationship_results.append(result)
         evidence_analysis = analyze_supplier_evidence([{"snippet": result.evidence_text}])
-
         debug_log(
             logger,
             "Company: %s | Relationship: %s | Confidence: %.2f | Evidence Score: %s | Reasoning: %s",
-            candidate_name,
+            supplier.name,
             result.relationship_type,
             result.confidence_score,
             evidence_analysis["score"],
             result.reasoning,
         )
+
+    for batch_number, suppliers in enumerate(batches, start=1):
+        if stop_if_timed_out(state, "relationship_classification"):
+            break
+
+        payloads = []
+        for supplier in suppliers:
+            candidate_name = supplier.name
+            relationship_source = supplier.parent_company or target_company
+            canonical_name = supplier.canonical_name or candidate_name
+            full_evidence_text = " ".join(
+                e.get("snippet", "") for e in supplier.evidence
+            )
+            evidence_payload = (
+                f"Supplier name: {candidate_name}\n"
+                f"Parent company: {relationship_source}\n"
+                f"Canonical company: {canonical_name}\n"
+                f"Evidence snippets:\n{full_evidence_text}"
+            )
+            payloads.append(
+                {
+                    "supplier": supplier,
+                    "candidate_entity": candidate_name,
+                    "target_company": relationship_source,
+                    "evidence": evidence_payload,
+                    "full_evidence": full_evidence_text,
+                }
+            )
+
+        batch_results = {}
+        batch_invalid = {}
+        batch_exception = None
+        if isinstance(active_classifier, LLMRelationshipClassifier):
+            if can_consume_llm_call(
+                state,
+                "relationship_classification",
+                f"relationship classification batch {batch_number}",
+            ):
+                try:
+                    batch_results, batch_invalid = active_classifier.classify_batch(
+                        [
+                            {
+                                "candidate_entity": item["candidate_entity"],
+                                "target_company": item["target_company"],
+                                "evidence": item["evidence"],
+                            }
+                            for item in payloads
+                        ]
+                    )
+                    model_successes += len(batch_results)
+                    record_primary_model_result(
+                        state,
+                        stage="relationship_classification",
+                        success=True,
+                    )
+                except Exception as exc:
+                    batch_exception = exc
+                    failed_batch_numbers.append(batch_number)
+                    original = getattr(exc, "__cause__", None) or exc
+                    logger.error(
+                        "[RELATIONSHIP BATCH] failed batch=%s exception_type=%s message=%s",
+                        batch_number,
+                        type(original).__name__,
+                        str(original),
+                    )
+            else:
+                batch_exception = RuntimeError("LLM call limit reached")
+                failed_batch_numbers.append(batch_number)
+        else:
+            for item in payloads:
+                result = active_classifier.classify(
+                    target_company=item["target_company"],
+                    candidate_entity=item["candidate_entity"],
+                    evidence=item["full_evidence"],
+                )
+                append_result(item["supplier"], result)
+                model_successes += 0
+            continue
+
+        for item in payloads:
+            candidate_name = item["candidate_entity"]
+            classification = batch_results.get(candidate_name)
+            fallback_reason = batch_invalid.get(candidate_name)
+            if batch_exception is not None:
+                fallback_reason = str(batch_exception)
+            if classification is None:
+                heuristic_successes += 1
+                set_stage_status(state, "relationship_classification", "heuristic")
+                warning = (
+                    f"Relationship classification primary model failed for {candidate_name}: "
+                    f"{fallback_reason or 'missing supplier result'}"
+                )
+                record_primary_model_result(
+                    state,
+                    stage="relationship_classification",
+                    success=False,
+                    fallback=True,
+                    warning=warning,
+                )
+                if batch_exception is not None and is_quota_error(batch_exception):
+                    mark_quota_exhausted(
+                        state,
+                        f"Relationship classification quota exhausted for {candidate_name}: {batch_exception}",
+                    )
+                result = HeuristicRelationshipClassifier().classify(
+                    target_company=item["target_company"],
+                    candidate_entity=candidate_name,
+                    evidence=item["full_evidence"],
+                )
+            else:
+                result = RelationshipResult(
+                    target_company=item["target_company"],
+                    candidate_company=candidate_name,
+                    relationship_type=classification.relationship,
+                    confidence_score=classification.confidence,
+                    reasoning=classification.reasoning,
+                    evidence_text=item["full_evidence"][:500],
+                )
+            append_result(item["supplier"], result)
+
+    logger.info(
+        "[RELATIONSHIP BATCH] model_classifications=%s heuristic_classifications=%s failed_batches=%s",
+        model_successes,
+        heuristic_successes,
+        failed_batch_numbers,
+    )
 
     state.current_task = f"Semantic relationship classification completed for {len(state.suppliers)} entities."
     debug_log(

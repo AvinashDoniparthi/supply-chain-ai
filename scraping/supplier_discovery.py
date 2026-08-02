@@ -956,6 +956,7 @@ COMPONENT_ALIASES = {
     "application processor": [
         "SoC",
         "chipset",
+        "chipsets",
         "processor",
         "application chip",
     ],
@@ -1205,6 +1206,7 @@ COMPONENT_TIER1_SUPPLIER_HINTS = {
         "Samsung Electronics",
         "Intel",
         "GlobalFoundries",
+        "Qualcomm",
     },
     "display": {
         "Samsung Display",
@@ -2437,6 +2439,14 @@ class SupplierDiscoveryScraper:
 
         if self.prefer_curated and cache_enabled and not refresh_requested:
             curated_suppliers = get_curated_suppliers(company_name)
+            if not curated_suppliers and self.runtime_state is not None:
+                # Component benchmarks pass a full product/component query as
+                # company_name. Resolve curated data against the actual root
+                # company before consulting the query-specific cache, whose
+                # contents may be stale or unrelated to the current component.
+                root_company = getattr(self.runtime_state, "target_company", None)
+                if root_company and root_company != company_name:
+                    curated_suppliers = get_curated_suppliers(root_company)
             if curated_suppliers:
                 logger.debug("CURATED SUPPLIER GRAPH HIT: %s", company_name)
                 set_stage_status(self.runtime_state, self.stage_key, "curated_hit")

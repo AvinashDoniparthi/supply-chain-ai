@@ -1,242 +1,39 @@
 # Samsung
 
 ## Executive Summary
-- Company: Samsung
-- Mode: SLM
-- Max Depth: 3
-- Generated At: 2026-07-27 21:27:39 IST
-- 1. EXECUTIVE SUMMARY
-- Samsung has a moderately healthy supply chain with strong dependence on Qualcomm, Murata Manufacturing, and Amkor Technology. The main concern is limited verification depth or supplier concentration.
-- 2. DISCOVERY QUALITY
-- Suppliers discovered: 12
-- Suppliers retained after verification: 11
-- Suppliers discarded: 1
-- - Discard reasons are preserved in the run benchmark record.
-- Coverage: High - 5 discovered Tier-1 suppliers identified.
-- Verification-adjusted coverage: High (92%; 11/12 suppliers verified).
-- 3. SUPPLY CHAIN HEALTH
-- Status: Good - 85.4/100.
-- Supplier Count: 11
-- Critical Suppliers: 0
-- High-Risk Suppliers: 0
-- Summary: Samsung's supply chain appears good overall. No major operational disruptions were detected. Verification quality is high (11/12 suppliers verified).
-- 4. SUPPLIER NETWORK
-- 4.1 Tier 1 Suppliers
-- TIER 1 SUPPLIERS
-- Direct suppliers to Samsung
-- 1. ASML
-- Relationship : Supplier
-- Confidence   : 0.91
-- Verification : Verified (0.91)
-- 2. Corning
-- Relationship : Supplier
-- Confidence   : 0.89
-- Verification : Verified (0.91)
-- 3. Murata Manufacturing
-- Relationship : Supplier
-- Confidence   : 0.89
-- Verification : Verified (0.91)
-- 4. Qualcomm
-- Relationship : Supplier
-- Confidence   : 0.85
-- Verification : Verified (0.88)
-- 5. Sony Semiconductor Solutions
-- Relationship : Supplier
-- Confidence   : 0.89
-- Verification : Verified (0.91)
-- 4.2 Tier 2 Suppliers
-- TIER 2 SUPPLIERS
-- Upstream suppliers connected through Tier 1 suppliers
-- 1. Amkor Technology
-- Parent       : Qualcomm
-- Path         : Samsung -> Qualcomm -> Amkor Technology
-- Relationship : Upstream Supplier
-- Confidence   : 0.89
-- Verification : Verified (0.90)
-- 2. Carl Zeiss SMT
-- Parent       : ASML
-- Path         : Samsung -> ASML -> Carl Zeiss SMT
-- Relationship : Upstream Supplier
-- Confidence   : 0.90
-- Verification : Verified (0.91)
-- 3. TSMC
-- Parent       : Qualcomm
-- Path         : Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company
-- Relationship : Upstream Supplier
-- Confidence   : 0.87
-- Verification : Verified (0.86)
-- 4.3 Tier 3 Suppliers
-- TIER 3 SUPPLIERS
-- Upstream suppliers connected through Tier 2 suppliers
-- 1. Applied Materials
-- Parent       : Taiwan Semiconductor Manufacturing Company
-- Path         : Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
-- Relationship : Upstream Supplier
-- Confidence   : 0.87
-- Verification : Verified (0.89)
-- 2. Lam Research
-- Parent       : Taiwan Semiconductor Manufacturing Company
-- Path         : Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Lam Research
-- Relationship : Upstream Supplier
-- Confidence   : 0.85
-- Verification : Verified (0.88)
-- 3. Tokyo Electron
-- Parent       : Taiwan Semiconductor Manufacturing Company
-- Path         : Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
-- Relationship : Upstream Supplier
-- Confidence   : 0.85
-- Verification : Verified (0.88)
-- 5. TOP RISKS
-- High
-- None identified
-- Medium
-- None identified
-- Low
-- None identified
-- No supplier-specific risks detected
-- 6. DATA QUALITY WARNINGS
-- Low Verification Confidence
-- None identified
-- Failed Verification
-- None identified
-- Missing Verification Result
-- None identified
-- 7. CRITICAL SUPPLIERS
-- 1. Qualcomm
-- Tier         : 1
-- Confidence   : 0.85
-- Reason       : Supplier manufactures core chip components and appears to be a sole-source dependency.
-- 2. Murata Manufacturing
-- Tier         : 1
-- Confidence   : 0.89
-- Reason       : Supplier provides essential component services and appears to be a sole-source dependency.
-- 3. Amkor Technology
-- Tier         : 2
-- Confidence   : 0.89
-- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
-- 4. Applied Materials
-- Tier         : 3
-- Confidence   : 0.87
-- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
-- 5. Tokyo Electron
-- Tier         : 3
-- Confidence   : 0.85
-- Reason       : Supplier manufactures core semiconductor components and appears to be a sole-source dependency.
+- Not available.
 
 ## Supply Chain Health
-- Health Score: 85.40
-- Status: Good
-- Supplier Count: 11
-- Verified Supplier Count: 11
+- Health Score: Not available
+- Status: Not available
+- Supplier Count: 0
+- Verified Supplier Count: 0
 
 ## Tier 1 Suppliers
-- Supplier: ASML
-  - Parent: Samsung
-  - Relationship Path: Samsung -> ASML
-  - Relationship: supplier
-  - Confidence: 0.91
-  - Verification: Verified (0.91)
-- Supplier: Corning Inc.
-  - Parent: Samsung
-  - Relationship Path: Samsung -> Corning Inc.
-  - Relationship: supplier
-  - Confidence: 0.89
-  - Verification: Verified (0.91)
-- Supplier: Murata Manufacturing
-  - Parent: Samsung
-  - Relationship Path: Samsung -> Murata Manufacturing
-  - Relationship: supplier
-  - Confidence: 0.89
-  - Verification: Verified (0.91)
-- Supplier: Qualcomm
-  - Parent: Samsung
-  - Relationship Path: Samsung -> Qualcomm
-  - Relationship: supplier
-  - Confidence: 0.85
-  - Verification: Verified (0.88)
-- Supplier: Sony Semiconductor Solutions
-  - Parent: Samsung
-  - Relationship Path: Samsung -> Sony Semiconductor Solutions
-  - Relationship: supplier
-  - Confidence: 0.89
-  - Verification: Verified (0.91)
+- None verified
 
 ## Tier 2 Suppliers
-- Supplier: Amkor Technology
-  - Parent: Qualcomm
-  - Relationship Path: Samsung -> Qualcomm -> Amkor Technology
-  - Relationship: upstream_supplier
-  - Confidence: 0.89
-  - Verification: Verified (0.90)
-- Supplier: Carl Zeiss SMT
-  - Parent: ASML
-  - Relationship Path: Samsung -> ASML -> Carl Zeiss SMT
-  - Relationship: upstream_supplier
-  - Confidence: 0.90
-  - Verification: Verified (0.91)
-- Supplier: Taiwan Semiconductor Manufacturing Company
-  - Parent: Qualcomm
-  - Relationship Path: Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company
-  - Relationship: upstream_supplier
-  - Confidence: 0.87
-  - Verification: Verified (0.86)
+- None verified
 
 ## Tier 3 Suppliers
-- Supplier: Applied Materials
-  - Parent: Taiwan Semiconductor Manufacturing Company
-  - Relationship Path: Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Applied Materials
-  - Relationship: upstream_supplier
-  - Confidence: 0.87
-  - Verification: Verified (0.89)
-- Supplier: Lam Research
-  - Parent: Taiwan Semiconductor Manufacturing Company
-  - Relationship Path: Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Lam Research
-  - Relationship: upstream_supplier
-  - Confidence: 0.85
-  - Verification: Verified (0.88)
-- Supplier: Tokyo Electron
-  - Parent: Taiwan Semiconductor Manufacturing Company
-  - Relationship Path: Samsung -> Qualcomm -> Taiwan Semiconductor Manufacturing Company -> Tokyo Electron
-  - Relationship: upstream_supplier
-  - Confidence: 0.85
-  - Verification: Verified (0.88)
+- None verified
 
 ## Major Risks
 - None verified
 
 ## Critical Suppliers
-- Qualcomm (High, 0.79)
-- Murata Manufacturing (High, 0.73)
-- Amkor Technology (High, 0.72)
-- Applied Materials (High, 0.71)
-- Tokyo Electron (High, 0.70)
-- Taiwan Semiconductor Manufacturing Company (Medium, 0.60)
-- ASML (Medium, 0.59)
-- Corning Inc. (Medium, 0.59)
-- Sony Semiconductor Solutions (Medium, 0.59)
-- Carl Zeiss SMT (Medium, 0.50)
-- Lam Research (Low, 0.48)
+- None verified
 
 ## Verification Summary
-- Total Verifications: 11
-- Verified Supplier Count: 11
+- Total Verifications: 0
+- Verified Supplier Count: 0
 - Not Verified Count: 0
-- Verified Suppliers: ASML, Corning Inc., Qualcomm, Murata Manufacturing, Sony Semiconductor Solutions, Carl Zeiss SMT, Amkor Technology, Taiwan Semiconductor Manufacturing Company, Applied Materials, Lam Research, Tokyo Electron
+- Verified Suppliers: None
 
 ## Confidence Summary
-- Amkor Technology: 0.89
-- Applied Materials: 0.87
-- ASML: 0.91
-- Carl Zeiss SMT: 0.90
-- Corning Inc.: 0.89
-- Lam Research: 0.85
-- Murata Manufacturing: 0.89
-- Qualcomm: 0.85
-- Sony Semiconductor Solutions: 0.89
-- Taiwan Semiconductor Manufacturing Company: 0.87
-- Tokyo Electron: 0.85
+- None verified
 
 ## Report Metadata
-- Generated Timestamp: 2026-07-27T15:57:40.623318+00:00
+- Generated Timestamp: 2026-08-02T09:45:35.452517+00:00
 - Mode: slm
 - Max Depth: 3

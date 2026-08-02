@@ -1494,6 +1494,28 @@
         "Lam Research",
         "Tokyo Electron"
       ]
+    },
+    {
+      "timestamp": "2026-08-02T15:15:33.745960",
+      "mode": "slm",
+      "health_score": 89.2,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T15:15:35.167825",
+      "mode": "slm",
+      "health_score": 84.4,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Sony Semiconductor Solutions"
+      ]
     }
   ]
 }

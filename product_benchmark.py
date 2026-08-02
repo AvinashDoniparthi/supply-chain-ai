@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import os
 import re
 import time
@@ -108,6 +109,13 @@ CSV_FIELDNAMES = [
     "mode",
     "max_depth",
     "skip_news",
+    "provider",
+    "model",
+    "primary_model_success",
+    "fallback_used",
+    "fallback_stages",
+    "workflow_status",
+    "warnings",
     "evaluation_status",
     "evaluation_note",
     "tier1_suppliers",
@@ -204,6 +212,48 @@ def _is_quota_error_text(value: str) -> bool:
         or "resourceexhausted" in text
         or "too many requests" in text
     )
+
+
+def _provenance_fields(state: Any | None) -> Dict[str, Any]:
+    """Serialize provenance already captured by run_analysis for one row."""
+    if state is None:
+        return {
+            "provider": "",
+            "model": "",
+            "primary_model_success": "",
+            "fallback_used": "",
+            "fallback_stages": "",
+            "workflow_status": "",
+            "warnings": "",
+        }
+
+    metadata = getattr(state, "run_metadata", {}) or {}
+    record = metadata.get("benchmark_record") or {}
+
+    def recorded(name: str, default: Any = "") -> Any:
+        if name in record:
+            return record[name]
+        if name in metadata:
+            return metadata[name]
+        return default
+
+    primary_model_success = recorded("primary_model_success")
+    fallback_used = recorded("fallback_used")
+    fallback_stages = recorded("fallback_stages")
+    warnings = recorded("warnings")
+    return {
+        "provider": recorded("provider", getattr(state, "provider", "")),
+        "model": recorded("model", getattr(state, "model", "")),
+        "primary_model_success": primary_model_success,
+        "fallback_used": fallback_used,
+        "fallback_stages": json.dumps(fallback_stages, sort_keys=True)
+        if fallback_stages not in (None, "")
+        else "",
+        "workflow_status": recorded("workflow_status"),
+        "warnings": json.dumps(warnings, sort_keys=True)
+        if warnings not in (None, "")
+        else "",
+    }
 
 
 def _retrieval_grounding_score(state: Any) -> float:
@@ -599,6 +649,7 @@ def calculate_component_metrics(
         reference_suppliers=reference_suppliers,
         quota_exhausted=quota_exhausted,
     )
+    provenance = _provenance_fields(state)
     if component_evidence_missing and not quota_exhausted:
         evaluation_note = "No component-specific supplier evidence found."
         supplier_data = {
@@ -636,6 +687,7 @@ def calculate_component_metrics(
         "mode": mode,
         "max_depth": max_depth,
         "skip_news": skip_news,
+        **provenance,
         "evaluation_status": evaluation_status,
         "evaluation_note": evaluation_note,
         "tier1_suppliers": supplier_data["tier1_suppliers"],

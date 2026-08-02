@@ -2,10 +2,14 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+from models.state import AgentState
 from scraping.supplier_discovery import (
     SupplierDiscoveryScraper,
+    component_tier1_supplier_hints,
     discovery_queries,
     expected_tier1_suppliers,
+    get_curated_suppliers,
+    supplier_evidence_mentions_component,
 )
 
 
@@ -74,6 +78,41 @@ class TestOpenWorldSupplierDiscovery(unittest.TestCase):
         self.assertIn("AMD chip packaging suppliers", queries)
         self.assertIn("AMD supply chain", queries)
         self.assertIn("AMD contract manufacturers", queries)
+
+    def test_samsung_application_processor_qualcomm_component_evidence(self):
+        qualcomm = next(
+            item for item in get_curated_suppliers("Samsung")
+            if item["name"] == "Qualcomm"
+        )
+        evidence = qualcomm["source_evidence"]
+
+        self.assertTrue(
+            supplier_evidence_mentions_component(
+                evidence,
+                product_name="Galaxy S25 Ultra",
+                component_name="Application Processor",
+                target_query="Samsung Galaxy S25 Ultra Application Processor",
+            )
+        )
+        self.assertIn("Qualcomm", component_tier1_supplier_hints("Application Processor"))
+
+    def test_component_query_uses_root_curated_graph_before_stale_query_cache(self):
+        state = AgentState(
+            target_company="Samsung",
+            product_name="Galaxy S25 Ultra",
+            component_name="Application Processor",
+            benchmark_target_query="Samsung Galaxy S25 Ultra Application Processor",
+        )
+        with tempfile.TemporaryDirectory() as cache_dir:
+            scraper = SupplierDiscoveryScraper(runtime_state=state, prefer_curated=True)
+            scraper.cache_dir = cache_dir
+            with open(scraper._get_cache_path(state.benchmark_target_query), "w") as handle:
+                handle.write('[{"name": "Samsung Galaxy A57", "confidence": 0.97}]')
+
+            suppliers = scraper.find_suppliers(state.benchmark_target_query)
+
+        self.assertIn("Qualcomm", {supplier["name"] for supplier in suppliers})
+        self.assertNotIn("Samsung Galaxy A57", {supplier["name"] for supplier in suppliers})
 
     def test_component_specific_queries_expand_with_aliases(self):
         queries = discovery_queries(

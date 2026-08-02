@@ -37,6 +37,48 @@ def _state_for_component(component: str, suppliers: list[SupplierInfo]) -> Agent
 
 
 class ProductComponentBenchmarkTests(unittest.TestCase):
+    def test_benchmark_rows_include_recorded_provenance(self) -> None:
+        state = _state_for_component("Application Processor", [_supplier("TSMC", 1)])
+        state.provider = "ollama"
+        state.model = "gemma3:4b"
+        state.run_metadata = {
+            "benchmark_record": {
+                "provider": "ollama",
+                "model": "gemma3:4b",
+                "primary_model_success": False,
+                "fallback_used": True,
+                "fallback_stages": ["relationship_classification"],
+                "workflow_status": "completed",
+                "warnings": ["relationship fallback"],
+            }
+        }
+
+        row = product_benchmark.calculate_component_metrics(
+            company="Apple",
+            product="iPhone 16 Pro",
+            component="Application Processor",
+            sample_id=103,
+            sample_label="provenance_test",
+            timestamp="2026-08-02T00:00:00+00:00",
+            mode="slm",
+            max_depth=3,
+            skip_news=True,
+            state=state,
+            runtime_seconds=1.0,
+            error=None,
+            reference_suppliers=["TSMC"],
+        )
+
+        self.assertEqual(row["provider"], "ollama")
+        self.assertEqual(row["model"], "gemma3:4b")
+        self.assertEqual(row["primary_model_success"], False)
+        self.assertEqual(row["fallback_used"], True)
+        self.assertEqual(row["fallback_stages"], '["relationship_classification"]')
+        self.assertEqual(row["workflow_status"], "completed")
+        self.assertEqual(row["warnings"], '["relationship fallback"]')
+        self.assertIn("provider", product_benchmark.CSV_FIELDNAMES)
+        self.assertIn("warnings", product_benchmark.CSV_FIELDNAMES)
+
     def test_reference_dataset_has_one_supplier_per_row_and_verified_rows_have_sources(self) -> None:
         with product_benchmark.REFERENCE_DATASET_PATH.open("r", encoding="utf-8", newline="") as handle:
             rows = list(csv.DictReader(handle))
