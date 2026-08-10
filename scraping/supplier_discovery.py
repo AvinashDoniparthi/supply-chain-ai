@@ -9,7 +9,7 @@ import re
 import time
 from html import unescape
 from models.state import SupplierInfo
-from utils.identity_resolution import resolver
+from utils.identity_resolution import compact_key, resolver
 from utils.runtime_controls import (
     can_consume_web_query,
     remaining_stage_timeout,
@@ -2678,6 +2678,164 @@ class SupplierDiscoveryScraper:
                 json.dump(formatted_suppliers, f)
 
         return formatted_suppliers
+
+    def retrieve_supplier_candidate_evidence(
+        self,
+        target_company: str,
+        candidate_name: str,
+        *,
+        product_name: Optional[str] = None,
+        component_name: Optional[str] = None,
+    ) -> List[Dict[str, str]]:
+        """Retrieve public relationship evidence for a model-proposed candidate."""
+        context = " ".join(
+            part for part in [target_company, candidate_name, product_name, component_name]
+            if part
+        )
+        queries = [
+            f"{context} supplier",
+            f"{candidate_name} supplies {target_company} {component_name or ''}".strip(),
+            f"{target_company} sources {component_name or 'components'} from {candidate_name}",
+        ]
+        evidence: List[Dict[str, str]] = []
+        seen = set()
+
+        def add_evidence(items: List[Dict[str, str]]) -> None:
+            for item in items:
+                key = (item.get("title", ""), item.get("snippet", ""), item.get("link", ""))
+                if key not in seen:
+                    seen.add(key)
+                    evidence.append(item)
+
+        # A prior supplier-discovery result is an available evidence source.
+        # Use it only when it identifies this exact candidate, rather than
+        # inventing evidence or consulting benchmark/reference data.
+        cached_evidence = self._cached_candidate_evidence(
+            target_company,
+            candidate_name,
+            product_name=product_name,
+            component_name=component_name,
+        )
+        add_evidence(cached_evidence)
+
+        max_retries = max(0, int(getattr(self.runtime_state, "max_retries", 2) or 2))
+        for query in queries:
+            if self.runtime_state and not can_consume_web_query(
+                self.runtime_state,
+                self.stage_key,
+                f"Generated-candidate evidence search for '{query}'",
+            ):
+                break
+            try:
+                response = self._wikipedia_request_with_retry(
+                    params={
+                        "action": "query",
+                        "list": "search",
+                        "srsearch": query,
+                        "format": "json",
+                        "limit": 10,
+                    },
+                    max_retries=max_retries,
+                    query=query,
+                )
+                if response is None:
+                    continue
+                for result in response.json().get("query", {}).get("search", []):
+                    item = {
+                        "title": result.get("title", ""),
+                        "link": f"https://en.wikipedia.org/wiki/{result.get('title', '').replace(' ', '_')}",
+                        "snippet": _strip_search_markup(result.get("snippet", "")),
+                    }
+                    add_evidence([item])
+            except Exception as exc:
+                logger.warning("Generated-candidate evidence search failed for %s: %s", candidate_name, exc)
+        return evidence
+
+    def _wikipedia_request_with_retry(
+        self,
+        *,
+        params: Dict[str, Any],
+        max_retries: int,
+        query: str,
+    ) -> Optional[requests.Response]:
+        """Perform a bounded Wikipedia request resilient to transient failures."""
+        for attempt in range(max_retries + 1):
+            if self.runtime_state and not can_consume_web_query(
+                self.runtime_state,
+                self.stage_key,
+                f"Wikipedia generated-candidate evidence for '{query}'",
+            ):
+                return None
+            try:
+                response = self.session.get(
+                    "https://en.wikipedia.org/w/api.php",
+                    params=params,
+                    headers=self.headers,
+                    timeout=remaining_stage_timeout(self.runtime_state, self.stage_key, 5.0),
+                )
+                if response.status_code == 429 or response.status_code >= 500:
+                    if attempt >= max_retries:
+                        logger.warning(
+                            "Wikipedia evidence request exhausted retries for %r (HTTP %s)",
+                            query,
+                            response.status_code,
+                        )
+                        return None
+                    retry_after = response.headers.get("Retry-After", "")
+                    try:
+                        delay = float(retry_after)
+                    except (TypeError, ValueError):
+                        delay = 0.25 * (2 ** attempt)
+                    delay = min(max(delay, 0.0), 4.0)
+                    self.stats["Wikipedia Retry Count"] += 1
+                    time.sleep(min(delay, remaining_stage_timeout(self.runtime_state, self.stage_key, delay)))
+                    continue
+                response.raise_for_status()
+                self.stats["Wikipedia Success"] += 1
+                return response
+            except requests.exceptions.RequestException as exc:
+                if attempt >= max_retries:
+                    logger.warning(
+                        "Wikipedia evidence request exhausted retries for %r: %s",
+                        query,
+                        exc,
+                    )
+                    return None
+                delay = min(0.25 * (2 ** attempt), 4.0)
+                self.stats["Wikipedia Retry Count"] += 1
+                time.sleep(min(delay, remaining_stage_timeout(self.runtime_state, self.stage_key, delay)))
+        return None
+
+    def _cached_candidate_evidence(
+        self,
+        target_company: str,
+        candidate_name: str,
+        *,
+        product_name: Optional[str],
+        component_name: Optional[str],
+    ) -> List[Dict[str, str]]:
+        cache_keys = [
+            target_company,
+            " ".join(part for part in [target_company, product_name, component_name] if part),
+        ]
+        candidate_key = compact_key(resolver.resolve(candidate_name))
+        cached: List[Dict[str, str]] = []
+        for cache_key in cache_keys:
+            for path in [self._get_cache_path(cache_key), *self._get_legacy_cache_paths(cache_key)]:
+                if not os.path.exists(path):
+                    continue
+                try:
+                    with open(path, "r") as handle:
+                        entries = json.load(handle)
+                except (OSError, ValueError):
+                    continue
+                for entry in entries if isinstance(entries, list) else []:
+                    if compact_key(resolver.resolve(entry.get("name", ""))) != candidate_key:
+                        continue
+                    for item in entry.get("source_evidence", []) or []:
+                        if item.get("snippet"):
+                            cached.append(dict(item))
+        return cached
 
     def _fetch_target_company_context(self, company_name: str) -> List[Dict[str, Any]]:
         """

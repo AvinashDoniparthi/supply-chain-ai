@@ -5,7 +5,20 @@
       "label": "Samsung",
       "node_type": "company",
       "tier": 0
+    },
+    {
+      "id": "Qualcomm",
+      "label": "Qualcomm",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Samsung"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "Samsung",
+      "target": "Qualcomm",
+      "relationship": "supplier"
+    }
+  ]
 }

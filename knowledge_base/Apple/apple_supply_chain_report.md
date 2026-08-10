@@ -4,34 +4,30 @@
 - Company: Apple
 - Mode: SLM
 - Max Depth: 3
-- Generated At: 2026-08-02 14:59:09 IST
+- Generated At: 2026-08-10 15:51:13 IST
 - 1. EXECUTIVE SUMMARY
-- Apple has a strained supply chain with strong dependence on Hon Hai Precision Industry and Pegatron. The main concern is geographic disruption exposure among key suppliers.
+- Apple has a moderately healthy supply chain with strong dependence on Pegatron. The main concern is geographic disruption exposure among key suppliers.
 - Recommendations
-- 1. Investigate geopolitical exposure for Hon Hai Precision Industry: Taiwan geopolitical exposure through Hon Hai Precision Industry. Affected path: Apple -> Hon Hai Precision Industry. Reason: Hon Hai Precision Industry is located in Taiwan / China, a high-tension geopolitical region.
+- 1. Investigate geopolitical exposure for Pegatron: Taiwan geopolitical exposure through Pegatron. Affected path: Apple -> Pegatron. Reason: Pegatron is located in Taiwan / China, a high-tension geopolitical region.
 - 2. DISCOVERY QUALITY
-- Suppliers discovered: 2
-- Suppliers retained after verification: 2
+- Suppliers discovered: 1
+- Suppliers retained after verification: 1
 - Suppliers discarded: 0
-- Coverage: High - 2 discovered Tier-1 suppliers identified.
+- Coverage: High - 1 discovered Tier-1 suppliers identified.
 - 3. SUPPLY CHAIN HEALTH
-- Status: Weak - 59.5/100.
-- Supplier Count: 2
+- Status: Moderate - 60.3/100.
+- Supplier Count: 1
 - Critical Suppliers: 0
-- High-Risk Suppliers: 2
-- Summary: Apple's supply chain appears weak overall. 2 supplier(s) face high or critical risk exposure.
+- High-Risk Suppliers: 1
+- Summary: Apple's supply chain appears moderate overall. 1 supplier(s) face high or critical risk exposure.
 - 4. SUPPLIER NETWORK
 - 4.1 Tier 1 Suppliers
 - TIER 1 SUPPLIERS
 - Direct suppliers to Apple
-- 1. Hon Hai Precision Industry
+- 1. Pegatron
 - Relationship : Supplier
-- Confidence   : 0.86
-- Verification : Verified (0.91)
-- 2. Pegatron
-- Relationship : Supplier
-- Confidence   : 0.85
-- Verification : Verified (0.91)
+- Confidence   : 0.87
+- Verification : Verified (0.93)
 - 4.2 Tier 2 Suppliers
 - TIER 2 SUPPLIERS
 - Upstream suppliers connected through Tier 1 suppliers
@@ -42,12 +38,7 @@
 - None identified
 - 5. TOP RISKS
 - High
-- 1. Geopolitical risk involving Hon Hai Precision Industry
-- Affected Path: Apple -> Hon Hai Precision Industry Co., Ltd.
-- Reason: Taiwan geopolitical exposure through Hon Hai Precision Industry. Affected path: Apple -> Hon Hai Precision Industry. Reason: Hon Hai Precision Industry is located in Taiwan / China, a high-tension geopolitical region.
-- Confidence: 0.90
-- Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
-- 2. Geopolitical risk involving Pegatron
+- 1. Geopolitical risk involving Pegatron
 - Affected Path: Apple -> Pegatron Corporation
 - Reason: Taiwan geopolitical exposure through Pegatron. Affected path: Apple -> Pegatron. Reason: Pegatron is located in Taiwan / China, a high-tension geopolitical region.
 - Confidence: 0.90
@@ -64,34 +55,24 @@
 - Missing Verification Result
 - None identified
 - 7. CRITICAL SUPPLIERS
-- 1. Hon Hai Precision Industry
+- 1. Pegatron
 - Tier         : 1
-- Confidence   : 0.86
-- Reason       : Supplier provides essential assembly services and appears to be a sole-source dependency.
-- 2. Pegatron
-- Tier         : 1
-- Confidence   : 0.85
+- Confidence   : 0.87
 - Reason       : Supplier provides essential assembly services and appears to be a sole-source dependency.
 
 ## Supply Chain Health
-- Health Score: 59.50
-- Status: Weak
-- Supplier Count: 2
-- Verified Supplier Count: 2
+- Health Score: 60.30
+- Status: Moderate
+- Supplier Count: 1
+- Verified Supplier Count: 1
 
 ## Tier 1 Suppliers
-- Supplier: Hon Hai Precision Industry Co., Ltd.
-  - Parent: Apple
-  - Relationship Path: Apple -> Hon Hai Precision Industry Co., Ltd.
-  - Relationship: supplier
-  - Confidence: 0.86
-  - Verification: Verified (0.91)
 - Supplier: Pegatron Corporation
   - Parent: Apple
   - Relationship Path: Apple -> Pegatron Corporation
   - Relationship: supplier
-  - Confidence: 0.85
-  - Verification: Verified (0.91)
+  - Confidence: 0.87
+  - Verification: Verified (0.93)
 
 ## Tier 2 Suppliers
 - None verified
@@ -101,31 +82,24 @@
 
 ## Major Risks
 - Risk Type: Geopolitical
-  - Affected Supplier: Hon Hai Precision Industry
-  - Severity: High
-  - Reason: Taiwan geopolitical exposure through Hon Hai Precision Industry. Affected path: Apple -> Hon Hai Precision Industry. Reason: Hon Hai Precision Industry is located in Taiwan / China, a high-tension geopolitical region.
-  - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
-- Risk Type: Geopolitical
   - Affected Supplier: Pegatron
   - Severity: High
   - Reason: Taiwan geopolitical exposure through Pegatron. Affected path: Apple -> Pegatron. Reason: Pegatron is located in Taiwan / China, a high-tension geopolitical region.
   - Mitigation: Identify and qualify alternative suppliers in diverse geographic regions.
 
 ## Critical Suppliers
-- Hon Hai Precision Industry Co., Ltd. (High, 0.73)
-- Pegatron Corporation (High, 0.73)
+- Pegatron Corporation (High, 0.74)
 
 ## Verification Summary
-- Total Verifications: 2
-- Verified Supplier Count: 2
+- Total Verifications: 1
+- Verified Supplier Count: 1
 - Not Verified Count: 0
-- Verified Suppliers: Hon Hai Precision Industry Co., Ltd., Pegatron Corporation
+- Verified Suppliers: Pegatron Corporation
 
 ## Confidence Summary
-- Hon Hai Precision Industry Co., Ltd.: 0.86
-- Pegatron Corporation: 0.85
+- Pegatron Corporation: 0.87
 
 ## Report Metadata
-- Generated Timestamp: 2026-08-02T09:29:09.695294+00:00
+- Generated Timestamp: 2026-08-10T10:21:13.819144+00:00
 - Mode: slm
 - Max Depth: 3

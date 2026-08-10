@@ -14,12 +14,15 @@ from scraping.supplier_discovery import (
 from utils.identity_resolution import resolver
 from utils.output import OutputMode, agent_event, debug_log, emit, progress
 from utils.runtime_controls import (
+    can_consume_llm_call,
     emit_limit_once,
     finish_stage,
     start_stage,
     stop_if_timed_out,
     timeout_stage,
 )
+from utils.benchmark_metrics import record_primary_model_result
+from chains.candidate_generation_chain import get_candidate_generation_chain
 import logging
 import re
 
@@ -28,6 +31,171 @@ logger = logging.getLogger(__name__)
 MAX_QUEUE_SIZE = 50
 MIN_DISCOVERY_CONFIDENCE = 0.75
 MAX_SUPPLIERS_PER_DISCOVERY = 5
+
+
+def _filter_supplier_candidate(
+    data: dict,
+    *,
+    state: AgentState,
+    current_company: str,
+    target_name: str,
+    next_tier: int,
+    is_root_target: bool,
+    canonical_seen_companies: set[str],
+    canonical_queued_companies: set[str],
+    seen_candidate_canonicals: set[str],
+) -> dict | None:
+    raw_candidate_name = data.get("name", "").strip()
+    candidate_tier = next_tier
+    evidence_ok, evidence_reason = supplier_evidence_is_strong(
+        data.get("source_evidence", []),
+        candidate_tier,
+        data.get("confidence", 0.0),
+        raw_candidate_name,
+        current_company,
+        product_name=state.product_name if is_root_target else None,
+        component_name=state.component_name if is_root_target else None,
+    )
+    logger.info(evidence_reason)
+    if not evidence_ok:
+        return None
+
+    if (
+        state.component_name
+        and candidate_tier == 1
+        and is_root_target
+        and not supplier_evidence_mentions_component(
+            data.get("source_evidence", []),
+            product_name=state.product_name,
+            component_name=state.component_name,
+            target_query=state.benchmark_target_query,
+        )
+    ):
+        return None
+
+    candidate_name = normalize_supplier_candidate_name(raw_candidate_name, current_company)
+    if not candidate_name:
+        return None
+
+    if state.component_name and candidate_tier == 1 and is_root_target:
+        hints = component_tier1_supplier_hints(state.component_name)
+        if hints:
+            candidate_hint_match = resolver.resolve(candidate_name)
+            normalized_hints = {resolver.resolve(hint) for hint in hints}
+            if candidate_hint_match not in normalized_hints:
+                return None
+
+    if candidate_name != raw_candidate_name:
+        data = {**data, "name": candidate_name}
+
+    if is_location_or_ecosystem_entity(candidate_name):
+        return None
+
+    canonical_name = resolver.resolve(candidate_name)
+    if candidate_competes_with_target(target_name, candidate_name) and not (
+        supplier_evidence_explicitly_links_candidate_to_source(
+            candidate_name, target_name, data.get("source_evidence", [])
+        )
+    ):
+        return None
+
+    if unrelated_energy_candidate_without_supply_evidence(
+        candidate_name, current_company, data.get("source_evidence", [])
+    ):
+        return None
+
+    valid_name, _ = _is_valid_supplier_name(candidate_name, data.get("confidence", 0.0))
+    if not valid_name:
+        return None
+
+    if canonical_name in canonical_seen_companies or canonical_name in canonical_queued_companies:
+        return None
+    if canonical_name in seen_candidate_canonicals:
+        return None
+    seen_candidate_canonicals.add(canonical_name)
+    return {**data, "canonical_name": canonical_name}
+
+
+def _generate_model_candidates(
+    state: AgentState,
+    *,
+    target_name: str,
+    current_company: str,
+    next_tier: int,
+) -> list[dict]:
+    """Generate hypotheses only after normal discovery yields no valid candidates."""
+    state.run_metadata["candidate_source"] = "gemma_generation"
+    state.run_metadata.setdefault("generated_candidate_count", 0)
+    state.run_metadata.setdefault("verified_generated_candidate_count", 0)
+    if not can_consume_llm_call(state, "supplier_candidate_generation", "supplier candidate generation"):
+        record_primary_model_result(
+            state,
+            stage="supplier_candidate_generation",
+            success=False,
+            warning="Gemma candidate generation skipped because the LLM call limit was reached.",
+        )
+        return []
+
+    try:
+        chain, parser = get_candidate_generation_chain(state.provider, state.model)
+        generated = chain.invoke(
+            {
+                "company": target_name,
+                "product": state.product_name or "",
+                "component": state.component_name or "",
+                "format_instructions": parser.get_format_instructions(),
+            }
+        )
+        record_primary_model_result(
+            state,
+            stage="supplier_candidate_generation",
+            success=True,
+        )
+    except Exception as exc:
+        record_primary_model_result(
+            state,
+            stage="supplier_candidate_generation",
+            success=False,
+            warning=f"Gemma candidate generation failed: {exc}",
+        )
+        return []
+
+    candidates = list(getattr(generated, "candidates", []) or [])
+    state.run_metadata["generated_candidate_count"] = len(candidates)
+    scraper = SupplierDiscoveryScraper(runtime_state=state, prefer_curated=False)
+    generated_data = []
+    seen_names = set()
+    for candidate in candidates:
+        raw_name = str(getattr(candidate, "name", "") or "").strip()
+        if not raw_name:
+            continue
+        normalized_name = normalize_supplier_candidate_name(raw_name, current_company)
+        if not normalized_name:
+            continue
+        canonical_name = resolver.resolve(normalized_name)
+        if canonical_name in seen_names:
+            continue
+        seen_names.add(canonical_name)
+        evidence = scraper.retrieve_supplier_candidate_evidence(
+            target_name,
+            normalized_name,
+            product_name=state.product_name,
+            component_name=state.component_name,
+        )
+        generated_data.append(
+            {
+                "name": normalized_name,
+                "location": "Unknown",
+                "products": [state.component_name or "Component"],
+                "tier": next_tier,
+                "criticality": "Medium",
+                "confidence": 0.75,
+                "source_evidence": evidence,
+                "candidate_source": "gemma_generation",
+                "model_generated": True,
+            }
+        )
+    return generated_data
 
 
 def _is_valid_supplier_name(name: str, confidence: float):
@@ -203,132 +371,22 @@ def supplier_agent(state: AgentState) -> AgentState:
                 if discovered_data:
                     break
 
-        if not discovered_data:
-            logger.warning(f"No suppliers discovered for {current_company}")
-            state.current_task = (
-                f"Supply chain mapping failed: No suppliers found for {current_company}"
-            )
-            if not state.mapping_queue:
-                finish_stage(state, "supplier_discovery")
-            return state
-
         valid_candidates = []
         seen_candidate_canonicals = set()
-        for data in discovered_data:
-            raw_candidate_name = data.get("name", "").strip()
-            candidate_tier = next_tier
-            evidence_ok, evidence_reason = supplier_evidence_is_strong(
-                data.get("source_evidence", []),
-                candidate_tier,
-                data.get("confidence", 0.0),
-                raw_candidate_name,
-                current_company,
-                product_name=state.product_name if is_root_target else None,
-                component_name=state.component_name if is_root_target else None,
+        for data in discovered_data or []:
+            filtered = _filter_supplier_candidate(
+                data,
+                state=state,
+                current_company=current_company,
+                target_name=target_name,
+                next_tier=next_tier,
+                is_root_target=is_root_target,
+                canonical_seen_companies=canonical_seen_companies,
+                canonical_queued_companies=canonical_queued_companies,
+                seen_candidate_canonicals=seen_candidate_canonicals,
             )
-            logger.info(evidence_reason)
-            if not evidence_ok:
-                logger.info(
-                    f"[EVIDENCE FILTER] Rejected: {raw_candidate_name} Reason: {evidence_reason}"
-                )
-                continue
-
-            if (
-                state.component_name
-                and candidate_tier == 1
-                and is_root_target
-                and not supplier_evidence_mentions_component(
-                    data.get("source_evidence", []),
-                    product_name=state.product_name,
-                    component_name=state.component_name,
-                    target_query=state.benchmark_target_query,
-                )
-            ):
-                logger.info(
-                    f"[FILTER] Rejected: {raw_candidate_name} Reason: Missing component-specific evidence for {state.component_name}"
-                )
-                continue
-
-            candidate_name = normalize_supplier_candidate_name(
-                raw_candidate_name, current_company
-            )
-            if not candidate_name:
-                logger.info(
-                    f"[FILTER] Rejected: {raw_candidate_name} Reason: Not an identifiable organization"
-                )
-                continue
-
-            if state.component_name and candidate_tier == 1 and is_root_target:
-                hints = component_tier1_supplier_hints(state.component_name)
-                if hints:
-                    candidate_hint_match = resolver.resolve(candidate_name)
-                    normalized_hints = {resolver.resolve(hint) for hint in hints}
-                    if candidate_hint_match not in normalized_hints:
-                        logger.info(
-                            f"[FILTER] Rejected: {candidate_name} Reason: Not in component-specific supplier hint set for {state.component_name}"
-                        )
-                        continue
-
-            if candidate_name != raw_candidate_name:
-                logger.info(
-                    f"[NORMALIZE] Candidate: {raw_candidate_name} -> {candidate_name}"
-                )
-                data = {**data, "name": candidate_name}
-
-            if is_location_or_ecosystem_entity(candidate_name):
-                logger.info(
-                    f"[FILTER] Rejected: {candidate_name} Reason: Location, region, or ecosystem label"
-                )
-                continue
-
-            canonical_name = resolver.resolve(candidate_name)
-
-            if candidate_competes_with_target(target_name, candidate_name) and not (
-                supplier_evidence_explicitly_links_candidate_to_source(
-                    candidate_name,
-                    target_name,
-                    data.get("source_evidence", []),
-                )
-            ):
-                logger.info(
-                    f"[FILTER] Rejected: {candidate_name} Reason: Competitor without explicit supplier evidence to {target_name}"
-                )
-                continue
-
-            if unrelated_energy_candidate_without_supply_evidence(
-                candidate_name,
-                current_company,
-                data.get("source_evidence", []),
-            ):
-                logger.info(
-                    f"[FILTER] Rejected: {candidate_name} Reason: Unrelated energy entity without direct supply evidence"
-                )
-                continue
-
-            valid_name, rejection_reason = _is_valid_supplier_name(
-                candidate_name, data.get("confidence", 0.0)
-            )
-            if not valid_name:
-                logger.info(
-                    f"[FILTER] Rejected: {candidate_name} Reason: {rejection_reason}"
-                )
-                continue
-
-            if (
-                canonical_name in canonical_seen_companies
-                or canonical_name in canonical_queued_companies
-            ):
-                logger.info(f"[DEDUP] Skipped duplicate: {canonical_name}")
-                continue
-
-            if canonical_name in seen_candidate_canonicals:
-                logger.info(
-                    f"[DEDUP] Skipped duplicate candidate within batch: {canonical_name}"
-                )
-                continue
-
-            seen_candidate_canonicals.add(canonical_name)
-            valid_candidates.append({**data, "canonical_name": canonical_name})
+            if filtered:
+                valid_candidates.append(filtered)
 
         logger.info(
             f"[TOP-K] Candidates Found: {len(valid_candidates)} Candidates Retained: {min(len(valid_candidates), state.max_candidates_per_company)}"
@@ -341,6 +399,28 @@ def supplier_agent(state: AgentState) -> AgentState:
                 f"Max candidates reached for {current_company}.",
             )
         valid_candidates = valid_candidates[: state.max_candidates_per_company]
+
+        if not valid_candidates and is_root_target and state.execution_mode == "slm":
+            generated_data = _generate_model_candidates(
+                state,
+                target_name=target_name,
+                current_company=current_company,
+                next_tier=next_tier,
+            )
+            for data in generated_data:
+                filtered = _filter_supplier_candidate(
+                    data,
+                    state=state,
+                    current_company=current_company,
+                    target_name=target_name,
+                    next_tier=next_tier,
+                    is_root_target=is_root_target,
+                    canonical_seen_companies=canonical_seen_companies,
+                    canonical_queued_companies=canonical_queued_companies,
+                    seen_candidate_canonicals=seen_candidate_canonicals,
+                )
+                if filtered:
+                    valid_candidates.append(filtered)
 
         if not valid_candidates:
             logger.warning(
@@ -409,6 +489,8 @@ def supplier_agent(state: AgentState) -> AgentState:
                 product_name=state.product_name,
                 component_name=state.component_name,
                 benchmark_target_query=state.benchmark_target_query,
+                candidate_source=data.get("candidate_source"),
+                model_generated=bool(data.get("model_generated", False)),
                 relationship_path=relationship_path,
                 evidence=data.get("source_evidence", []),
             )

@@ -121,33 +121,66 @@ class TestLLMRelationshipClassifier(unittest.TestCase):
         with self.assertRaises(Exception):
             self._batch_classifier_for_raw_response("{not valid json")
 
-    def test_unknown_and_duplicate_batch_supplier_names_fail(self):
-        for results, expected_message in (
-            ([{
-                "supplier_name": "Unknown",
-                "relationship": "supplier",
-                "confidence": 0.9,
-                "reasoning": "Unexpected supplier.",
-            }], "unknown supplier result"),
-            ([{
-                "supplier_name": "TSMC",
+    def test_unknown_batch_supplier_names_still_fail(self):
+        classifier = self._batch_classifier_for_raw_response(json.dumps([{
+            "supplier_name": "Unknown",
+            "relationship": "supplier",
+            "confidence": 0.9,
+            "reasoning": "Unexpected supplier.",
+        }]))
+        with self.assertRaisesRegex(RuntimeError, "unknown supplier result"):
+            classifier.classify_batch([{
+                "candidate_entity": "TSMC",
+                "target_company": "Apple",
+                "evidence": "TSMC supplies chips to Apple.",
+            }])
+
+    def test_duplicate_supplier_results_are_deduplicated_without_fallback(self):
+        classifier = self._batch_classifier_for_raw_response(json.dumps([
+            {
+                "supplier_name": "LG Display",
                 "relationship": "supplier",
                 "confidence": 0.9,
                 "reasoning": "First result.",
-            }, {
-                "supplier_name": "TSMC",
+            },
+            {
+                "supplier_name": "LG Display",
                 "relationship": "supplier",
                 "confidence": 0.8,
                 "reasoning": "Duplicate result.",
-            }], "duplicate supplier result"),
-        ):
-            classifier = self._batch_classifier_for_raw_response(json.dumps(results))
-            with self.assertRaisesRegex(RuntimeError, expected_message):
-                classifier.classify_batch([{
-                    "candidate_entity": "TSMC",
-                    "target_company": "Apple",
-                    "evidence": "TSMC supplies chips to Apple.",
-                }])
+            },
+        ]))
+        valid, invalid = classifier.classify_batch([{
+            "candidate_entity": "LG Display",
+            "target_company": "Samsung",
+            "evidence": "LG Display supplies panels to Samsung.",
+        }])
+        self.assertEqual(set(valid), {"LG Display"})
+        self.assertEqual(valid["LG Display"].confidence, 0.9)
+        self.assertEqual(invalid, {})
+
+    def test_alias_duplicate_supplier_results_are_deduplicated(self):
+        classifier = self._batch_classifier_for_raw_response(json.dumps([
+            {
+                "supplier_name": "Pegatron",
+                "relationship": "supplier",
+                "confidence": 0.9,
+                "reasoning": "First result.",
+            },
+            {
+                "supplier_name": "Pegatron Corporation",
+                "relationship": "supplier",
+                "confidence": 0.8,
+                "reasoning": "Alias duplicate.",
+            },
+        ]))
+        valid, invalid = classifier.classify_batch([{
+            "candidate_entity": "Pegatron",
+            "target_company": "Samsung",
+            "evidence": "Pegatron supplies assembled devices to Samsung.",
+        }])
+        self.assertEqual(set(valid), {"Pegatron"})
+        self.assertEqual(invalid, {})
 
 
 class TestRelationshipAgent(unittest.TestCase):

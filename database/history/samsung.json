@@ -1516,6 +1516,193 @@
       "suppliers": [
         "Sony Semiconductor Solutions"
       ]
+    },
+    {
+      "timestamp": "2026-08-02T16:02:50.842435",
+      "mode": "llm",
+      "health_score": 92.2,
+      "health_status": "Excellent",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T16:03:00.348035",
+      "mode": "llm",
+      "health_score": 84.4,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Sony Semiconductor Solutions"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T16:05:01.263652",
+      "mode": "rag",
+      "health_score": 88.9,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T16:05:14.571683",
+      "mode": "rag",
+      "health_score": 82.9,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Sony Semiconductor Solutions"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T16:11:39.326054",
+      "mode": "slm",
+      "health_score": 91.3,
+      "health_status": "Excellent",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T16:12:05.149872",
+      "mode": "slm",
+      "health_score": 84.4,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Sony Semiconductor Solutions"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T18:52:00.215447",
+      "mode": "slm",
+      "health_score": 91.3,
+      "health_status": "Excellent",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T18:53:47.766702",
+      "mode": "slm",
+      "health_score": 84.4,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Sony Semiconductor Solutions"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T18:55:10.420018",
+      "mode": "slm",
+      "health_score": 86.5,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Pegatron"
+      ]
+    },
+    {
+      "timestamp": "2026-08-10T15:02:30.124137",
+      "mode": "slm",
+      "health_score": 89.2,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
+    },
+    {
+      "timestamp": "2026-08-10T15:02:30.940492",
+      "mode": "slm",
+      "health_score": 84.4,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Sony Semiconductor Solutions"
+      ]
+    },
+    {
+      "timestamp": "2026-08-10T15:17:45.203895",
+      "mode": "slm",
+      "health_score": 91.3,
+      "health_status": "Excellent",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
+    },
+    {
+      "timestamp": "2026-08-10T15:19:48.686747",
+      "mode": "slm",
+      "health_score": 84.4,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Sony Semiconductor Solutions"
+      ]
+    },
+    {
+      "timestamp": "2026-08-10T15:21:13.828016",
+      "mode": "slm",
+      "health_score": 86.5,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Pegatron"
+      ]
+    },
+    {
+      "timestamp": "2026-08-10T15:41:54.709107",
+      "mode": "slm",
+      "health_score": 89.2,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
+    },
+    {
+      "timestamp": "2026-08-10T15:41:55.646121",
+      "mode": "slm",
+      "health_score": 84.4,
+      "health_status": "Good",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Sony Semiconductor Solutions"
+      ]
+    },
+    {
+      "timestamp": "2026-08-10T15:51:34.526600",
+      "mode": "slm",
+      "health_score": 91.3,
+      "health_status": "Excellent",
+      "supplier_count": 1,
+      "risk_count": 0,
+      "suppliers": [
+        "Qualcomm"
+      ]
     }
   ]
 }

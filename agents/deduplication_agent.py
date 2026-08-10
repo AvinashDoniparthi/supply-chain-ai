@@ -109,6 +109,12 @@ def deduplication_agent(state: AgentState) -> AgentState:
             propagated_confidence=max_propagated_confidence,
             parent_company=primary.parent_company
             or (parent_companies[0] if parent_companies else None),
+            candidate_source=(
+                "gemma_generation"
+                if any(getattr(s, "model_generated", False) for s in group)
+                else primary.candidate_source
+            ),
+            model_generated=any(getattr(s, "model_generated", False) for s in group),
             relationship_path=relationship_path,
             evidence=merged_evidence,
         )

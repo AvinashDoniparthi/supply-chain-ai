@@ -95,6 +95,9 @@ def get_product_component_map() -> Dict[str, Dict[str, Any]]:
 
 PRODUCT_COMPONENT_MAP = get_product_component_map()
 DEFAULT_COMPANIES = list(PRODUCT_COMPONENT_MAP.keys())
+# Keep SLM opt-in: it requires a local Ollama service/model, so it should not
+# be included in the default benchmark run, but it must be accepted by the CLI.
+SUPPORTED_MODES = ["llm", "rag", "slm"]
 DEFAULT_MODES = ["llm", "rag"]
 DEFAULT_MAX_DEPTH = 3
 DEFAULT_SKIP_NEWS = True
@@ -111,6 +114,11 @@ CSV_FIELDNAMES = [
     "skip_news",
     "provider",
     "model",
+    "model_invocation_status",
+    "model_invoked",
+    "candidate_source",
+    "generated_candidate_count",
+    "verified_generated_candidate_count",
     "primary_model_success",
     "fallback_used",
     "fallback_stages",
@@ -220,6 +228,11 @@ def _provenance_fields(state: Any | None) -> Dict[str, Any]:
         return {
             "provider": "",
             "model": "",
+            "model_invocation_status": "skipped_other",
+            "model_invoked": False,
+            "candidate_source": "",
+            "generated_candidate_count": 0,
+            "verified_generated_candidate_count": 0,
             "primary_model_success": "",
             "fallback_used": "",
             "fallback_stages": "",
@@ -244,6 +257,13 @@ def _provenance_fields(state: Any | None) -> Dict[str, Any]:
     return {
         "provider": recorded("provider", getattr(state, "provider", "")),
         "model": recorded("model", getattr(state, "model", "")),
+        "model_invocation_status": recorded("model_invocation_status", "skipped_other"),
+        "model_invoked": bool(recorded("model_invoked", False)),
+        "candidate_source": recorded("candidate_source", ""),
+        "generated_candidate_count": int(recorded("generated_candidate_count", 0) or 0),
+        "verified_generated_candidate_count": int(
+            recorded("verified_generated_candidate_count", 0) or 0
+        ),
         "primary_model_success": primary_model_success,
         "fallback_used": fallback_used,
         "fallback_stages": json.dumps(fallback_stages, sort_keys=True)
@@ -1264,9 +1284,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--modes",
         nargs="*",
-        choices=DEFAULT_MODES,
+        choices=SUPPORTED_MODES,
         default=DEFAULT_MODES,
-        help="Execution modes to run.",
+        help="Execution modes to run (llm, rag, or slm via Ollama).",
     )
     parser.add_argument(
         "--max-depth",

@@ -5,7 +5,20 @@
       "label": "Apple",
       "node_type": "company",
       "tier": 0
+    },
+    {
+      "id": "Pegatron",
+      "label": "Pegatron",
+      "node_type": "supplier",
+      "tier": 1,
+      "parent_company": "Apple"
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "Apple",
+      "target": "Pegatron",
+      "relationship": "supplier"
+    }
+  ]
 }

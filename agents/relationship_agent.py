@@ -22,6 +22,7 @@ from scraping.supplier_discovery import (
 )
 from utils.output import OutputMode, agent_event, debug_log, emit, progress
 from utils.benchmark_metrics import record_primary_model_result
+from utils.identity_resolution import compact_key, normalize_name, resolver
 from utils.runtime_controls import (
     can_consume_llm_call,
     emit_skip_once,
@@ -192,6 +193,10 @@ class LLMRelationshipClassifier(RelationshipClassifier):
         )
 
         expected = {item["candidate_entity"] for item in items}
+        expected_by_identity = {
+            compact_key(resolver.resolve(normalize_name(name))): name
+            for name in expected
+        }
         valid_labels = {
             "supplier",
             "upstream_supplier",
@@ -205,31 +210,52 @@ class LLMRelationshipClassifier(RelationshipClassifier):
         invalid: Dict[str, str] = {}
         seen: Dict[str, int] = {}
 
+        # Gemma occasionally emits the same classification more than once.
+        # Treat the first occurrence as the model's classification and ignore
+        # later occurrences, using the shared identity resolver so aliases and
+        # harmless formatting differences cannot trigger a batch failure.
+        unique_results = []
         for result in response.results:
+            raw_name = str(result.supplier_name or "").strip()
+            identity = resolver.resolve(normalize_name(raw_name))
+            identity_key = compact_key(identity or raw_name)
+            if identity_key in seen:
+                logger.warning(
+                    "[RELATIONSHIP BATCH] Ignoring duplicate supplier result: %r",
+                    result.supplier_name,
+                )
+                continue
+            seen[identity_key] = 1
+            unique_results.append((result, identity_key))
+
+        for result, identity_key in unique_results:
             name = result.supplier_name
-            if name not in expected:
+            expected_name = expected_by_identity.get(identity_key)
+            if expected_name is None:
                 logger.warning(
                     "[RELATIONSHIP BATCH] Unknown supplier result: %r", name
                 )
                 raise RuntimeError(f"unknown supplier result: {name!r}")
-            seen[name] = seen.get(name, 0) + 1
-            if seen[name] > 1:
-                raise RuntimeError(f"duplicate supplier result: {name!r}")
             if (
                 result.relationship not in valid_labels
                 or not isinstance(result.confidence, (int, float))
                 or not 0 <= float(result.confidence) <= 1
                 or not isinstance(result.reasoning, str)
             ):
-                invalid[name] = "invalid supplier classification result"
+                invalid[expected_name] = "invalid supplier classification result"
                 continue
-            valid[name] = RelationshipClassification(
+            valid[expected_name] = RelationshipClassification(
                 relationship=result.relationship,
                 confidence=float(result.confidence),
                 reasoning=result.reasoning,
             )
 
-        for name in expected - set(seen):
+        seen_expected = {
+            expected_by_identity[identity]
+            for identity in seen
+            if identity in expected_by_identity
+        }
+        for name in expected - seen_expected:
             invalid[name] = "missing supplier result"
         for name in set(invalid):
             valid.pop(name, None)

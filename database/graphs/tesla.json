@@ -5,20 +5,7 @@
       "label": "Tesla",
       "node_type": "company",
       "tier": 0
-    },
-    {
-      "id": "Gigafactory Shanghai",
-      "label": "Gigafactory Shanghai",
-      "node_type": "supplier",
-      "tier": 1,
-      "parent_company": "Tesla"
     }
   ],
-  "edges": [
-    {
-      "source": "Tesla",
-      "target": "Gigafactory Shanghai",
-      "relationship": "supplier"
-    }
-  ]
+  "edges": []
 }

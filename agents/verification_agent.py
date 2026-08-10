@@ -426,6 +426,11 @@ def verification_agent(state: AgentState) -> AgentState:
         candidates,
         verified_results,
     )
+    state.run_metadata["verified_generated_candidate_count"] = sum(
+        1
+        for supplier in retained_candidates
+        if getattr(supplier, "model_generated", False)
+    )
     state.verification_results = retained_results
     state.suppliers = retained_candidates
     

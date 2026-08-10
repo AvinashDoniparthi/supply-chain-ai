@@ -31,6 +31,11 @@ def record_primary_model_result(
 ) -> None:
     metadata = state.run_metadata
     metadata["primary_model_invoked"] = True
+    metadata["model_invoked"] = True
+    if not success or metadata.get("model_invocation_status") == "failed":
+        metadata["model_invocation_status"] = "failed"
+    else:
+        metadata["model_invocation_status"] = "succeeded"
     if metadata.get("primary_model_success") is not False:
         metadata["primary_model_success"] = bool(success)
     if fallback:
@@ -111,13 +116,48 @@ def build_benchmark_record(state: AgentState, workflow_status: str) -> Dict[str,
         )
     )
 
+    model_invoked = bool(
+        state.run_metadata.get(
+            "model_invoked",
+            state.run_metadata.get("primary_model_invoked", False),
+        )
+    )
+    if model_invoked:
+        model_invocation_status = state.run_metadata.get("model_invocation_status")
+        if model_invocation_status not in {"succeeded", "failed"}:
+            model_invocation_status = (
+                "failed"
+                if state.run_metadata.get("primary_model_success") is False
+                else "succeeded"
+            )
+        primary_model_success = state.run_metadata.get("primary_model_success")
+        if primary_model_success is None:
+            primary_model_success = model_invocation_status == "succeeded"
+    else:
+        model_invocation_status = (
+            "skipped_no_candidates" if not state.suppliers else "skipped_other"
+        )
+        primary_model_success = "not_applicable"
+    state.run_metadata["model_invoked"] = model_invoked
+    state.run_metadata["model_invocation_status"] = model_invocation_status
+    state.run_metadata["primary_model_success"] = primary_model_success
+
     record = {
         "company": state.target_company or (state.company.name if state.company else None),
         "execution_mode": state.execution_mode,
         "provider": provider,
         "model": model,
+        "model_invocation_status": model_invocation_status,
+        "model_invoked": model_invoked,
+        "candidate_source": state.run_metadata.get("candidate_source", ""),
+        "generated_candidate_count": int(
+            state.run_metadata.get("generated_candidate_count", 0) or 0
+        ),
+        "verified_generated_candidate_count": int(
+            state.run_metadata.get("verified_generated_candidate_count", 0) or 0
+        ),
         "workflow_status": workflow_status,
-        "primary_model_success": state.run_metadata.get("primary_model_success"),
+        "primary_model_success": primary_model_success,
         "fallback_used": bool(state.run_metadata.get("fallback_used", False)),
         "fallback_stages": list(state.run_metadata.get("fallback_stages", [])),
         "suppliers_discovered": len(discovered_names),

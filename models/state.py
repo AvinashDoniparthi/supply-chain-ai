@@ -50,6 +50,14 @@ class SupplierInfo(BaseModel):
         default=None,
         description="Full benchmark target string used during discovery",
     )
+    candidate_source: Optional[str] = Field(
+        default=None,
+        description="Origin of the candidate, such as normal discovery or gemma_generation",
+    )
+    model_generated: bool = Field(
+        default=False,
+        description="Whether the candidate was proposed by the model rather than normal discovery",
+    )
     relationship_path: List[str] = Field(
         default_factory=list,
         description="Full ancestry path from the target company down to this supplier",

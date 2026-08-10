@@ -1210,6 +1210,57 @@
       "suppliers": [
         "Gigafactory Shanghai"
       ]
+    },
+    {
+      "timestamp": "2026-08-02T16:03:11.799001",
+      "mode": "llm",
+      "health_score": 78.8,
+      "health_status": "Good",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T16:05:19.611197",
+      "mode": "rag",
+      "health_score": 78.3,
+      "health_status": "Good",
+      "supplier_count": 8,
+      "risk_count": 3,
+      "suppliers": [
+        "Panasonic",
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Sumitomo Metal Mining",
+        "Mitsubishi Materials",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
+    },
+    {
+      "timestamp": "2026-08-02T16:14:04.960218",
+      "mode": "slm",
+      "health_score": 73.7,
+      "health_status": "Moderate",
+      "supplier_count": 5,
+      "risk_count": 3,
+      "suppliers": [
+        "Contemporary Amperex Technology Co. Limited",
+        "LG Energy Solution",
+        "Samsung SDI",
+        "Ganfeng Lithium",
+        "Tianqi Lithium"
+      ]
     }
   ]
 }
